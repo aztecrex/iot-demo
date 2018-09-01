@@ -1,25 +1,7 @@
 import React from 'react';
 import * as R from 'ramda';
 
-
-// luminance function originally developed by Craig Buckler
-// https://www.sitepoint.com/javascript-generate-lighter-darker-color/
-const luminance = (hex, lum) => {
-	hex = String(hex).replace(/[^0-9a-f]/gi, '');
-	if (hex.length < 6) {
-		hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
-	}
-	lum = lum || 0;
-
-	var rgb = "#", c, i;
-	for (i = 0; i < 3; i++) {
-		c = parseInt(hex.substr(i*2,2), 16);
-		c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
-		rgb += ("00"+c).substr(c.length);
-	}
-
-	return rgb;
-};
+import {Dot} from './Dot';
 
 const generatePoints = (count, dim, colors) => {
 
@@ -35,25 +17,6 @@ const generatePoints = (count, dim, colors) => {
         const color = colors_[cidx(i)] || "off";
         return {x,y,radius,color}
     }, R.range(0, count));
-};
-
-const Dot = ({x, y, radius, color}) =>  {
-    const colorOutside = luminance(color,-.5);
-    const gid = x+"_"+y
-    const fill = (color === "off") ? "#666" : "url(#" + gid + ")";
-    return (
-        <React.Fragment>
-        <defs>
-            <radialGradient id={gid}>
-                <stop offset="43%" stopColor={color}/>
-                <stop offset="100%" stopColor={colorOutside}/>
-            </radialGradient>
-
-        </defs>
-        <circle cx={x} cy={y} r={radius} fill={fill} stroke="#cccccc" filter="url(#glow)"/>
-        </React.Fragment>
-    );
-
 };
 
 const Wheel = ( {dim = 300, count = 16, colors = [{index: 3, color: "#FF3344"}] }) => {

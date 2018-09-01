@@ -25,7 +25,6 @@ const radiusFactor = .077;
 
 const point = (count, dim) => {
     const innerDim = dim - dim * radiusFactor * 2.1
-    console.log(dim, innerDim)
     const theta = (2 * Math.PI) / count;
     return i => {
         const x = Math.cos(i * theta) * (innerDim/2) + (dim/2);

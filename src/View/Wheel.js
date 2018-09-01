@@ -45,7 +45,6 @@ const generatePoints = (colors, dim) => {
 
 const Dot = ({x,y,r = 30,color}) =>  {
     const colorOutside = luminance(color,-.5);
-
     const gid = x+"_"+y
     return (
         <React.Fragment>
@@ -62,7 +61,7 @@ const Dot = ({x,y,r = 30,color}) =>  {
 
 };
 
-const ColorWheel = ( {dim = 300, colors = ["#000000", "#CC0000", "#0000DD", "#00EE00", "#FF0000", "#000000", "#CC0000", "#0000DD", "#00EE00", "#FF0000", "#000000", "#CC0000", "#0000DD", "#00EE00", "#FF0000", "#FF2299"]}) =>
+const Wheel = ( {dim = 300, colors = ["#000000", "#CC0000", "#0000DD", "#00EE00", "#FF0000", "#000000", "#CC0000", "#0000DD", "#00EE00", "#FF0000", "#000000", "#CC0000", "#0000DD", "#00EE00", "#FF0000", "#FF2299"]}) =>
 <div>
     <svg width={dim} height={dim} >
         <defs>
@@ -80,5 +79,5 @@ const ColorWheel = ( {dim = 300, colors = ["#000000", "#CC0000", "#0000DD", "#00
 </div>
 
 
-export {ColorWheel};
+export {Wheel};
 

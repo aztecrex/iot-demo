@@ -1,8 +1,24 @@
 import React from 'react';
 import * as R from 'ramda';
 
+// luminance function originally developed by Craig Buckler
+// https://www.sitepoint.com/javascript-generate-lighter-darker-color/
+const luminance = (hex, lum) => {
+	hex = String(hex).replace(/[^0-9a-f]/gi, '');
+	if (hex.length < 6) {
+		hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+	}
+	lum = lum || 0;
 
+	var rgb = "#", c, i;
+	for (i = 0; i < 3; i++) {
+		c = parseInt(hex.substr(i*2,2), 16);
+		c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
+		rgb += ("00"+c).substr(c.length);
+	}
 
+	return rgb;
+};
 
 const generatePoints = (dim, rows, cols, colors) => {
     const insideDim = dim * .9;
@@ -15,18 +31,32 @@ const generatePoints = (dim, rows, cols, colors) => {
     return R.flatten(R.map(row => R.map(col => {
         const x = col * pitch + offset;
         const y = row * pitch + offset;
-        const color = colors_[cidx(row,col)] || "#444";
+        const color = colors_[cidx(row,col)] || "off";
         return {x, y, color, radius};
     },R.range(0,cols)), R.range(0,rows)));
 };
 
 const Dot = ({x, y, color, radius}) => {
+    const colorOutside = luminance(color,-.5);
+    const gid = x+"_"+y
+    const fill = (color === "off") ? "#666" : "url(#" + gid + ")"
     return (
-        <circle cx={x} cy={y} r={radius} fill={color} stroke="#cccccc" filter="url(#glow)"/>
+        <React.Fragment>
+        <defs>
+            <radialGradient id={gid}>
+                <stop offset="43%" stopColor={color}/>
+                <stop offset="100%" stopColor={colorOutside}/>
+            </radialGradient>
+
+        </defs>
+        <circle cx={x} cy={y} r={radius} fill={fill} stroke="#666" filter="url(#glow)"/>
+    </React.Fragment>
     );
+
+
 };
 
-const Matrix = ({dim=600, rows=16, cols=16, colors = [{row:1,col:2,color:"#aaa333"}]}) => {
+const Matrix = ({dim=300, rows=8, cols=8, colors = [{row:1,col:2,color:"#aaa333"}, {row:6,col:4,color:"#FF5555"}]}) => {
     const points = generatePoints(dim, rows, cols, colors);
     return (
     <div>

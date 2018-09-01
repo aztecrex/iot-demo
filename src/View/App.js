@@ -1,15 +1,15 @@
 import React from 'react';
 import './App.css';
-import {ColorWheel} from './ColorWheel';
+import {Wheel} from './Wheel';
 import {Matrix} from './Matrix';
 
 
 const App = () => (
     <div className="App">
-        <ColorWheel dim="100"/>
-        <ColorWheel dim="150"/>
-        <ColorWheel dim="200"/>
-        <ColorWheel dim="250"/>
+        <Wheel dim="100"/>
+        <Wheel dim="150"/>
+        <Wheel dim="200"/>
+        <Wheel dim="250"/>
         <Matrix/>
     </div>
 );

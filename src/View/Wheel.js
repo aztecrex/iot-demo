@@ -15,12 +15,16 @@ const generatePoints = (count, dim, colors) => {
         const x = Math.cos(i * theta) * (innerDim/2) + (dim/2);
         const y = Math.sin(i * theta) * (innerDim/2) + (dim/2);
         const color = colors_[cidx(i)] || "off";
-        return {x,y,radius,color}
+        const coord = {index: i};
+        return {x,y,radius,color,coord}
     }, R.range(0, count));
 };
 
-const Wheel = ( {dim = 300, count = 16, colors = [{index: 3, color: "#FF3344"}] }) => {
+const Wheel = ( {device, dim = 300,
+                count = 16, colors = [{index: 3, color: "#FF3344"}],
+                handleDotClicked}) => {
     const points = generatePoints(count, dim, colors);
+    const hclick = coord => handleDotClicked({...coord, device, displayType:"Wheel"});
     return (
         <div>
             <svg width={dim} height={dim} >
@@ -33,7 +37,11 @@ const Wheel = ( {dim = 300, count = 16, colors = [{index: 3, color: "#FF3344"}] 
                         </feMerge>
                     </filter>
                 </defs>
-            {R.map(p => <Dot key ={p.x + "_" + p.y} x={p.x} y={p.y} color={p.color} radius={p.radius} />, points)}
+            {R.map(p => <Dot
+                key={p.x + "_" + p.y}
+                x={p.x} y={p.y} color={p.color} radius={p.radius}
+                handleClick={() => hclick(p.coord)}
+                />, points)}
 
             </svg>
         </div>

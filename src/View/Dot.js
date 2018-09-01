@@ -19,10 +19,12 @@ const luminance = (hex, lum) => {
 	return rgb;
 };
 
-const Dot = ({x, y, radius, color}) =>  {
+const defaultColor="#CCC";
+
+const Dot = ({coord, x, y, radius, color, handleClick}) =>  {
     const colorOutside = luminance(color,-.5);
     const gid = x+"_"+y
-    const fill = (color === "off") ? "#666" : "url(#" + gid + ")";
+    const fill = (color === "off") ? defaultColor : "url(#" + gid + ")";
     return (
         <React.Fragment>
         <defs>
@@ -32,7 +34,10 @@ const Dot = ({x, y, radius, color}) =>  {
             </radialGradient>
 
         </defs>
-        <circle cx={x} cy={y} r={radius} fill={fill} stroke="#666" filter="url(#glow)"/>
+        <circle cx={x} cy={y}
+                r={radius}
+                fill={fill} stroke={defaultColor} filter="url(#glow)"
+                onClick={handleClick}/>
         </React.Fragment>
     );
 

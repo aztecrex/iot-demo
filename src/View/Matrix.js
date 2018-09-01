@@ -1,5 +1,6 @@
 import React from 'react';
 import * as R from 'ramda';
+import {connect} from 'react-redux';
 
 import {Dot} from './Dot';
 
@@ -15,11 +16,15 @@ const generatePoints = (dim, rows, cols, colors) => {
         const x = col * pitch + offset;
         const y = row * pitch + offset;
         const color = colors_[cidx(row,col)] || "off";
-        return {x, y, color, radius};
+        const coord = {row,col};
+        return {x, y, color, radius, coord};
     },R.range(0,cols)), R.range(0,rows)));
 };
 
-const Matrix = ({dim=300, rows=8, cols=8, colors = [{row:1,col:2,color:"#aaa333"}, {row:6,col:4,color:"#FF5555"}]}) => {
+const Matrix = ({device, dim=300, rows=8, cols=8,
+                colors = [{row:1,col:2,color:"#aaa333"}, {row:6,col:4,color:"#FF5555"}],
+                handleDotClicked}) => {
+    const hclick = coord => handleDotClicked({...coord, device, displayType:"Matrix"});
     const points = generatePoints(dim, rows, cols, colors);
     return (
     <div>
@@ -34,11 +39,20 @@ const Matrix = ({dim=300, rows=8, cols=8, colors = [{row:1,col:2,color:"#aaa333"
                 </filter>
             </defs>
         {R.map(p => {
-            console.log(JSON.stringify(p));
-            return <Dot key={p.x + "" + p.y} x={p.x} y={p.y} color={p.color} radius={p.radius} />
+            return <Dot
+                key={p.x + "" + p.y}
+                x={p.x} y={p.y}
+                color={p.color} radius={p.radius}
+                handleClick={() => hclick(p.coord)}
+                />
             }, points)}
         </svg>
     </div>);
 };
 
-export {Matrix};
+const ConnectedMatrix = connect(
+    state => ({}),
+    dispatch => ({handleDotClicked: coord => dispatch({type:"CLICK",...coord})})
+)(Matrix);
+
+export {Matrix, ConnectedMatrix};

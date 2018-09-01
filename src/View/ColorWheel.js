@@ -1,18 +1,16 @@
 import React from 'react';
 import * as R from 'ramda';
 
-// const dim = 500;
 
-function ColorLuminance(hex, lum) {
-
-	// validate hex string
+// luminance function originally developed by Craig Buckler
+// https://www.sitepoint.com/javascript-generate-lighter-darker-color/
+const luminance = (hex, lum) => {
 	hex = String(hex).replace(/[^0-9a-f]/gi, '');
 	if (hex.length < 6) {
 		hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
 	}
 	lum = lum || 0;
 
-	// convert to decimal and change luminosity
 	var rgb = "#", c, i;
 	for (i = 0; i < 3; i++) {
 		c = parseInt(hex.substr(i*2,2), 16);
@@ -21,18 +19,21 @@ function ColorLuminance(hex, lum) {
 	}
 
 	return rgb;
-}
+};
+
+const radiusFactor = .077;
 
 const point = (count, dim) => {
+    const innerDim = dim - dim * radiusFactor * 2.1
+    console.log(dim, innerDim)
     const theta = (2 * Math.PI) / count;
     return i => {
-        const x = Math.cos(i * theta) * (dim/2.5) + (dim/2);
-        const y = Math.sin(i * theta) * (dim/2.5) + (dim/2);
+        const x = Math.cos(i * theta) * (innerDim/2) + (dim/2);
+        const y = Math.sin(i * theta) * (innerDim/2) + (dim/2);
       return  ({x,y});
     };
 
 };
-
 
 const generatePoints = (colors, dim) => {
 
@@ -44,7 +45,7 @@ const generatePoints = (colors, dim) => {
 };
 
 const Dot = ({x,y,r = 30,color}) =>  {
-    const colorOutside = ColorLuminance(color,-.5);
+    const colorOutside = luminance(color,-.5);
 
     const gid = x+"_"+y
     return (
@@ -74,7 +75,7 @@ const ColorWheel = ( {dim = 300, colors = ["#000000", "#CC0000", "#0000DD", "#00
                 </feMerge>
             </filter>
         </defs>
-       {R.map(p => <Dot key ={p.x + "" + p.y} x={p.x} y={p.y} color={p.color} r={.07*dim} />, generatePoints(colors, dim))}
+       {R.map(p => <Dot key ={p.x + "" + p.y} x={p.x} y={p.y} color={p.color} r={radiusFactor*dim} />, generatePoints(colors, dim))}
 
     </svg>
 </div>

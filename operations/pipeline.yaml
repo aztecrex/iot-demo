@@ -103,7 +103,7 @@ Resources:
                       - Name: SiteSource
                     Configuration:
                       Owner: aztecrex
-                      Repo: aztecrex/iot-demo
+                      Repo: iot-demo
                       OAuthToken: !Ref GithubToken
                       Branch: master
                     RunOrder: 1

@@ -3,7 +3,7 @@ import * as R from 'ramda';
 import {connect} from 'react-redux';
 
 import {Dot} from './Dot';
-import { evtLampPressed, matrixCoord } from '../Model'
+import { evtLampPressed, matrixCoord, colors } from '../Model'
 
 const generatePoints = (dim, rows, cols, colors) => {
     const insideDim = dim * .9;
@@ -52,7 +52,7 @@ const Matrix = ({device, dim=300, rows=8, cols=8,
 };
 
 const ConnectedMatrix = connect(
-    state => ({}),
+    (state,{device}) => ({colors: colors(state, device)}),
     dispatch => ({handleDotClicked: coord => dispatch(evtLampPressed(coord))})
 )(Matrix);
 

@@ -2,7 +2,7 @@ import React from 'react';
 import * as R from 'ramda';
 import { connect } from 'react-redux';
 
-import { evtLampPressed, wheelCoord } from '../Model';
+import { evtLampPressed, wheelCoord, colors } from '../Model';
 
 import {Dot} from './Dot';
 
@@ -52,7 +52,7 @@ const Wheel = ( {device, dim = 300,
 };
 
 const ConnectedWheel = connect(
-    state => ({}),
+    (state,{device}) => ({colors: colors(state, device)}),
     dispatch => ({handleDotClicked: coord => dispatch(evtLampPressed(coord))})
 )(Wheel);
 

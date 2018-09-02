@@ -4,10 +4,9 @@ import { createMuiTheme, MuiThemeProvider } from '@material-ui/core';
 
 import { ConnectedNavBar } from './NavBar';
 import { ConnectedLogin } from './Login';
-import { ConnectedWheel } from './Wheel';
-import { ConnectedMatrix } from './Matrix';
 
 import './App.css';
+import { Page1 } from './Page/Page1';
 
 const theme1 = createMuiTheme({
     palette: {
@@ -24,8 +23,7 @@ const App = () => (
     <MuiThemeProvider theme={theme1}>
         <ConnectedLogin />
         <ConnectedNavBar />
-        <ConnectedWheel dim="250" device="colorwheel_3" />
-        <ConnectedMatrix dim = "250" device="matrix_0" />
+        <Page1 />
     </MuiThemeProvider>
 );
 

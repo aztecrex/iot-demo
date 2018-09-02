@@ -45,7 +45,7 @@ const NavBar_ = ({classes, loggedIn, onLoginRequest = () => {}, onLogoutRequest 
                     <MenuIcon />
                 </IconButton> */}
                 <Typography variant="title" color="inherit" className={classes.flex}>
-                    Internet of Things - A Little Demo
+                    Internet of Things - A Little Presentation
                 </Typography>
                 <LoginControl
                     loggedIn={loggedIn}

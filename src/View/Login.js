@@ -4,31 +4,6 @@ import {Dialog, DialogTitle, DialogContent,DialogActions,
         Button, TextField } from '@material-ui/core';
 import { getLoginState, LoginStates, evtLoginCanceled, evtLoginRequested } from '../Model';
 
-
-// var Content = React.createClass({
-
-//     getInitialState: function() {
-//         return {
-//             textFieldValue: ''
-//         };
-//     },
-
-//     _handleTextFieldChange: function(e) {
-//         this.setState({
-//             textFieldValue: e.target.value
-//         });
-//     },
-
-//     render: function() {
-//         return (
-//             <div>
-//                 <TextField value={this.state.textFieldValue} onChange={this._handleTextFieldChange} />
-//             </div>
-//         )
-//     }
-
-// });
-
 const initialState = {
     passwordValue: '',
     usernameValue: ''
@@ -69,7 +44,7 @@ class Login extends Component {
         const {open, handleOK, handleCancel} = this.props;
         return (
             <Dialog open={open} onClose={handleCancel}>
-                <DialogTitle>Super Secret Password</DialogTitle>
+                <DialogTitle>Login</DialogTitle>
                 <DialogContent>
                 <TextField
                     autoFocus

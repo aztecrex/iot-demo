@@ -2,7 +2,7 @@
 
 set -e
 
-orign='iot-demo-frontend-websiteorigin-q7qtqoasc02j'
+origin='iot-demo-frontend-websiteorigin-q7qtqoasc02j'
 
 cd "$(dirname "${0}")/.."
 

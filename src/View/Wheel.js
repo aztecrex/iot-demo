@@ -2,13 +2,13 @@ import React from 'react';
 import * as R from 'ramda';
 import { connect } from 'react-redux';
 
-import { evtLampPressed } from '../Model';
+import { evtLampPressed, wheelCoord, colors } from '../Model';
 
 import {Dot} from './Dot';
 
 const generatePoints = (count, dim, colors) => {
 
-    const innerDim = dim * .81;
+    const innerDim = dim * .70;
     const theta = (2 * Math.PI) / count;
     const radius = (Math.PI * innerDim * .9) / (count * 2)
     const cidx = idx => idx+"_";
@@ -27,7 +27,7 @@ const Wheel = ( {device, dim = 300,
                 count = 16, colors = [{index: 3, color: "#FF3344"}],
                 handleDotClicked}) => {
     const points = generatePoints(count, dim, colors);
-    const hclick = coord => handleDotClicked({...coord, device, displayType:"Wheel"});
+    const hclick = coord => handleDotClicked(wheelCoord(device, coord.index));
     return (
         <div>
             <svg width={dim} height={dim} >
@@ -52,7 +52,7 @@ const Wheel = ( {device, dim = 300,
 };
 
 const ConnectedWheel = connect(
-    state => ({}),
+    (state,{device}) => ({colors: colors(state, device)}),
     dispatch => ({handleDotClicked: coord => dispatch(evtLampPressed(coord))})
 )(Wheel);
 

@@ -3,10 +3,10 @@ import * as R from 'ramda';
 import {connect} from 'react-redux';
 
 import {Dot} from './Dot';
-import { evtLampPressed } from '../Model'
+import { evtLampPressed, matrixCoord, colors } from '../Model'
 
 const generatePoints = (dim, rows, cols, colors) => {
-    const insideDim = dim * .9;
+    const insideDim = dim * .7;
     const pitch = insideDim / (Math.max(rows,cols));
     const radius = (pitch * .9) / 2;
     const offset = (dim - insideDim) / 2 + pitch / 2;
@@ -25,7 +25,7 @@ const generatePoints = (dim, rows, cols, colors) => {
 const Matrix = ({device, dim=300, rows=8, cols=8,
                 colors = [{row:1,col:2,color:"#aaa333"}, {row:6,col:4,color:"#FF5555"}],
                 handleDotClicked}) => {
-    const hclick = coord => handleDotClicked({...coord, device, displayType:"Matrix"});
+    const hclick = coord => handleDotClicked(matrixCoord(device, coord.row, coord.col));
     const points = generatePoints(dim, rows, cols, colors);
     return (
     <div>
@@ -52,7 +52,7 @@ const Matrix = ({device, dim=300, rows=8, cols=8,
 };
 
 const ConnectedMatrix = connect(
-    state => ({}),
+    (state,{device}) => ({colors: colors(state, device)}),
     dispatch => ({handleDotClicked: coord => dispatch(evtLampPressed(coord))})
 )(Matrix);
 

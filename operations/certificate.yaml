@@ -1,0 +1,22 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+
+Parameters:
+  Key:
+    Type: String
+    MinLength: 1
+  Value:
+    Type: String
+    MinLength: 1
+
+
+Resources:
+    CertificateValidationDomain:
+        Type: AWS::Route53::RecordSet
+        Properties:
+            HostedZoneName: banjocreek.io.
+            Name: !Sub ${Key}.banjocreek.io.
+            Type: CNAME
+            TTL: 120
+            ResourceRecords:
+              - !Sub ${Value}.

@@ -1,0 +1,18 @@
+version: 0.1
+
+phases:
+  pre_build:
+    commands:
+      - echo "pre build"
+      - find . -name '*.sh' -type f | xargs chmod +x
+      - npm i
+  build:
+    commands:
+      - echo "build"
+      - npm test
+      - npm run build
+  post_build:
+    commands:
+      - echo "post build"
+      - ./operations/cd-publish.sh
+

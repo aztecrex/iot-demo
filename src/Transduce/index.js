@@ -1,9 +1,9 @@
-import { isLampOn, lampColor, evtTypeLampPressed, evtLampStatus, evtLampStatusOff, coordinates } from '../Model';
+import { isLampOn, lampColor, evtTypeLampPressed, evtLampStatus, evtLampStatusOff, coordinates, evtTypeLoginRequested, evtLoginFailed, matrixCoord, wheelCoord } from '../Model';
 
 
 const transduce = getState => evt => {
     var emit = [];
-
+    console.log(evt.type);
     if (evtTypeLampPressed(evt)) {
         const coords = coordinates(evt);
         const state = getState();
@@ -18,9 +18,24 @@ const transduce = getState => evt => {
             }
         } else
             emit = [evtLampStatus(coords, "#ff0000")];
-
+    } else if (evtTypeLoginRequested(evt)) {
+        emit = [evtLoginFailed()];
+    } else if (evt.type === "INIT_APP") {
+        emit = [
+            evtLampStatus(matrixCoord("matrix_0",1,7),"#ff0000"),
+            evtLampStatus(matrixCoord("matrix_0",3,2),"#00ff00"),
+            evtLampStatus(matrixCoord("matrix_0",1,4),"#0000ff"),
+            evtLampStatus(matrixCoord("matrix_0",4,1),"#00ff00"),
+            evtLampStatus(wheelCoord("colorwheel_0",3),"#00ff00"),
+            evtLampStatus(wheelCoord("colorwheel_0",7),"#ff0000"),
+            evtLampStatus(wheelCoord("colorwheel_0",11),"#0000ff"),
+        ]
     }
     return Promise.resolve(emit);
+};
+
+const kick = ({dispatch}) => {
+    dispatch({type: "INIT_APP"});
 };
 
 const makeMiddleware = () => ({dispatch, getState}) => next => {
@@ -40,4 +55,4 @@ const makeMiddleware = () => ({dispatch, getState}) => next => {
 
 };
 
-export { transduce, makeMiddleware };
+export { transduce, makeMiddleware, kick };

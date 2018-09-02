@@ -2,11 +2,11 @@ import React from 'react'
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar'
-import IconButton from '@material-ui/core/IconButton'
+// import IconButton from '@material-ui/core/IconButton'
 import Button from '@material-ui/core/Button'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
-import MenuIcon from '@material-ui/icons/Menu'
+// import MenuIcon from '@material-ui/icons/Menu'
 import { evtLoginLoginDesired, isLoggedIn, evtLogoutRequested } from '../Model';
 
 
@@ -17,10 +17,10 @@ const styles = {
     flex: {
       flexGrow: 1,
     },
-    menuButton: {
-      marginLeft: -12,
-      marginRight: 20,
-    },
+    // menuButton: {
+    //   marginLeft: -12,
+    //   marginRight: 20,
+    // },
   };
 
 
@@ -38,12 +38,12 @@ const LoginControl = ({loggedIn, onLoginRequest, onLogoutRequest}) => {
 
 const NavBar_ = ({classes, loggedIn, onLoginRequest = () => {}, onLogoutRequest = () => {}}) => {
     return (
-    <div className={classes.root}>
-        <AppBar position="static">
+    <React.Fragment>
+        <AppBar position="static" className={classes.root}>
             <Toolbar>
-                <IconButton color="inherit" aria-label="Menu" className={classes.menuButton} >
+                {/* <IconButton color="inherit" aria-label="Menu" className={classes.menuButton} >
                     <MenuIcon />
-                </IconButton>
+                </IconButton> */}
                 <Typography variant="title" color="inherit" className={classes.flex}>
                     Internet of Things - A Little Demo
                 </Typography>
@@ -53,7 +53,7 @@ const NavBar_ = ({classes, loggedIn, onLoginRequest = () => {}, onLogoutRequest 
                     onLogoutRequest={onLogoutRequest} />
             </Toolbar>
         </AppBar>
-    </div>
+    </React.Fragment>
     )
 }
 

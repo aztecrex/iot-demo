@@ -77,9 +77,9 @@ Resources:
     #         Name: !Sub ${DNSName}.${ZoneBase}.
     #         Type: A
 
-# Outputs:
-#     WebsiteOrigin:
-#         Value: !Ref WebsiteOrigin
+Outputs:
+    WebsiteOrigin:
+        Value: !Ref WebsiteOrigin
 #     NonVanitySite:
 #         Value: !Sub https://${WebsiteDomain}
 #     VanitySite:

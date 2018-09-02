@@ -11,8 +11,8 @@ phases:
       - echo "build"
       - npm test
       - npm run build
+      - ./operations/cd-publish.sh
   post_build:
     commands:
       - echo "post build"
-      - ./operations/cd-publish.sh
 

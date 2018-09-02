@@ -1,7 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {Provider} from 'react-redux';
 import './index.css';
-import {App} from './View/App';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+import {App} from './View/App';
+import {store} from './Wiring';
+
+
+ReactDOM.render(
+    <Provider store={store}>
+        <App />
+    </Provider>,
+    document.getElementById('root'));
 

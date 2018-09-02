@@ -1,4 +1,4 @@
-import { isLampOn, evtTypeLampPressed, evtLampStatus, evtLampStatusOff, coordinates } from '../Model';
+import { isLampOn, lampColor, evtTypeLampPressed, evtLampStatus, evtLampStatusOff, coordinates } from '../Model';
 
 
 const transduce = getState => evt => {
@@ -6,9 +6,17 @@ const transduce = getState => evt => {
 
     if (evtTypeLampPressed(evt)) {
         const coords = coordinates(evt);
-        if (isLampOn(getState(), coords))
-            emit = [evtLampStatusOff(coords)];
-        else
+        const state = getState();
+        if (isLampOn(state, coords)) {
+            const color = lampColor(state, coords);
+            switch (color) {
+                case "#ff0000": emit =[evtLampStatus(coords,"#00ff00")]; break;
+                case "#00ff00": emit =[evtLampStatus(coords,"#0000ff")]; break;
+                case "#0000ff": emit =[evtLampStatusOff(coords)]; break;
+                default: emit =[evtLampStatusOff(coords)]; break;
+
+            }
+        } else
             emit = [evtLampStatus(coords, "#ff0000")];
 
     }

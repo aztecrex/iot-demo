@@ -1,5 +1,8 @@
 import React from 'react';
 import * as R from 'ramda';
+import { connect } from 'react-redux';
+
+import { evtLampPressed } from '../Model';
 
 import {Dot} from './Dot';
 
@@ -48,5 +51,11 @@ const Wheel = ( {device, dim = 300,
     );
 };
 
-export {Wheel};
+const ConnectedWheel = connect(
+    state => ({}),
+    dispatch => ({handleDotClicked: coord => dispatch(evtLampPressed(coord))})
+)(Wheel);
+
+
+export {Wheel, ConnectedWheel};
 

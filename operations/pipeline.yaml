@@ -1,0 +1,146 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Parameters:
+  GithubToken:
+    Type: String
+    MinLength: 1
+
+Resources:
+
+    ArtifactStore:
+        Type: AWS::S3::Bucket
+
+    SourceStore:
+        Type: AWS::S3::Bucket
+
+    PipelineRole:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Statement:
+                    Effect: Allow
+                    Action: sts:AssumeRole
+                    Principal:
+                        Service: codepipeline.amazonaws.com
+            Policies:
+              - PolicyName: pipeline
+                PolicyDocument:
+                    Version: 2012-10-17
+                    Statement:
+                      - Effect: Allow
+                        Action:
+                          - codebuild:*
+                        Resource:
+                          !GetAtt FrontendBuilder.Arn
+                      - Effect: Allow
+                        Action:
+                          - s3:getObject
+                        Resource:
+                          - !GetAtt SourceStore.Arn
+                          - !Sub ${SourceStore.Arn}/*
+                      - Effect: Allow
+                        Action:
+                          - s3:GetObject
+                          - s3:ListObjects
+                          - s3:PutObject
+                        Resource:
+                          - !GetAtt ArtifactStore.Arn
+                          - !Sub ${ArtifactStore.Arn}/*
+
+    BuildRole:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Statement:
+                    Effect: Allow
+                    Action: sts:AssumeRole
+                    Principal:
+                        Service: codebuild.amazonaws.com
+            Policies:
+              - PolicyName: artifact-store
+                PolicyDocument:
+                    Version: 2012-10-17
+                    Statement:
+                      - Effect: Allow
+                        Action:
+                          - s3:PutObject
+                        Resource:
+                          - arn:aws:s3:::iot-demo-frontend-websiteorigin-q7qtqoasc02j
+                          - arn:aws:s3:::iot-demo-frontend-websiteorigin-q7qtqoasc02j/*
+                      - Effect: Allow
+                        Action:
+                          - s3:GetObject
+                          - s3:PutObject
+                        Resource:
+                          - !GetAtt ArtifactStore.Arn
+                          - !Sub ${ArtifactStore.Arn}/*
+                      - Effect: Allow
+                        Action:
+                          - logs:CreateLogGroup
+                          - logs:CreateLogStream
+                          - logs:PutLogEvents
+                        Resource: "*"
+
+
+    FrontendPipeline:
+        Type: AWS::CodePipeline::Pipeline
+        Properties:
+            ArtifactStore:
+                Location: !Ref ArtifactStore
+                Type: S3
+            RoleArn: !GetAtt PipelineRole.Arn
+            RestartExecutionOnUpdate: false
+            Stages:
+              - Name: Source
+                Actions:
+                  - Name: Source
+                    ActionTypeId:
+                      Category: Source
+                      Owner: ThirdParty
+                      Version: 1
+                      Provider: GitHub
+                    OutputArtifacts:
+                      - Name: SiteSource
+                    Configuration:
+                      Owner: aztecrex
+                      Repo: aztecrex/iot-demo
+                      OAuthToken: !Ref GithubToken
+                      Branch: master
+                    RunOrder: 1
+              - Name: Build
+                Actions:
+                  - Name: Build
+                    ActionTypeId:
+                        Category: Build
+                        Owner: AWS
+                        Version: 1
+                        Provider: CodeBuild
+                    Configuration:
+                        ProjectName: !Ref FrontendBuilder
+                    InputArtifacts:
+                      - Name: SiteSource
+                    RunOrder: 2
+
+    FrontendBuilder:
+        Type: AWS::CodeBuild::Project
+        Properties:
+            Artifacts:
+                Type: CODEPIPELINE
+            Source:
+                Type: CODEPIPELINE
+                BuildSpec: buildspec.yaml
+            Environment:
+                ComputeType: BUILD_GENERAL1_SMALL
+                Image: aws/codebuild/nodejs:8.11.0
+                Type: LINUX_CONTAINER
+                EnvironmentVariables:
+                  - Name: AWS_DEFAULT_REGION
+                    Value: !Ref AWS::Region
+            Name: !Sub frontend-${AWS::StackName}
+            ServiceRole: !Ref BuildRole
+
+
+
+
+
+

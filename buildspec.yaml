@@ -9,8 +9,8 @@ phases:
   build:
     commands:
       - echo "build"
-      - npm test
-      - npm run build
+      - CI=true npm test
+      - CI=true npm run build
       - ./operations/cd-publish.sh
   post_build:
     commands:

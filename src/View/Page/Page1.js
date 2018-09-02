@@ -26,12 +26,12 @@ const Left_ = ({classes}) => {
     return (
         <Grid item sm={6}>
             <Paper  className={classes.paper}>
-                <Typography title variant="display3">
+                <Typography variant="display3">
                     What is IoT?
                 </Typography>
                 <Typography variant="display1">
                     <ul>
-                        <li>How device builders use the Internet to connect
+                        <li>Device makers use the Internet to connect
                     everything</li>
                         <li>The difference (and not difference) between IoT devices
                             and your own computer</li>
@@ -39,7 +39,7 @@ const Left_ = ({classes}) => {
                 </Typography>
             </Paper>
             <Paper  className={classes.paper}>
-                <Typography title variant="display3">
+                <Typography variant="display3">
                     What is IoT for?
                 </Typography>
                 <Typography variant="display1">
@@ -51,12 +51,12 @@ const Left_ = ({classes}) => {
                 </Typography>
             </Paper>
             <Paper  className={classes.paper}>
-                <Typography title variant="display3">
+                <Typography variant="display3">
                     How does IoT Work?
                 </Typography>
                 <Typography variant="display1">
                     <ul>
-                        <li>How the pieces fit</li>
+                        <li>The technical bits and how they fit together</li>
                         <li>How to build your own IoT apps</li>
                     </ul>
                 </Typography>

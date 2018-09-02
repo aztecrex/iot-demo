@@ -8,7 +8,7 @@ import {Dot} from './Dot';
 
 const generatePoints = (count, dim, colors) => {
 
-    const innerDim = dim * .81;
+    const innerDim = dim * .70;
     const theta = (2 * Math.PI) / count;
     const radius = (Math.PI * innerDim * .9) / (count * 2)
     const cidx = idx => idx+"_";

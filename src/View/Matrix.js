@@ -6,7 +6,7 @@ import {Dot} from './Dot';
 import { evtLampPressed, matrixCoord, colors } from '../Model'
 
 const generatePoints = (dim, rows, cols, colors) => {
-    const insideDim = dim * .9;
+    const insideDim = dim * .7;
     const pitch = insideDim / (Math.max(rows,cols));
     const radius = (pitch * .9) / 2;
     const offset = (dim - insideDim) / 2 + pitch / 2;

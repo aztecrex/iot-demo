@@ -40,6 +40,16 @@ const Dot = ({ coord, x, y, radius, color, handleClick }) => {
         return (
             <React.Fragment>
                 <defs>
+                    <filter id={"sofGlow" + color} height="400%" width="400%" x="-75%" y="-75%">
+                        <feMorphology operator="dilate" radius="4" in="SourceAlpha" result="thicken" />
+                        <feGaussianBlur in="thicken" stdDeviation="10" result="blurred" />
+                        <feFlood floodColor={color} result="glowColor" />
+                        <feComposite in="glowColor" in2="blurred" operator="in" result="softGlow_colored" />
+                        <feMerge>
+                            <feMergeNode in="softGlow_colored"/>
+                            <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                    </filter>
                     <radialGradient id={gid}>
                         <stop offset="43%" stopColor={color} />
                         <stop offset="100%" stopColor={colorOutside} />
@@ -48,7 +58,7 @@ const Dot = ({ coord, x, y, radius, color, handleClick }) => {
                 </defs>
                 <circle cx={x} cy={y}
                     r={radius}
-                    fill={"url(#" + gid + ")"} stroke={defaultColor} filter="url(#glow)"
+                    fill={"url(#" + gid + ")"} stroke="#333" filter={"url(#sofGlow"+ color +")"}
                     onClick={handleClick}
                     className="DotClickable" />
             </React.Fragment>

@@ -1,13 +1,24 @@
 import * as R from 'ramda';
 
 
+const navPre = "nAV";
 const lampPre = "laMp";
 
-const ETP_LAMP_STATUS = lampPre + "LAMP_STATUS";
-const ETP_LAMP_PRESSED = lampPre + "LAMP_CHANGE";
+const ETP_LAMP_STATUS = lampPre + "/LAMP_STATUS";
+const ETP_LAMP_PRESSED = lampPre + "/LAMP_CHANGE";
+
+const ETP_LOGOUT_REQUESTED = navPre + "/LOGOUT_REQUESTED";
+const ETP_LOGIN_REQUESTED = navPre + "/LOGIN_REQUESTED";
+const ETP_LOGIN_SUCCEEDED = navPre + "/LOGIN_SUCCEEDED";
+const ETP_LOGIN_FAILED = navPre + "/LOGIN_FAILED";
+const ETP_LOGIN_DESIRED = navPre + "/LOGIN_DESIRED";
+const ETP_LOGIN_CANCELED = navPre + "/LOGIN_CANCELED";
+
+
 
 const DT_MATRIX = "Matrix";
 const DT_WHEEL = "Wheel";
+
 
 const lampKey = ({displayType, device, row, col, index}) => {
     switch (displayType) {
@@ -60,12 +71,12 @@ const evtTypeLampPressed = (evt = {}) => {
     return evt.type === ETP_LAMP_PRESSED;
 };
 
-const isLampOn = (m, coord) => {
+const isLampOn = (m = {}, coord) => {
     const key = lampKey(coord);
     return !!m[key];
 };
 
-const lampColor = (m, coord) => {
+const lampColor = (m = {}, coord) => {
     const key = lampKey(coord);
     return m[key] || undefined;
 }
@@ -78,6 +89,58 @@ const turnLampOff = (m = {}, coord) => {
 const coordinates = ({coord}) => {
     return coord || {};
 };
+
+const NAV_LOGGED_IN = navPre + "/LOGGEDIN";
+const NAV_LOGGED_OUT = navPre + "/LOGGEDOUT";
+const NAV_LOGGING_IN = navPre + "/LOGGINGIN";
+const NAV_AWAITING_LOGIN_RESULT = navPre + "/LOGINWAIT"
+const loginKey = navPre + "/login";
+
+const setLoginState = (m = {}, st) => {
+    return R.assoc(loginKey, st, m);
+}
+
+const getLoginState = (m = {}) => {
+    return m[loginKey] || NAV_LOGGED_OUT;
+}
+
+const isLoggedIn = (m = {}) => {
+    return m[loginKey] === NAV_LOGGED_IN;
+};
+
+const evtLoginRequested = (user, pass) => {
+    return {
+        type:ETP_LOGIN_REQUESTED,
+        credentials: {user, pass}
+    };
+};
+
+const evtLogoutRequested = () => {
+    return {
+        type:ETP_LOGOUT_REQUESTED
+    };
+};
+
+const evtLoginSucceeded = () => {
+    return {type:ETP_LOGIN_SUCCEEDED};
+};
+
+const evtLoginFailed = () => {
+    return {type:ETP_LOGIN_FAILED};
+};
+
+const evtLoginLoginDesired = () => {
+    return {type:ETP_LOGIN_DESIRED};
+};
+
+const evtLoginCanceled = () => {
+    return {type:ETP_LOGIN_CANCELED};
+};
+
+const evtTypeLoginRequested = (evt = {}) => {
+    return evt.type === ETP_LOGIN_REQUESTED;
+};
+
 
 const colors = (m, device) => {
     const keys = R.filter(s => s.startsWith(`${lampPre}/${device}/`), R.keys(m))
@@ -109,15 +172,33 @@ const reduce = (m = {}, evt = {}) => {
     switch (evt.type) {
         case ETP_LAMP_STATUS:
             if (!evt.status)
-                return turnLampOff(m, evt.coord);
+                m = turnLampOff(m, evt.coord);
             else
-                return turnLampOn(m, evt.coord, evt.status)
+                m = turnLampOn(m, evt.coord, evt.status);
+            break;
+
+        case ETP_LOGIN_SUCCEEDED: m = setLoginState(m, NAV_LOGGED_IN); break;
+        case ETP_LOGIN_FAILED: m = setLoginState(m, NAV_LOGGED_OUT); break;
+        case ETP_LOGIN_DESIRED: m = setLoginState(m, NAV_LOGGING_IN); break;
+        case ETP_LOGIN_REQUESTED: m = setLoginState(m, NAV_AWAITING_LOGIN_RESULT); break;
+        case ETP_LOGIN_CANCELED: m = setLoginState(m, NAV_LOGGED_OUT); break;
+        case ETP_LOGOUT_REQUESTED: m = setLoginState(m, NAV_LOGGED_OUT); break;
+
         default:
             break;
     }
+
     return m;
 
 };
+
+const LoginStates = {
+    LOGGED_IN: NAV_LOGGED_IN,
+    LOGGED_OUT: NAV_LOGGED_OUT,
+    LOGGING_IN: NAV_LOGGING_IN,
+    WAITING: NAV_AWAITING_LOGIN_RESULT
+}
+
 
 export {
     reduce,
@@ -125,5 +206,10 @@ export {
     evtLampStatus, evtLampStatusOff, isLampOn, lampColor,
     evtLampPressed, evtTypeLampPressed,
     coordinates, wheelCoord, matrixCoord,
-    colors
+    colors,
+    setLoginState, isLoggedIn, getLoginState,
+    evtLoginRequested, evtLogoutRequested, evtLoginSucceeded, evtLoginFailed,
+    evtLoginCanceled, evtLoginLoginDesired,
+    evtTypeLoginRequested,
+    LoginStates
 };

@@ -1,4 +1,4 @@
-import { isLampOn, lampColor, evtTypeLampPressed, evtLampStatus, evtLampStatusOff, coordinates } from '../Model';
+import { isLampOn, lampColor, evtTypeLampPressed, evtLampStatus, evtLampStatusOff, coordinates, evtLoginSucceeded, evtTypeLoginRequested } from '../Model';
 
 
 const transduce = getState => evt => {
@@ -18,7 +18,8 @@ const transduce = getState => evt => {
             }
         } else
             emit = [evtLampStatus(coords, "#ff0000")];
-
+    } else if (evtTypeLoginRequested(evt)) {
+        emit = [evtLoginSucceeded()];
     }
     return Promise.resolve(emit);
 };

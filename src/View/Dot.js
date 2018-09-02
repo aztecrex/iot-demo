@@ -1,4 +1,5 @@
 import React from 'react';
+import './Dot.css';
 
 // luminance function originally developed by Craig Buckler
 // https://www.sitepoint.com/javascript-generate-lighter-darker-color/
@@ -37,7 +38,8 @@ const Dot = ({coord, x, y, radius, color, handleClick}) =>  {
         <circle cx={x} cy={y}
                 r={radius}
                 fill={fill} stroke={defaultColor} filter="url(#glow)"
-                onClick={handleClick}/>
+                onClick={handleClick}
+                className="DotClickable"/>
         </React.Fragment>
     );
 

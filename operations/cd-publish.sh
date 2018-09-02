@@ -4,7 +4,7 @@ set -e
 
 orign='iot-demo-frontend-websiteorigin-q7qtqoasc02j'
 
-cd "$(dirname "${0}")"
+cd "$(dirname "${0}")/.."
 
 aws s3 cp \
     --recursive \

@@ -21,17 +21,53 @@ const lampId = ({displayType, device, row, col, index}) => {
     }
 };
 
+const matrixCoord = (device, row,col) => {
+    return {
+        displayType: DT_MATRIX,
+        device,
+        row,
+        col
+    };
+}
+
+const wheelCoord = (device, index) => {
+    return {
+        displayType: DT_WHEEL,
+        device,
+        index
+    };
+}
+
+
 const turnLampOn = (m = {}, coord, color) => {
     const key = lampPre + lampId(coord);
     return R.assoc(key, color, m);
 };
 
-const evtLampStatus = (coord, status) => {
-    return {type:ETP_LAMP_STATUS, ...coord, status};
+const evtLampStatus = (coord, color) => {
+    return {type:ETP_LAMP_STATUS, coord, status: color};
+}
+
+const evtLampStatusOff = (coord) => {
+    return {type:ETP_LAMP_STATUS, coord};
 }
 
 const evtLampPressed = (coord) => {
-    return {type:ETP_LAMP_PRESSED, ...coord};
+    return {type:ETP_LAMP_PRESSED, coord};
+}
+
+const evtTypeLampPressed = (evt = {}) => {
+    return evt.type === ETP_LAMP_PRESSED;
+};
+
+const isLampOn = (m, coord) => {
+    const key = lampPre + lampId(coord);
+    return !!m[key];
+};
+
+const lampColor = (m, coord) => {
+    const key = lampPre + lampId(coord);
+    return m[key] || undefined;
 }
 
 const turnLampOff = (m = {}, coord) => {
@@ -39,23 +75,29 @@ const turnLampOff = (m = {}, coord) => {
     return R.dissoc(key, m);
 };
 
+const coordinates = ({coord}) => {
+    return coord || {};
+};
+
 const reduce = (m = {}, evt = {}) => {
 
     switch (evt.type) {
         case ETP_LAMP_STATUS:
-            if ((!evt.status) || (evt.status === "off"))
-                return turnLampOff(m, evt);
+            if (!evt.status)
+                return turnLampOff(m, evt.coord);
             else
-                return turnLampOn(m, evt, evt.status)
+                return turnLampOn(m, evt.coord, evt.status)
         default:
             break;
     }
+    return m;
 
 };
 
 export {
     reduce,
     turnLampOn, turnLampOff,
-    evtLampStatus,
-    evtLampPressed
+    evtLampStatus, evtLampStatusOff, isLampOn, lampColor,
+    evtLampPressed, evtTypeLampPressed,
+    coordinates, wheelCoord, matrixCoord
 };

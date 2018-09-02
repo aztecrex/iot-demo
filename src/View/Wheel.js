@@ -2,7 +2,7 @@ import React from 'react';
 import * as R from 'ramda';
 import { connect } from 'react-redux';
 
-import { evtLampPressed } from '../Model';
+import { evtLampPressed, wheelCoord } from '../Model';
 
 import {Dot} from './Dot';
 
@@ -27,7 +27,7 @@ const Wheel = ( {device, dim = 300,
                 count = 16, colors = [{index: 3, color: "#FF3344"}],
                 handleDotClicked}) => {
     const points = generatePoints(count, dim, colors);
-    const hclick = coord => handleDotClicked({...coord, device, displayType:"Wheel"});
+    const hclick = coord => handleDotClicked(wheelCoord(device, coord.index));
     return (
         <div>
             <svg width={dim} height={dim} >

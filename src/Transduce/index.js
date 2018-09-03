@@ -1,37 +1,61 @@
-import { isLampOn, lampColor, evtTypeLampPressed, evtLampStatus, evtLampStatusOff, coordinates, evtTypeLoginRequested, evtLoginFailed, matrixCoord, wheelCoord } from '../Model';
+
+import {Login, currentUser, Logout, ChangePass} from '../AWS/Authenticate';
+import { isLampOn, lampColor, evtTypeLampPressed, evtLampStatus, evtLampStatusOff, coordinates, evtTypeLoginRequested, evtLoginFailed, matrixCoord, wheelCoord, evtLoginSucceeded, credentials, evtTypeLogoutRequested, evtPasswordChangeRequired, evtTypePasswordChangeRequested, getCurrentUser } from '../Model';
 
 
 const transduce = getState => evt => {
     var emit = [];
-    console.log(evt.type);
     if (evtTypeLampPressed(evt)) {
         const coords = coordinates(evt);
         const state = getState();
         if (isLampOn(state, coords)) {
             const color = lampColor(state, coords);
             switch (color) {
-                case "#ff0000": emit =[evtLampStatus(coords,"#00ff00")]; break;
-                case "#00ff00": emit =[evtLampStatus(coords,"#0000ff")]; break;
-                case "#0000ff": emit =[evtLampStatusOff(coords)]; break;
-                default: emit =[evtLampStatusOff(coords)]; break;
+                case "#ff0000": emit =[Promise.resolve(evtLampStatus(coords,"#00ff00"))]; break;
+                case "#00ff00": emit =[Promise.resolve(evtLampStatus(coords,"#0000ff"))]; break;
+                case "#0000ff": emit =[Promise.resolve(evtLampStatusOff(coords))]; break;
+                default: emit =[Promise.resolve(evtLampStatusOff(coords))]; break;
 
             }
         } else
-            emit = [evtLampStatus(coords, "#ff0000")];
+            emit = [Promise.resolve(evtLampStatus(coords, "#ff0000"))];
     } else if (evtTypeLoginRequested(evt)) {
-        emit = [evtLoginFailed()];
+        const {user,pass} = credentials(evt);
+        emit = [
+            Login(user,pass)
+                .then(user => {
+                    if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
+                        return evtPasswordChangeRequired(user);
+                    } else {
+                        return evtLoginSucceeded(user);
+                    }
+                })
+                .catch(() => evtLoginFailed())
+        ]
+    } else if (evtTypeLogoutRequested(evt)) {
+        // no need to emit anything
+        Logout();
+    } else if (evtTypePasswordChangeRequested(evt)) {
+        const {pass} = credentials(evt);
+        const user = getCurrentUser(getState());
+        return ChangePass(user, pass)
+            .then(u => evtLoginSucceeded(u))
+            .catch(() => evtPasswordChangeRequired(user))
     } else if (evt.type === "INIT_APP") {
         emit = [
-            evtLampStatus(matrixCoord("matrix_0",1,7),"#ff0000"),
-            evtLampStatus(matrixCoord("matrix_0",3,2),"#00ff00"),
-            evtLampStatus(matrixCoord("matrix_0",1,4),"#0000ff"),
-            evtLampStatus(matrixCoord("matrix_0",4,1),"#00ff00"),
-            evtLampStatus(wheelCoord("colorwheel_0",3),"#00ff00"),
-            evtLampStatus(wheelCoord("colorwheel_0",7),"#ff0000"),
-            evtLampStatus(wheelCoord("colorwheel_0",11),"#0000ff"),
-        ]
+            currentUser()
+                .then(user => evtLoginSucceeded(user))
+                .catch(() => evtLoginFailed()),
+        Promise.resolve(evtLampStatus(matrixCoord("matrix_0",1,7),"#ff0000")),
+            Promise.resolve(evtLampStatus(matrixCoord("matrix_0",3,2),"#00ff00")),
+            Promise.resolve(evtLampStatus(matrixCoord("matrix_0",1,4),"#0000ff")),
+            Promise.resolve(evtLampStatus(matrixCoord("matrix_0",4,1),"#00ff00")),
+            Promise.resolve(evtLampStatus(wheelCoord("colorwheel_0",3),"#00ff00")),
+            Promise.resolve(evtLampStatus(wheelCoord("colorwheel_0",7),"#ff0000")),
+            Promise.resolve(evtLampStatus(wheelCoord("colorwheel_0",11),"#0000ff")),
+        ];
     }
-    return Promise.resolve(emit);
+    return emit;
 };
 
 const kick = ({dispatch}) => {
@@ -49,7 +73,13 @@ const makeMiddleware = () => ({dispatch, getState}) => next => {
         // redux middleware protocol.
         const rval = next(event);
         run(event)
-            .then(evts => evts.forEach(dispatch)).catch(err => console.log("interop error: " + err));
+            .forEach(pev => {
+                pev
+                    .then(dispatch)
+                    .catch(err => console.log("interop error: " + err));
+            });
+
+        //     .then(evts => evts.forEach(dispatch)).catch(err => console.log("interop error: " + err));
         return rval;
     };
 

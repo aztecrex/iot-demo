@@ -1,0 +1,69 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Parameters:
+    Username:
+      Type: String
+      MinLength: 1
+      NoEcho: true
+    EmailAddress:
+      Type: String
+      MinLength: 1
+      NoEcho: true
+
+Resources:
+  Users:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      AdminCreateUserConfig:
+        AllowAdminCreateUserOnly: true
+        UnusedAccountValidityDays: 90
+      AliasAttributes:
+        - email
+        - preferred_username
+      AutoVerifiedAttributes:
+        - email
+      DeviceConfiguration:
+          ChallengeRequiredOnNewDevice: false
+          DeviceOnlyRememberedOnUserPrompt: true
+      MfaConfiguration: "OFF"
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 10
+          RequireLowercase: true
+          RequireNumbers: true
+          RequireSymbols: false
+          RequireUppercase: true
+      Schema:
+        - AttributeDataType: String
+          DeveloperOnlyAttribute: false
+          Mutable: false
+          Name: email
+          Required: true
+      UserPoolName: !Sub users-${AWS::StackName}
+
+  PresentationClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      GenerateSecret: false
+      ReadAttributes:
+        - email
+      RefreshTokenValidity: 30
+      UserPoolId: !Ref Users
+
+  InitialUser:
+    Type: AWS::Cognito::UserPoolUser
+    Properties:
+      DesiredDeliveryMediums:
+        - EMAIL
+      UserAttributes:
+        - Name: email
+          Value: !Ref EmailAddress
+      Username: !Ref Username
+      UserPoolId: !Ref Users
+
+
+Outputs:
+  UserPool:
+    Value: !Ref Users
+  PresentationClient:
+    Value: !Ref PresentationClient

@@ -1,6 +1,7 @@
 
-import {Login, currentUser, Logout, ChangePass, canUseAWS} from '../AWS/Authenticate';
+import {Login, currentUser, Logout, ChangePass} from '../AWS/Authenticate';
 import { isLampOn, lampColor, evtTypeLampPressed, evtLampStatus, evtLampStatusOff, coordinates, evtTypeLoginRequested, evtLoginFailed, matrixCoord, wheelCoord, evtLoginSucceeded, credentials, evtTypeLogoutRequested, evtPasswordChangeRequired, evtTypePasswordChangeRequested, getCurrentUser, evtTypeLoginSucceeded } from '../Model';
+import { bringUp, bringDown } from '../AWS/IoT';
 
 
 const transduce = getState => evt => {
@@ -33,10 +34,10 @@ const transduce = getState => evt => {
                 .catch(() => evtLoginFailed())
         ]
     } else if (evtTypeLogoutRequested(evt)) {
-        // no need to emit anything
+        bringDown();
         Logout();
     } else if (evtTypeLoginSucceeded(evt)) {
-        canUseAWS();
+        bringUp().then(console.log).catch(console.error);
     } else if (evtTypePasswordChangeRequested(evt)) {
         const {pass} = credentials(evt);
         const user = getCurrentUser(getState());

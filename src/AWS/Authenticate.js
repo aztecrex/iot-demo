@@ -1,22 +1,12 @@
 import Auth from '@aws-amplify/auth';
-import CF from 'aws-sdk/clients/cloudformation';
 
-const canUseAWS = () => {
+
+const awsCredentials = () => {
     return Auth.currentCredentials()
-        .then(credentials => {
-            const cf = new CF({
-                credentials: Auth.essentialCredentials(credentials),
-                region: 'us-east-1'
-            });
-            return new Promise((resolve, reject) => {
-                cf.describeStacks({}, (err,data) => {
-                    if (err) reject(err);
-                    else resolve(data);
-                });
-            });
-        })
-        .then(stacks => console.log("i can aws! ", stacks))
-        .catch(error => console.log("i cannot aws"));
+        .then(x => {console.log("raw cred", x); return x;})
+        .then(acred => Promise.resolve(Auth.essentialCredentials(acred)))
+        .then(x => {console.log("ess cred", x); return x;})
+        ;
 };
 
 Auth.configure({
@@ -50,5 +40,5 @@ const Login = (user, pass) => {
 
 };
 
-export {Login, currentUser, Logout, ChangePass, canUseAWS};
+export {Login, currentUser, Logout, ChangePass, awsCredentials};
 

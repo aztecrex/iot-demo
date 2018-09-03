@@ -70,6 +70,24 @@ Resources:
         - ClientId: !Ref PresentationClient
           ProviderName: !GetAtt Users.ProviderName
 
+
+  AuthenticatedUserIoTPolicy:
+    Type: AWS::IoT::Policy
+    Properties:
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - iot:Connect
+              - iot:Publish
+              - iot:Subscribe
+              - iot:Receive
+              - iot:UpdateThingShadow
+              - iot:GetThingShadow
+            Resource:
+              - "*"
+
   AuthenticatedIdentityRole:
     Type: AWS::IAM::Role
     Properties:
@@ -98,9 +116,12 @@ Resources:
                   - "*"
               - Effect: Allow
                 Action:
-                  - "s3:*"
-                  - "cloudformation:*"
-                  - "iot:*"
+                  - iot:Connect
+                  - iot:Publish
+                  - iot:Subscribe
+                  - iot:Receive
+                  - iot:UpdateThingShadow
+                  - iot:GetThingShadow
                 Resource:
                   - "*"
 
@@ -147,3 +168,9 @@ Outputs:
     Value: !Ref PresentationClient
   IdentityPool:
     Value: !Ref Identities
+  AuthenticatedUserIoTPolicy:
+    Value: !Ref AuthenticatedUserIoTPolicy
+  AttachPolicyCommand:
+    Value: !Sub aws iot attach-policy --policy-name ${AuthenticatedUserIoTPolicy} --target <target id>
+
+

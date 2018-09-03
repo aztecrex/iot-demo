@@ -1,43 +1,54 @@
 import Auth from '@aws-amplify/auth';
+// import S3 from 'aws-sdk/clients/s3';
+import CF from 'aws-sdk/clients/cloudformation';
+
+const canUseAWS = () => {
+    return Auth.currentCredentials()
+        .then(credentials => {
+            const cf = new CF({
+                credentials: Auth.essentialCredentials(credentials),
+                region: 'us-east-1'
+            });
+            return new Promise((resolve, reject) => {
+                cf.describeStacks({}, (err,data) => {
+                    if (err) reject(err);
+                    else resolve(data);
+                });
+            });
+            // const s3 = new S3({
+            //     credentials: Auth.essentialCredentials(credentials),
+            // });
+            // return new Promise ((resolve, reject) => {
+            //     s3.listBuckets((err, data) => {
+            //         if (err) reject (err);
+            //         else resolve(data);
+            //     });
+            // });
+        })
+        .then(buckets => console.log("i can aws! ", buckets))
+        .catch(error => console.log("i cannot aws"));
+};
+
+
+// import Route53 from 'aws-sdk/clients/route53';
+
+// Auth.currentCredentials()
+//   .then(credentials => {
+//     const route53 = new Route53({
+//       apiVersion: '2013-04-01',
+//       credentials: Auth.essentialCredentials(credentials)
+//     });
+
+//     // more code working with route53 object
+//     // route53.changeResourceRecordSets();
+//   })
 
 Auth.configure({
-
-    // identityPoolId: 'XX-XXXX-X:XXXXXXXX-XXXX-1234-abcd-1234567890ab',
-
-    // REQUIRED - Amazon Cognito Region
     region: 'us-east-1',
-
-    // OPTIONAL - Amazon Cognito Federated Identity Pool Region
-    // Required only if it's different from Amazon Cognito Region
-    // identityPoolRegion: 'XX-XXXX-X',
-
-    // OPTIONAL - Amazon Cognito User Pool ID
     userPoolId: 'us-east-1_RxOfyTzuV',
-
-    // OPTIONAL - Amazon Cognito Web Client ID (26-char alphanumeric string)
     userPoolWebClientId: '1vd3m7n0u5l4m0ks9k73cjgntv',
-
-    // OPTIONAL - Enforce user authentication prior to accessing AWS resources or not
-    // mandatorySignIn: false,
-
-    // // OPTIONAL - Configuration for cookie storage
-    // cookieStorage: {
-    // // REQUIRED - Cookie domain (only required if cookieStorage is provided)
-    //     domain: '.yourdomain.com',
-    // // OPTIONAL - Cookie path
-    //     path: '/',
-    // // OPTIONAL - Cookie expiration in days
-    //     expires: 365,
-    // // OPTIONAL - Cookie secure flag
-    //     secure: true
-    // },
-
-    // OPTIONAL - customized storage object
-    // storage: new MyStorage(),
-
-    // OPTIONAL - Manually set the authentication flow type. Default is 'USER_SRP_AUTH'
-    // authenticationFlowType: 'USER_PASSWORD_AUTH'
-
+    identityPoolRegion: 'us-east-1',
+    identityPoolId: 'us-east-1:f993c382-7447-4a93-838f-1676cd78c485',
 });
 
 
@@ -65,5 +76,5 @@ const Login = (user, pass) => {
 
 
 
-export {Login, currentUser, Logout, ChangePass};
+export {Login, currentUser, Logout, ChangePass, canUseAWS};
 

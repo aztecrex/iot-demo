@@ -1,6 +1,6 @@
 
-import {Login, currentUser, Logout, ChangePass} from '../AWS/Authenticate';
-import { isLampOn, lampColor, evtTypeLampPressed, evtLampStatus, evtLampStatusOff, coordinates, evtTypeLoginRequested, evtLoginFailed, matrixCoord, wheelCoord, evtLoginSucceeded, credentials, evtTypeLogoutRequested, evtPasswordChangeRequired, evtTypePasswordChangeRequested, getCurrentUser } from '../Model';
+import {Login, currentUser, Logout, ChangePass, canUseAWS} from '../AWS/Authenticate';
+import { isLampOn, lampColor, evtTypeLampPressed, evtLampStatus, evtLampStatusOff, coordinates, evtTypeLoginRequested, evtLoginFailed, matrixCoord, wheelCoord, evtLoginSucceeded, credentials, evtTypeLogoutRequested, evtPasswordChangeRequired, evtTypePasswordChangeRequested, getCurrentUser, evtTypeLoginSucceeded } from '../Model';
 
 
 const transduce = getState => evt => {
@@ -35,6 +35,8 @@ const transduce = getState => evt => {
     } else if (evtTypeLogoutRequested(evt)) {
         // no need to emit anything
         Logout();
+    } else if (evtTypeLoginSucceeded(evt)) {
+        canUseAWS();
     } else if (evtTypePasswordChangeRequested(evt)) {
         const {pass} = credentials(evt);
         const user = getCurrentUser(getState());

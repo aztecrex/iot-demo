@@ -95,18 +95,26 @@ const NAV_LOGGED_OUT = navPre + "/LOGGEDOUT";
 const NAV_LOGGING_IN = navPre + "/LOGGINGIN";
 const NAV_AWAITING_LOGIN_RESULT = navPre + "/LOGINWAIT"
 const loginKey = navPre + "/login";
+const loginUserKey = navPre + "/login/user";
 
 const setLoginState = (m = {}, st) => {
     return R.assoc(loginKey, st, m);
-}
+};
+
+const setLoginUser = ( m = {}, u) => {
+    console.log("here");
+    return R.assoc(loginUserKey, u, m);
+};
 
 const getLoginState = (m = {}) => {
     return m[loginKey] || NAV_LOGGED_OUT;
-}
+};
 
 const isLoggedIn = (m = {}) => {
     return m[loginKey] === NAV_LOGGED_IN;
 };
+
+const credentials = ({credentials}) => credentials || {};
 
 const evtLoginRequested = (user, pass) => {
     return {
@@ -121,8 +129,11 @@ const evtLogoutRequested = () => {
     };
 };
 
-const evtLoginSucceeded = () => {
-    return {type:ETP_LOGIN_SUCCEEDED};
+const evtLoginSucceeded = (user) => {
+    return {
+        type:ETP_LOGIN_SUCCEEDED,
+        user
+        };
 };
 
 const evtLoginFailed = () => {
@@ -177,7 +188,10 @@ const reduce = (m = {}, evt = {}) => {
                 m = turnLampOn(m, evt.coord, evt.status);
             break;
 
-        case ETP_LOGIN_SUCCEEDED: m = setLoginState(m, NAV_LOGGED_IN); break;
+        case ETP_LOGIN_SUCCEEDED:
+            m = setLoginState(m, NAV_LOGGED_IN);
+            m = setLoginUser(m, evt.user);
+            break;
         case ETP_LOGIN_FAILED: m = setLoginState(m, NAV_LOGGED_OUT); break;
         case ETP_LOGIN_DESIRED: m = setLoginState(m, NAV_LOGGING_IN); break;
         case ETP_LOGIN_REQUESTED: m = setLoginState(m, NAV_AWAITING_LOGIN_RESULT); break;
@@ -211,5 +225,6 @@ export {
     evtLoginRequested, evtLogoutRequested, evtLoginSucceeded, evtLoginFailed,
     evtLoginCanceled, evtLoginLoginDesired,
     evtTypeLoginRequested,
-    LoginStates
+    LoginStates,
+    credentials
 };

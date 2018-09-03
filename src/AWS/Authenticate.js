@@ -1,5 +1,4 @@
 import Auth from '@aws-amplify/auth';
-// import S3 from 'aws-sdk/clients/s3';
 import CF from 'aws-sdk/clients/cloudformation';
 
 const canUseAWS = () => {
@@ -15,33 +14,10 @@ const canUseAWS = () => {
                     else resolve(data);
                 });
             });
-            // const s3 = new S3({
-            //     credentials: Auth.essentialCredentials(credentials),
-            // });
-            // return new Promise ((resolve, reject) => {
-            //     s3.listBuckets((err, data) => {
-            //         if (err) reject (err);
-            //         else resolve(data);
-            //     });
-            // });
         })
-        .then(buckets => console.log("i can aws! ", buckets))
+        .then(stacks => console.log("i can aws! ", stacks))
         .catch(error => console.log("i cannot aws"));
 };
-
-
-// import Route53 from 'aws-sdk/clients/route53';
-
-// Auth.currentCredentials()
-//   .then(credentials => {
-//     const route53 = new Route53({
-//       apiVersion: '2013-04-01',
-//       credentials: Auth.essentialCredentials(credentials)
-//     });
-
-//     // more code working with route53 object
-//     // route53.changeResourceRecordSets();
-//   })
 
 Auth.configure({
     region: 'us-east-1',
@@ -73,8 +49,6 @@ const Login = (user, pass) => {
         .then(user => {console.log(user); return user;})
 
 };
-
-
 
 export {Login, currentUser, Logout, ChangePass, canUseAWS};
 

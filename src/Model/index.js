@@ -13,6 +13,7 @@ const ETP_LOGIN_SUCCEEDED = navPre + "/LOGIN_SUCCEEDED";
 const ETP_LOGIN_FAILED = navPre + "/LOGIN_FAILED";
 const ETP_LOGIN_DESIRED = navPre + "/LOGIN_DESIRED";
 const ETP_LOGIN_CANCELED = navPre + "/LOGIN_CANCELED";
+const ETP_PASSWORD_CHANGE_REQUIRED = navPre + "/PASSWORD_CHANGE_REQUIRED"
 
 
 
@@ -93,6 +94,7 @@ const coordinates = ({coord}) => {
 const NAV_LOGGED_IN = navPre + "/LOGGEDIN";
 const NAV_LOGGED_OUT = navPre + "/LOGGEDOUT";
 const NAV_LOGGING_IN = navPre + "/LOGGINGIN";
+const NAV_PASSWORD_CHANGE = navPre + "/PASSCHANGE";
 const NAV_AWAITING_LOGIN_RESULT = navPre + "/LOGINWAIT"
 const loginKey = navPre + "/login";
 const loginUserKey = navPre + "/login/user";
@@ -134,6 +136,13 @@ const evtLoginSucceeded = (user) => {
         type:ETP_LOGIN_SUCCEEDED,
         user
         };
+};
+
+const evtTypePasswordChangeRequired = user => {
+    return {
+        type:ETP_PASSWORD_CHANGE_REQUIRED,
+        user
+    }
 };
 
 const evtLoginFailed = () => {
@@ -201,6 +210,10 @@ const reduce = (m = {}, evt = {}) => {
         case ETP_LOGIN_REQUESTED: m = setLoginState(m, NAV_AWAITING_LOGIN_RESULT); break;
         case ETP_LOGIN_CANCELED: m = setLoginState(m, NAV_LOGGED_OUT); break;
         case ETP_LOGOUT_REQUESTED: m = setLoginState(m, NAV_LOGGED_OUT); break;
+        case ETP_PASSWORD_CHANGE_REQUIRED:
+            m = setLoginState(m, NAV_PASSWORD_CHANGE);
+            m = setLoginUser(m, evt.user);
+            break;
 
         default:
             break;
@@ -214,6 +227,7 @@ const LoginStates = {
     LOGGED_IN: NAV_LOGGED_IN,
     LOGGED_OUT: NAV_LOGGED_OUT,
     LOGGING_IN: NAV_LOGGING_IN,
+    PASSWORD_CHANGE: NAV_PASSWORD_CHANGE,
     WAITING: NAV_AWAITING_LOGIN_RESULT
 }
 
@@ -228,7 +242,7 @@ export {
     setLoginState, isLoggedIn, getLoginState,
     evtLoginRequested, evtLogoutRequested, evtLoginSucceeded, evtLoginFailed,
     evtLoginCanceled, evtLoginLoginDesired,
-    evtTypeLoginRequested, evtTypeLogoutRequested,
+    evtTypeLoginRequested, evtTypeLogoutRequested, evtTypePasswordChangeRequired,
     LoginStates,
     credentials
 };

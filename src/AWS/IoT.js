@@ -39,11 +39,11 @@ const dismiss = (client) => {
 
 const Thing = (() => {
     var client = null;
-    const up = (cb) => {
+    const up = (callback) => {
         if (client) {
             down();
         }
-        client = createClient(cb);
+        client = createClient(callback);
     };
     const down = () => {
         if (client) {
@@ -59,7 +59,7 @@ const Thing = (() => {
 
 })();
 
-const createClient = async (name) => {
+const createClient = async (callback) => {
 
     const cid = await clientId();
     const cred = await awsCredentials();
@@ -76,36 +76,48 @@ const createClient = async (name) => {
         sessionToken: cred.sessionToken
     });
     client.on('connect', async () => {
-        console.log("client is connected");
         await Promise.all(R.map(thing => register(client,thing), Things))
-            .catch(error => console.log("Error registering", error));
-        console.log("things are registered");
+            .catch(error => console.error("Error registering", error));
         Things.forEach(thing => client.get(thing));
-        console.log("things are kicked");
     });
     client.on('reconnect', () => {
         console.log("client is reconnect")
     });
-    client.on('delta', function (name, stateObj) {
-        console.log(name, "DELTA: " + JSON.stringify(stateObj));
+    // client.on('delta', function (name, stateObj) {
+    //     console.log(name, "DELTA: " + JSON.stringify(stateObj));
+    // });
+    client.on('status', function (name, statusType, token, obj) {
+        if (callback)
+            callback({
+                type: 'STATUS',
+                name,
+                statusType,
+                token,
+                obj
+            });
+        // console.log(name, type, token, "STATUS: " + JSON.stringify(stateObj));
     });
-    client.on('status', function (name, type, token, stateObj) {
-        console.log(name, type, token, "STATUS: " + JSON.stringify(stateObj));
+    client.on('foreignStateChange', (name, foreignOp, obj) => {
+        // console.log(name, op, obj, "foreign state change");
+        if (callback)
+            callback({
+                type: 'FOREIGN',
+                name,
+                foreignOp,
+                obj
+            });
     });
-    client.on('foreignStateChange', (name, op, obj) => {
-        console.log(name, op, obj, "foreign state change");
-    });
-    client.on('close', () => {
-        console.log("client closed");
-    });
-    client.on('offline', () => {
-        console.log("client offline");
-    });
-    client.on('end', () => {
-        console.log("client end");
-    });
+    // client.on('close', () => {
+    //     console.log("client closed");
+    // });
+    // client.on('offline', () => {
+    //     console.log("client offline");
+    // });
+    // client.on('end', () => {
+    //     console.log("client end");
+    // });
     client.on('error', (error) => {
-        console.log("client error", error);
+        console.error("client error", error);
     });
 
     const setRefresh = millis => {
@@ -137,8 +149,8 @@ const createClient = async (name) => {
 
 };
 
-const bringUp = async () => {
-    return await Thing.up();
+const bringUp = async (callback) => {
+    return await Thing.up(callback);
 };
 
 const bringDown = async () => {

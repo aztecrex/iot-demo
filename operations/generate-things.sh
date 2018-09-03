@@ -17,8 +17,9 @@ genPresentationData() {
     local pl='{
     "state": {
         "desired": {
-            "page": 1,
-            "powered": false
+            "slide": 1,
+            "powered": false,
+            "presenting": false
         }
     }
 }'

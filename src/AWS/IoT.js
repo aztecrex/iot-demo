@@ -102,6 +102,30 @@ const createClient = async (name) => {
         console.log("client error", error);
     });
 
+    const setRefresh = millis => {
+        console.log("next credential refresh minutes: " + millis / 60000)
+        setTimeout(async () => {
+            console.log("refresh credentials");
+            const newCreds = await awsCredentials().catch(() => {
+                return Promise.resolve({});
+            });
+            if (newCreds.expireTime) {
+                client.updateWebSocketCredentials(
+                    newCreds.accessKeyId,
+                    newCreds.secretAccessKey,
+                    newCreds.sessionToken,
+                    newCreds.expireTime
+                );
+                const nextExp = newCreds.expireTime.getTime() - new Date().getTime();
+                setRefresh (nextExp);
+            } else {
+                console.log("error getting credentials, retry 8s");
+                setRefresh(8000);
+            }
+        }, millis);
+    };
+    setRefresh((cred.expireTime.getTime() - new Date().getTime()));
+
     return client;
 
 

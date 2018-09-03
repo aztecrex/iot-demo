@@ -4,7 +4,11 @@ import Auth from '@aws-amplify/auth';
 const awsCredentials = () => {
     return Auth.currentCredentials()
         .then(x => {console.log("raw cred", x); return x;})
-        .then(acred => Promise.resolve(Auth.essentialCredentials(acred)))
+        .then(acred => {
+            const {expireTime} = acred;
+            const ecred = Auth.essentialCredentials(acred);
+            return Promise.resolve({...ecred, expireTime});
+        })
         .then(x => {console.log("ess cred", x); return x;})
         ;
 };

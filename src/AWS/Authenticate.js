@@ -41,6 +41,11 @@ Auth.configure({
 });
 
 
+const currentUser = () => {
+    return Auth
+        .currentAuthenticatedUser()
+};
+
 
 const Login = (user, pass) => {
 
@@ -48,9 +53,9 @@ const Login = (user, pass) => {
         .signIn(user,pass)
         .then(user => {console.log(user); return user;})
 
-}
+};
 
 
 
-export {Login};
+export {Login, currentUser};
 

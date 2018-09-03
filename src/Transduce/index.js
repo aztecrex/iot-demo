@@ -1,5 +1,5 @@
 
-import {Login} from '../AWS/Authenticate';
+import {Login, currentUser} from '../AWS/Authenticate';
 import { isLampOn, lampColor, evtTypeLampPressed, evtLampStatus, evtLampStatusOff, coordinates, evtTypeLoginRequested, evtLoginFailed, matrixCoord, wheelCoord, evtLoginSucceeded, credentials } from '../Model';
 
 
@@ -18,7 +18,7 @@ const transduce = getState => evt => {
 
             }
         } else
-            emit = [evtLampStatus(coords, "#ff0000")];
+            emit = [Promise.resolve(evtLampStatus(coords, "#ff0000"))];
     } else if (evtTypeLoginRequested(evt)) {
         const {user,pass} = credentials(evt);
         emit = [
@@ -28,7 +28,10 @@ const transduce = getState => evt => {
         ]
     } else if (evt.type === "INIT_APP") {
         emit = [
-            Promise.resolve(evtLampStatus(matrixCoord("matrix_0",1,7),"#ff0000")),
+            currentUser()
+                .then(user => evtLoginSucceeded(user))
+                .catch(() => evtLoginFailed()),
+        Promise.resolve(evtLampStatus(matrixCoord("matrix_0",1,7),"#ff0000")),
             Promise.resolve(evtLampStatus(matrixCoord("matrix_0",3,2),"#00ff00")),
             Promise.resolve(evtLampStatus(matrixCoord("matrix_0",1,4),"#0000ff")),
             Promise.resolve(evtLampStatus(matrixCoord("matrix_0",4,1),"#00ff00")),

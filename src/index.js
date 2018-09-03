@@ -3,13 +3,13 @@ import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
 import './index.css';
 
-import {App} from './View/App';
+import {ConnectedApp} from './View/App';
 import {store} from './Wiring';
 
 
 ReactDOM.render(
     <Provider store={store}>
-        <App />
+        <ConnectedApp />
     </Provider>,
     document.getElementById('root'));
 

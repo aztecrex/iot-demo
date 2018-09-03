@@ -80,8 +80,7 @@ const Right_ = ({classes}) => {
 };
 const Right = withStyles(styles)(Right_);
 
-
-const Page1_ = ({classes}) => {
+const HomePage_ = ({classes, pagenumber}) => {
 
     return (
         <div className={classes.root} >
@@ -94,6 +93,6 @@ const Page1_ = ({classes}) => {
 
 };
 
-const Page1 = withStyles(styles)(Page1_);
+const HomePage = withStyles(styles)(HomePage_);
 
-export {Page1};
+export {HomePage};

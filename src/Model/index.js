@@ -3,6 +3,7 @@ import * as R from 'ramda';
 
 const navPre = "nAV";
 const lampPre = "laMp";
+const presPre = "PresENt";
 
 const ETP_LAMP_STATUS = lampPre + "/LAMP_STATUS";
 const ETP_LAMP_PRESSED = lampPre + "/LAMP_CHANGE";
@@ -15,7 +16,7 @@ const ETP_LOGIN_DESIRED = navPre + "/LOGIN_DESIRED";
 const ETP_LOGIN_CANCELED = navPre + "/LOGIN_CANCELED";
 const ETP_PASSWORD_CHANGE_REQUIRED = navPre + "/PASSWORD_CHANGE_REQUIRED"
 const ETP_PASSWORD_CHANGE_REQUESTED = navPre + "/PASSWORD_CHANGE_REQUESTED"
-
+const ETP_PRESENTATION_CHANGED = presPre + "/PRESENTATION_CHANGED"
 
 const DT_MATRIX = "Matrix";
 const DT_WHEEL = "Wheel";
@@ -182,6 +183,28 @@ const evtTypeLoginSucceeded = ({type}) => type === ETP_LOGIN_SUCCEEDED;
 
 const evtTypePasswordChangeRequested = ({type}) => type === ETP_PASSWORD_CHANGE_REQUESTED;
 
+const presentationKey = presPre + "/presentation"
+
+const setPresentationStatus = (m = {}, status) => {
+    return R.assoc(presentationKey, status, m);
+}
+
+const isPresenting = (m = {}) => ((m[presentationKey] || {}).presenting) || false;
+const isPowered = (m = {}) => ((m[presentationKey] || {}).powered) || false;
+const getSlideNumber = (m = {}) => {
+    const v = ((m[presentationKey] || {}).slide) || 1;
+    console.log(v);
+    return v;
+}
+
+
+const evtPresentationChanged = (presenting, powered, slide) => {
+    return {
+        type: ETP_PRESENTATION_CHANGED,
+        status: {presenting, powered, slide}
+    }
+};
+
 const colors = (m, device) => {
     const keys = R.filter(s => s.startsWith(`${lampPre}/${device}/`), R.keys(m))
     const kcs = R.map(key => {
@@ -231,6 +254,8 @@ const reduce = (m = {}, evt = {}) => {
             m = setLoginUser(m, evt.user);
             break;
 
+        case ETP_PRESENTATION_CHANGED: m = setPresentationStatus(m, evt.status); break;
+
         default:
             break;
     }
@@ -262,5 +287,7 @@ export {
     evtTypeLoginSucceeded,
     getCurrentUser,
     LoginStates,
-    credentials, user
+    credentials, user,
+    isPresenting, isPowered, getSlideNumber,
+    evtPresentationChanged,
 };

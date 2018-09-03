@@ -16,7 +16,6 @@ genPresentationData() {
     echo updateing "$name"
     local pl='{
     "state": {
-        "reported": {},
         "desired": {
             "page": 1,
             "powered": false
@@ -38,7 +37,6 @@ genRingData() {
     echo updateing "$name"
     local pl='{
     "state": {
-        "reported": {},
         "desired": {
             "lamps": [
                 {

@@ -14,7 +14,7 @@ const ETP_LOGIN_FAILED = navPre + "/LOGIN_FAILED";
 const ETP_LOGIN_DESIRED = navPre + "/LOGIN_DESIRED";
 const ETP_LOGIN_CANCELED = navPre + "/LOGIN_CANCELED";
 const ETP_PASSWORD_CHANGE_REQUIRED = navPre + "/PASSWORD_CHANGE_REQUIRED"
-
+const ETP_PASSWORD_CHANGE_REQUESTED = navPre + "/PASSWORD_CHANGE_REQUESTED"
 
 
 const DT_MATRIX = "Matrix";
@@ -116,7 +116,13 @@ const isLoggedIn = (m = {}) => {
     return m[loginKey] === NAV_LOGGED_IN;
 };
 
+const getCurrentUser = (m = {}) => {
+    return m[loginUserKey] || {};
+};
+
 const credentials = ({credentials}) => credentials || {};
+
+const user = ({user}) => user | {};
 
 const evtLoginRequested = (user, pass) => {
     return {
@@ -138,13 +144,6 @@ const evtLoginSucceeded = (user) => {
         };
 };
 
-const evtTypePasswordChangeRequired = user => {
-    return {
-        type:ETP_PASSWORD_CHANGE_REQUIRED,
-        user
-    }
-};
-
 const evtLoginFailed = () => {
     return {type:ETP_LOGIN_FAILED};
 };
@@ -157,6 +156,20 @@ const evtLoginCanceled = () => {
     return {type:ETP_LOGIN_CANCELED};
 };
 
+
+const evtPasswordChangeRequested = pass => {
+    return {
+        type:ETP_PASSWORD_CHANGE_REQUESTED,
+        credentials: {pass}
+    };
+};
+
+const evtPasswordChangeRequired = user => {
+    return {
+        type:ETP_PASSWORD_CHANGE_REQUIRED,
+        user
+    };
+};
 const evtTypeLoginRequested = (evt = {}) => {
     return evt.type === ETP_LOGIN_REQUESTED;
 };
@@ -165,6 +178,7 @@ const evtTypeLogoutRequested = (evt = {}) => {
     return evt.type === ETP_LOGOUT_REQUESTED;
 };
 
+const evtTypePasswordChangeRequested = ({type}) => type === ETP_PASSWORD_CHANGE_REQUESTED;
 
 const colors = (m, device) => {
     const keys = R.filter(s => s.startsWith(`${lampPre}/${device}/`), R.keys(m))
@@ -241,8 +255,9 @@ export {
     colors,
     setLoginState, isLoggedIn, getLoginState,
     evtLoginRequested, evtLogoutRequested, evtLoginSucceeded, evtLoginFailed,
-    evtLoginCanceled, evtLoginLoginDesired,
-    evtTypeLoginRequested, evtTypeLogoutRequested, evtTypePasswordChangeRequired,
+    evtLoginCanceled, evtLoginLoginDesired, evtPasswordChangeRequired, evtPasswordChangeRequested,
+    evtTypeLoginRequested, evtTypeLogoutRequested, evtTypePasswordChangeRequested,
+    getCurrentUser,
     LoginStates,
-    credentials
+    credentials, user
 };

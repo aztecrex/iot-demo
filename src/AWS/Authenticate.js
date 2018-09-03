@@ -47,6 +47,10 @@ const currentUser = () => {
 };
 
 
+const ChangePass = (user, pass) => {
+    return Auth.completeNewPassword(user, pass);
+};
+
 const Logout = () => {
     return Auth.signOut();
 };
@@ -61,5 +65,5 @@ const Login = (user, pass) => {
 
 
 
-export {Login, currentUser, Logout};
+export {Login, currentUser, Logout, ChangePass};
 

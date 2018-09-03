@@ -1,6 +1,6 @@
 
-import {Login, currentUser, Logout} from '../AWS/Authenticate';
-import { isLampOn, lampColor, evtTypeLampPressed, evtLampStatus, evtLampStatusOff, coordinates, evtTypeLoginRequested, evtLoginFailed, matrixCoord, wheelCoord, evtLoginSucceeded, credentials, evtTypeLogoutRequested } from '../Model';
+import {Login, currentUser, Logout, ChangePass} from '../AWS/Authenticate';
+import { isLampOn, lampColor, evtTypeLampPressed, evtLampStatus, evtLampStatusOff, coordinates, evtTypeLoginRequested, evtLoginFailed, matrixCoord, wheelCoord, evtLoginSucceeded, credentials, evtTypeLogoutRequested, evtPasswordChangeRequired, evtTypePasswordChangeRequested, getCurrentUser } from '../Model';
 
 
 const transduce = getState => evt => {
@@ -23,12 +23,24 @@ const transduce = getState => evt => {
         const {user,pass} = credentials(evt);
         emit = [
             Login(user,pass)
-                .then(user => evtLoginSucceeded(user))
+                .then(user => {
+                    if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
+                        return evtPasswordChangeRequired(user);
+                    } else {
+                        return evtLoginSucceeded(user);
+                    }
+                })
                 .catch(() => evtLoginFailed())
         ]
     } else if (evtTypeLogoutRequested(evt)) {
         // no need to emit anything
         Logout();
+    } else if (evtTypePasswordChangeRequested(evt)) {
+        const {pass} = credentials(evt);
+        const user = getCurrentUser(getState());
+        return ChangePass(user, pass)
+            .then(u => evtLoginSucceeded(u))
+            .catch(() => evtPasswordChangeRequired(user))
     } else if (evt.type === "INIT_APP") {
         emit = [
             currentUser()

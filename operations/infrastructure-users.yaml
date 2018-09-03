@@ -61,9 +61,88 @@ Resources:
       Username: !Ref Username
       UserPoolId: !Ref Users
 
+  Identities:
+    Type: AWS::Cognito::IdentityPool
+    Properties:
+      AllowUnauthenticatedIdentities: false
+      # DeveloperProviderName: String   ### might need this <--------
+      CognitoIdentityProviders:
+        - ClientId: !Ref PresentationClient
+          ProviderName: !GetAtt Users.ProviderName
+
+  AuthenticatedIdentityRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+            Effect: Allow
+            Action: sts:AssumeRoleWithWebIdentity
+            Principal:
+                Federated: cognito-identity.amazonaws.com
+            Condition:
+              StringEquals:
+                "cognito-identity.amazonaws.com:aud": !Ref Identities
+              "ForAnyValue:StringLike":
+                "cognito-identity.amazonaws.com:amr": authenticated
+      Policies:
+        - PolicyName: pipeline
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - mobileanalytics:PutEvents
+                  - cognito-sync:*
+                  - cognito-identity:*
+                Resource:
+                  - "*"
+              - Effect: Allow
+                Action:
+                  - "s3:*"
+                  - "cloudformation:*"
+                Resource:
+                  - "*"
+
+  UnauthenticatedIdentityRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+            Effect: Allow
+            Action: sts:AssumeRoleWithWebIdentity
+            Principal:
+                Federated: cognito-identity.amazonaws.com
+            Condition:
+              StringEquals:
+                "cognito-identity.amazonaws.com:aud": !Ref Identities
+              "ForAnyValue:StringLike":
+                "cognito-identity.amazonaws.com:amr": unauthenticated
+      Policies:
+        - PolicyName: pipeline
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Deny
+                Action:
+                  - "*"
+                Resource:
+                  - "*"
+
+  AuthenticatedRoleAttachment:
+    Type: AWS::Cognito::IdentityPoolRoleAttachment
+    DependsOn:
+      - UnauthenticatedIdentityRole
+      - AuthenticatedIdentityRole
+    Properties:
+      IdentityPoolId: !Ref Identities
+      Roles:
+        authenticated: !GetAtt AuthenticatedIdentityRole.Arn
+        unauthenticated: !GetAtt UnauthenticatedIdentityRole.Arn
 
 Outputs:
   UserPool:
     Value: !Ref Users
   PresentationClient:
     Value: !Ref PresentationClient
+  IdentityPool:
+    Value: !Ref Identities

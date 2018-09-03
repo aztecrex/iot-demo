@@ -178,6 +178,8 @@ const evtTypeLogoutRequested = (evt = {}) => {
     return evt.type === ETP_LOGOUT_REQUESTED;
 };
 
+const evtTypeLoginSucceeded = ({type}) => type === ETP_LOGIN_SUCCEEDED;
+
 const evtTypePasswordChangeRequested = ({type}) => type === ETP_PASSWORD_CHANGE_REQUESTED;
 
 const colors = (m, device) => {
@@ -257,6 +259,7 @@ export {
     evtLoginRequested, evtLogoutRequested, evtLoginSucceeded, evtLoginFailed,
     evtLoginCanceled, evtLoginLoginDesired, evtPasswordChangeRequired, evtPasswordChangeRequested,
     evtTypeLoginRequested, evtTypeLogoutRequested, evtTypePasswordChangeRequested,
+    evtTypeLoginSucceeded,
     getCurrentUser,
     LoginStates,
     credentials, user

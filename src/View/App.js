@@ -12,19 +12,16 @@ const theme1 = createMuiTheme({
     palette: {
 
         primary: {
-            main: '#388e3c',
+            // main: '#ff4400',
+            main: '#000000',
           },
-          secondary: {
-            main: '#ff5722',
-          },
-        // primary: {
-        //     // light: will be calculated from palette.primary.main,
-        //     main: '#ff4400',
-        //     // dark: will be calculated from palette.primary.main,
-        //     // contrastText: will be calculated to contrast with palette.primary.main
-        //   },
         type: 'light',
     },
+    typography: {
+        fontFamily: [
+            'Permanent Marker'
+        ]
+    }
 });
 
 const App = () => (
@@ -40,14 +37,3 @@ const App = () => (
 );
 
 export {App};
-
-
-
-
-/* <div className="App">
-<ConnectedWheel dim="100" device="colorwheel_0" />
-<ConnectedWheel dim="150" device="colorwheel_1" />
-<ConnectedWheel dim="200" device="colorwheel_2" />
-<ConnectedWheel dim="250" device="colorwheel_3" />
-<ConnectedMatrix dim = "250" device="matrix_0" />
-</div> */

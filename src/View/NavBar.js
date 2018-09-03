@@ -17,6 +17,9 @@ const styles = {
     flex: {
       flexGrow: 1,
     },
+    font: {
+        fontFamily: ['Roboto'],
+    }
     // menuButton: {
     //   marginLeft: -12,
     //   marginRight: 20,
@@ -24,14 +27,14 @@ const styles = {
   };
 
 
-const LoginControl = ({loggedIn, onLoginRequest, onLogoutRequest}) => {
+const LoginControl = ({classes, loggedIn, onLoginRequest, onLogoutRequest}) => {
     if (!loggedIn) {
         return (
-            <Button color="inherit" onClick={onLoginRequest} >Login</Button>
+            <Button color="inherit" onClick={onLoginRequest} className={classes.font} >Login</Button>
         );
     } else {
         return (
-            <Button color="inherit" onClick={onLogoutRequest} >Logout</Button>
+            <Button color="inherit" onClick={onLogoutRequest}  className={classes.font} >Logout</Button>
         );
     }
 };
@@ -41,13 +44,11 @@ const NavBar_ = ({classes, loggedIn, onLoginRequest = () => {}, onLogoutRequest 
     <React.Fragment>
         <AppBar position="static" className={classes.root}>
             <Toolbar>
-                {/* <IconButton color="inherit" aria-label="Menu" className={classes.menuButton} >
-                    <MenuIcon />
-                </IconButton> */}
-                <Typography variant="title" color="inherit" className={classes.flex}>
+                <Typography variant="title" color="inherit" className={classes.flex + ' ' + classes.font}>
                     Internet of Things - A Little Presentation
                 </Typography>
                 <LoginControl
+                    classes = {classes}
                     loggedIn={loggedIn}
                     onLoginRequest={onLoginRequest}
                     onLogoutRequest={onLogoutRequest} />

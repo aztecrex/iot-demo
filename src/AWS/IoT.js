@@ -6,13 +6,19 @@ const clientId = () =>
     awsCredentials()
         .then(c => c.identityId);
 
+
 const PRES_THING = 'Presentation';
 const RING_THING_0 = 'Ring0';
 
-const Things = [
+const RawThings = [
     PRES_THING,
     RING_THING_0
 ];
+
+const thingNamespace = "SBHS";
+
+const Things = R.map(rt => thingNamespace + "_" + rt, RawThings);
+
 
 const register = (client, thing) => {
     const opts = {persistentSubscribe: true};

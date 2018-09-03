@@ -12,10 +12,10 @@ Auth.configure({
     // identityPoolRegion: 'XX-XXXX-X',
 
     // OPTIONAL - Amazon Cognito User Pool ID
-    userPoolId: 'us-east-1_8MKUbDRp7',
+    userPoolId: 'us-east-1_RxOfyTzuV',
 
     // OPTIONAL - Amazon Cognito Web Client ID (26-char alphanumeric string)
-    userPoolWebClientId: 'pnumjbeo38et9k3kl384r1id3',
+    userPoolWebClientId: '1vd3m7n0u5l4m0ks9k73cjgntv',
 
     // OPTIONAL - Enforce user authentication prior to accessing AWS resources or not
     // mandatorySignIn: false,

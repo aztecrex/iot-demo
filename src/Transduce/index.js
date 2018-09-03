@@ -1,6 +1,6 @@
 
-import {Login, currentUser} from '../AWS/Authenticate';
-import { isLampOn, lampColor, evtTypeLampPressed, evtLampStatus, evtLampStatusOff, coordinates, evtTypeLoginRequested, evtLoginFailed, matrixCoord, wheelCoord, evtLoginSucceeded, credentials } from '../Model';
+import {Login, currentUser, Logout} from '../AWS/Authenticate';
+import { isLampOn, lampColor, evtTypeLampPressed, evtLampStatus, evtLampStatusOff, coordinates, evtTypeLoginRequested, evtLoginFailed, matrixCoord, wheelCoord, evtLoginSucceeded, credentials, evtTypeLogoutRequested } from '../Model';
 
 
 const transduce = getState => evt => {
@@ -26,6 +26,9 @@ const transduce = getState => evt => {
                 .then(user => evtLoginSucceeded(user))
                 .catch(() => evtLoginFailed())
         ]
+    } else if (evtTypeLogoutRequested(evt)) {
+        // no need to emit anything
+        Logout();
     } else if (evt.type === "INIT_APP") {
         emit = [
             currentUser()

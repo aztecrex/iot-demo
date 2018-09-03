@@ -152,6 +152,10 @@ const evtTypeLoginRequested = (evt = {}) => {
     return evt.type === ETP_LOGIN_REQUESTED;
 };
 
+const evtTypeLogoutRequested = (evt = {}) => {
+    return evt.type === ETP_LOGOUT_REQUESTED;
+};
+
 
 const colors = (m, device) => {
     const keys = R.filter(s => s.startsWith(`${lampPre}/${device}/`), R.keys(m))
@@ -224,7 +228,7 @@ export {
     setLoginState, isLoggedIn, getLoginState,
     evtLoginRequested, evtLogoutRequested, evtLoginSucceeded, evtLoginFailed,
     evtLoginCanceled, evtLoginLoginDesired,
-    evtTypeLoginRequested,
+    evtTypeLoginRequested, evtTypeLogoutRequested,
     LoginStates,
     credentials
 };

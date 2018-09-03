@@ -47,6 +47,10 @@ const currentUser = () => {
 };
 
 
+const Logout = () => {
+    return Auth.signOut();
+};
+
 const Login = (user, pass) => {
 
     return Auth
@@ -57,5 +61,5 @@ const Login = (user, pass) => {
 
 
 
-export {Login, currentUser};
+export {Login, currentUser, Logout};
 

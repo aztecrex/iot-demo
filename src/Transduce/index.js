@@ -1,6 +1,8 @@
+import * as R from 'ramda';
 
-import {Login, currentUser, Logout, ChangePass, canUseAWS} from '../AWS/Authenticate';
-import { isLampOn, lampColor, evtTypeLampPressed, evtLampStatus, evtLampStatusOff, coordinates, evtTypeLoginRequested, evtLoginFailed, matrixCoord, wheelCoord, evtLoginSucceeded, credentials, evtTypeLogoutRequested, evtPasswordChangeRequired, evtTypePasswordChangeRequested, getCurrentUser, evtTypeLoginSucceeded } from '../Model';
+import {Login, currentUser, Logout, ChangePass} from '../AWS/Authenticate';
+import { isLampOn, lampColor, evtTypeLampPressed, evtLampStatus, evtLampStatusOff, coordinates, evtTypeLoginRequested, evtLoginFailed, matrixCoord, wheelCoord, evtLoginSucceeded, credentials, evtTypeLogoutRequested, evtPasswordChangeRequired, evtTypePasswordChangeRequested, getCurrentUser, evtTypeLoginSucceeded, evtPresentationChanged } from '../Model';
+import { bringUp, bringDown } from '../AWS/IoT';
 
 
 const transduce = getState => evt => {
@@ -33,10 +35,10 @@ const transduce = getState => evt => {
                 .catch(() => evtLoginFailed())
         ]
     } else if (evtTypeLogoutRequested(evt)) {
-        // no need to emit anything
+        bringDown();
         Logout();
     } else if (evtTypeLoginSucceeded(evt)) {
-        canUseAWS();
+        bringUp(IoTHandler).then(console.log).catch(console.error);
     } else if (evtTypePasswordChangeRequested(evt)) {
         const {pass} = credentials(evt);
         const user = getCurrentUser(getState());
@@ -60,7 +62,25 @@ const transduce = getState => evt => {
     return emit;
 };
 
+var IoTHandler = d => console.log(d);
+
+const makeIoTHandler = dispatch => {
+
+    return d => {
+        // console.log("GOT IOT EVENT: ", d);
+        if (d.type === "STATUS" || d.type === "FOREIGN") {
+            if (d.name === "SBHS_Presentation") {
+                const slide         = R.path(['obj','state','desired','slide'],d) || 1;
+                const powered       = !!(R.path(['obj','state','desired','powered'],d)) || false;
+                const presenting   = !!(R.path(['obj','state','desired','presenting'],d)) || false;
+                dispatch(evtPresentationChanged(presenting, powered, slide));
+            }
+        }
+    };
+};
+
 const kick = ({dispatch}) => {
+    IoTHandler = makeIoTHandler(dispatch);
     dispatch({type: "INIT_APP"});
 };
 

@@ -2,6 +2,7 @@ import React from 'react';
 import { Grid, Paper, withStyles, Typography } from '@material-ui/core';
 import { ConnectedWheel } from '../Wheel';
 import { ConnectedMatrix } from '../Matrix';
+import { Blue, Green, Red } from './SlideStyle';
 
 const styles = theme => ({
     root: {
@@ -30,7 +31,7 @@ const Left_ = ({classes}) => {
         <Grid item sm={6}>
             <Paper  className={classes.paper}>
                 <Typography variant="display3" className={classes.font}>
-                    What is IoT?
+                    What <Blue>Is</Blue> IoT?
                 </Typography>
                 <Typography variant="display1" className={classes.font}>
                     <ul>
@@ -43,7 +44,7 @@ const Left_ = ({classes}) => {
             </Paper>
             <Paper  className={classes.paper}>
                 <Typography variant="display3" className={classes.font}>
-                    What is IoT for?
+                    What Is IoT <Green>For?</Green>
                 </Typography>
                 <Typography variant="display1" className={classes.font}>
                     <ul>
@@ -55,7 +56,7 @@ const Left_ = ({classes}) => {
             </Paper>
             <Paper  className={classes.paper}>
                 <Typography variant="display3" className={classes.font}>
-                    How does IoT Work?
+                    How does IoT <Red>Work?</Red>
                 </Typography>
                 <Typography variant="display1" className={classes.font}>
                     <ul>

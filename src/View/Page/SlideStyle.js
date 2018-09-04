@@ -45,4 +45,17 @@ const Li = styled.li`
     }
 `
 
-export {Outer, Column, FixedColumn, InnerCenter, InnerTop, Title, Ul, Li}
+const Red = styled.span`
+    color: red;
+`
+
+const Green = styled.span`
+    color: green;
+`
+
+const Blue = styled.span`
+    color: blue;
+`
+
+export {Outer, Column, FixedColumn, InnerCenter, InnerTop, Title, Ul, Li,
+        Red, Green, Blue}

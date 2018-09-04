@@ -57,6 +57,7 @@ const transduce = getState => evt => {
             Promise.resolve(evtLampStatus(wheelCoord("colorwheel_0",3),"#00ff00")),
             Promise.resolve(evtLampStatus(wheelCoord("colorwheel_0",7),"#ff0000")),
             Promise.resolve(evtLampStatus(wheelCoord("colorwheel_0",11),"#0000ff")),
+            Promise.resolve(evtPresentationChanged(true,true,1)),
         ];
     }
     return emit;

@@ -18,6 +18,9 @@ const styles = theme => ({
         paddingTop: 125,
         paddingBottom: 125,
         textAlign: "center"
+    },
+    font: {
+               fontFamily: ["Permanent Marker"]
     }
   });
 
@@ -26,10 +29,10 @@ const Left_ = ({classes}) => {
     return (
         <Grid item sm={6}>
             <Paper  className={classes.paper}>
-                <Typography variant="display3">
+                <Typography variant="display3" className={classes.font}>
                     What is IoT?
                 </Typography>
-                <Typography variant="display1">
+                <Typography variant="display1" className={classes.font}>
                     <ul>
                         <li>Device makers use the Internet to connect
                     everything</li>
@@ -39,10 +42,10 @@ const Left_ = ({classes}) => {
                 </Typography>
             </Paper>
             <Paper  className={classes.paper}>
-                <Typography variant="display3">
+                <Typography variant="display3" className={classes.font}>
                     What is IoT for?
                 </Typography>
-                <Typography variant="display1">
+                <Typography variant="display1" className={classes.font}>
                     <ul>
                         <li>Uses include health, safety, industry, recreation,
                         and convenience</li>
@@ -51,10 +54,10 @@ const Left_ = ({classes}) => {
                 </Typography>
             </Paper>
             <Paper  className={classes.paper}>
-                <Typography variant="display3">
+                <Typography variant="display3" className={classes.font}>
                     How does IoT Work?
                 </Typography>
-                <Typography variant="display1">
+                <Typography variant="display1" className={classes.font}>
                     <ul>
                         <li>The technical bits and how they fit together</li>
                         <li>How to build your own IoT apps</li>

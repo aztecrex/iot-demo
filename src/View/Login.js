@@ -41,9 +41,9 @@ class Login extends Component {
     }
 
     render() {
-        const {open, handleOK, handleCancel} = this.props;
+        const { open, handleOK, handleCancel} = this.props;
         return (
-            <Dialog open={open} onClose={handleCancel}>
+            <Dialog open={open}  onClose={handleCancel}>
                 <DialogTitle>Login</DialogTitle>
                 <DialogContent>
                 <TextField

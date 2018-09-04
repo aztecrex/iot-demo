@@ -36,9 +36,13 @@ const Ul = styled.ul`
     font-size 3vmin;
     margin-left: 3vmin;
     padding-left: 3vmin;
+    list-style: none;
 `
 
 const Li = styled.li`
+    &:before {
+        content: '- ';
+    }
 `
 
 export {Outer, Column, FixedColumn, InnerCenter, InnerTop, Title, Ul, Li}

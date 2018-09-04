@@ -1,11 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { isPowered, getSlideNumber } from '../../Model';
+import { isPowered, getSlideNumber, evtLogoutRequested } from '../../Model';
 
-const Slides = ({powered=true, number = 1}) => {
+const Slides = ({powered=true, number = 1, handleLogout = () => {}}) => {
     return (
         <div>
             {number}
+            <button onClick={handleLogout}>Logout</button>
         </div>
     );
 };
@@ -15,7 +16,9 @@ const ConnectedSlides = connect(
         powered: isPowered(state),
         number: getSlideNumber(state)
     }),
-    dispatch => ({})
+    dispatch => ({
+        handleLogout: () => dispatch(evtLogoutRequested())
+    })
 )(Slides);
 
 export {Slides, ConnectedSlides}

@@ -67,7 +67,7 @@ var IoTHandler = d => console.log(d);
 const makeIoTHandler = dispatch => {
 
     return d => {
-        console.log("GOT IOT EVENT: ", d);
+        // console.log("GOT IOT EVENT: ", d);
         if (d.type === "STATUS" || d.type === "FOREIGN") {
             if (d.name === "SBHS_Presentation") {
                 const slide         = R.path(['obj','state','desired','slide'],d) || 1;

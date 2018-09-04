@@ -3,6 +3,7 @@ import { Grid, Paper, withStyles, Typography } from '@material-ui/core';
 import { ConnectedWheel } from '../Wheel';
 import { ConnectedMatrix } from '../Matrix';
 import { Blue, Green, Red } from './SlideStyle';
+import styled from 'styled-components';
 
 const styles = theme => ({
     root: {
@@ -25,6 +26,15 @@ const styles = theme => ({
     }
   });
 
+const UL = styled.ul`
+    list-style: none;
+`
+const LI = styled.li`
+    text-indent: -1em;
+    &:before {
+        content: '- ';
+    }
+`
 
 const Left_ = ({classes}) => {
     return (
@@ -34,12 +44,12 @@ const Left_ = ({classes}) => {
                     What <Blue>Is</Blue> IoT?
                 </Typography>
                 <Typography variant="display1" className={classes.font}>
-                    <ul>
-                        <li>Device makers use the Internet to connect
-                    everything</li>
-                        <li>The difference (and not difference) between IoT devices
-                            and your own computer</li>
-                    </ul>
+                    <UL>
+                        <LI>Device makers use the Internet to connect
+                    everything</LI>
+                        <LI>The difference (and not difference) between IoT devices
+                            and your own computer</LI>
+                    </UL>
                 </Typography>
             </Paper>
             <Paper  className={classes.paper}>
@@ -47,11 +57,11 @@ const Left_ = ({classes}) => {
                     What Is IoT <Green>For?</Green>
                 </Typography>
                 <Typography variant="display1" className={classes.font}>
-                    <ul>
-                        <li>Uses include health, safety, industry, recreation,
-                        and convenience</li>
-                        <li>What's next?</li>
-                    </ul>
+                    <UL>
+                        <LI>Uses include health, safety, industry, recreation,
+                        and convenience</LI>
+                        <LI>What's next?</LI>
+                    </UL>
                 </Typography>
             </Paper>
             <Paper  className={classes.paper}>
@@ -59,10 +69,10 @@ const Left_ = ({classes}) => {
                     How does IoT <Red>Work?</Red>
                 </Typography>
                 <Typography variant="display1" className={classes.font}>
-                    <ul>
-                        <li>The technical bits and how they fit together</li>
-                        <li>How to build your own IoT apps</li>
-                    </ul>
+                    <UL>
+                        <LI>The technical bits and how they fit together</LI>
+                        <LI>How to build your own IoT apps</LI>
+                    </UL>
                 </Typography>
             </Paper>
         </Grid>

@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 
-
 const Outer = styled.div`
     display: flex;
     font-family: Permanent Marker;
@@ -32,14 +31,26 @@ const Title = styled.h1`
     font-size: 4.5vmin;
 `
 
+const Section = styled.h1`
+    font-size 3.4vmin;
+    &:before {
+        content: '~~ ';
+    }
+    &:after {
+        content: ' ~~';
+    }
+`
+
+
 const Ul = styled.ul`
     font-size 3vmin;
-    margin-left: 3vmin;
-    padding-left: 3vmin;
+    // margin-left: 3vmin;
+    // padding-left: 3vmin;
     list-style: none;
 `
 
 const Li = styled.li`
+    text-indent: -1em;
     &:before {
         content: '- ';
     }
@@ -58,4 +69,4 @@ const Blue = styled.span`
 `
 
 export {Outer, Column, FixedColumn, InnerCenter, InnerTop, Title, Ul, Li,
-        Red, Green, Blue}
+        Red, Green, Blue, Section}

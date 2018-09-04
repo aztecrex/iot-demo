@@ -1,7 +1,7 @@
 import React from 'react';
 import { ConnectedWheel } from '../Wheel';
 import { Column, Outer, FixedColumn, InnerTop,
-         InnerCenter, Ul, Li, Title, Red} from './SlideStyle'
+         InnerCenter, Ul, Li, Title, Red, Section} from './SlideStyle'
 
 
 const WhatSlide1 = () => {
@@ -9,10 +9,11 @@ const WhatSlide1 = () => {
         <Outer>
             <FixedColumn>
                 <InnerTop>
+                    <Section>What</Section>
                     <Title>Independent Inter-related <Red>Computing</Red> Machines</Title>
                     <Ul>
-                        <Li>Uniquely Identified and Addressable</Li>
                         <Li>Network Connected</Li>
+                        <Li>Uniquely Identified and Addressable</Li>
                     </Ul>
                 </InnerTop>
             </FixedColumn>

@@ -1,76 +1,22 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { isPowered, getSlideNumber, evtLogoutRequested } from '../../Model';
-import styled from 'styled-components';
-import { ConnectedWheel } from '../Wheel';
+import { WhatSlide1, WhatSlide2, WhatSlide3, WhatSlide4 } from './What';
+import { WhatForSlide1, WhatForSlide2, WhatForSlide3, WhatForSlide4 } from './WhatFor';
 
-
-const Outer = styled.div`
-    display: flex;
-    flex-direction: row;
-`
-
-const Left = styled.div`
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    flex-grow: 2;
-`
-const Right = styled.div`
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    flex-grow: 1;
-`
-
-const Inner = styled.div`
-    display: inline-block;
-    margin: auto;
-`
-
-const Title = styled.h1`
-    font-size: 2.9vw;
-`
-const Li = styled.li`
-    font-size: 1.5vw;
-`
-
-
-const Slides = ({powered=true, number = 1, handleLogout = () => {}}) => {
-    return (
-        // {number}
-        // <button onClick={handleLogout}>Logout</button>
-        <Outer>
-            <Left>
-                <Inner>
-                    <Title>This should be in the center</Title>
-                    <ol>
-                        <Li>Line 1</Li>
-                        <Li>Line 2 is a bit longer</Li>
-                        <Li>Line 3 is like a paragraph of stuff how can this be even possible?Line 3 is like a paragraph of stuff how can this be even possible?Line 3 is like a paragraph of stuff how can this be even possible?Line 3 is like a paragraph of stuff how can this be even possible?Line 3 is like a paragraph of stuff how can this be even possible?Line 3 is like a paragraph of stuff how can this be even possible?Line 3 is like a paragraph of stuff how can this be even possible?</Li>
-                        <Li>Line 1</Li>
-                        <Li>Line 2 is a bit longer</Li>
-                        <Li>Line 3 is like a paragraph of stuff how can this be even possible?</Li>
-                        <Li>Line 1</Li>
-                        <Li>Line 2 is a bit longer</Li>
-                        <Li>Line 3 is like a paragraph of stuff how can this be even possible?</Li>
-                        <Li>Line 1</Li>
-                        <Li>Line 2 is a bit longer</Li>
-                        <Li>Line 3 is like a paragraph of stuff how can this be even possible?</Li>
-                    </ol>
-                </Inner>
-            </Left>
-            <Right>
-                <Inner>
-                    <ConnectedWheel device="colorwheel_9" />
-                </Inner>
-                <Inner>
-                    <ConnectedWheel device="colorwheel_9" />
-                </Inner>
-            </Right>
-        </Outer>
-
-    );
+const Slides = ({ powered = true, number = 1, handleLogout = () => { } }) => {
+    switch (number) {
+        case 1: return <WhatSlide1 />
+        case 2: return <WhatSlide2 />
+        case 3: return <WhatSlide3 />
+        case 4: return <WhatSlide4 />
+        case 5: return <WhatForSlide1 />
+        case 6: return <WhatForSlide2 />
+        case 7: return <WhatForSlide3 />
+        case 8: return <WhatForSlide4 />
+        default:
+            return number < 1 ? <WhatSlide1 /> : <WhatForSlide4 />
+    }
 };
 
 const ConnectedSlides = connect(
@@ -83,4 +29,4 @@ const ConnectedSlides = connect(
     })
 )(Slides);
 
-export {Slides, ConnectedSlides}
+export { Slides, ConnectedSlides }

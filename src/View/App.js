@@ -19,11 +19,11 @@ const theme1 = createMuiTheme({
           },
         type: 'light',
     },
-    typography: {
-        fontFamily: [
-            'Permanent Marker'
-        ]
-    }
+    // typography: {
+    //     fontFamily: [
+    //         'Permanent Marker'
+    //     ]
+    // }
 });
 
 const App = ({loggedIn = false, presenting = false}) => {

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {Dialog, DialogTitle, DialogContent,DialogActions,
-        Button, TextField } from '@material-ui/core';
+        Button, TextField, withStyles } from '@material-ui/core';
 import { getLoginState, LoginStates, evtLoginCanceled, evtLoginRequested, evtPasswordChangeRequested } from '../Model';
 
 const initialState = {
@@ -9,7 +9,23 @@ const initialState = {
     usernameValue: ''
 };
 
-class Login extends Component {
+const styles = {
+    root: {
+        typography: {
+            fontFamily: [
+                'Roboto'
+            ]
+        }
+    },
+    paper: {
+        typography: {
+        fontFamily: ["Roboto"]
+        }
+    },
+
+};
+
+class Login_ extends Component {
 
     constructor(props) {
         super(props);
@@ -41,9 +57,9 @@ class Login extends Component {
     }
 
     render() {
-        const {open, handleOK, handleCancel} = this.props;
+        const { open, handleOK, handleCancel} = this.props;
         return (
-            <Dialog open={open} onClose={handleCancel}>
+            <Dialog open={open}>
                 <DialogTitle>Login</DialogTitle>
                 <DialogContent>
                 <TextField
@@ -82,6 +98,8 @@ class Login extends Component {
     }
 
 }
+
+const Login = withStyles(styles)(Login_);
 
 // Note this is not a general password change. It is used when
 // the authentication system tells us the user is being forced

@@ -1,0 +1,65 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Resources:
+
+  ControlFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+            Effect: Allow
+            Action: sts:AssumeRole
+            Principal:
+                Service: lambda.amazonaws.com
+      Policies:
+        - PolicyName: pipeline
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - iot:Connect
+                  - iot:Publish
+                  - iot:Subscribe
+                  - iot:Receive
+                  - iot:UpdateThingShadow
+                  - iot:GetThingShadow
+                Resource:
+                  - "*"
+
+  SlidesButtonFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+        Code:
+            ZipFile: >
+                exports.handler = (event, context, callback) => {
+                    console.log("gen content placeholder invoked with ", event);
+                    callback(null, {});
+                };
+        Handler: index.handler
+        Role: !GetAtt ControlFunctionRole.Arn
+        Runtime: nodejs6.10
+
+  SlidesButtonRule:
+    Type: AWS::IoT::TopicRule
+    Properties:
+      TopicRulePayload:
+        Actions:
+          - Lambda:
+              FunctionArn: !GetAtt SlidesButtonFunction.Arn
+        RuleDisabled: false
+        Sql: SELECT * FROM 'iotbutton/G030MD046147K438'
+
+  IoTFunctionPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+        FunctionName: !GetAtt SlidesButtonFunction.Arn
+        Action: lambda:InvokeFunction
+        Principal: iot.amazonaws.com
+        SourceArn: !GetAtt SlidesButtonRule.Arn
+
+Outputs:
+  SlidesButtonFunction:
+    Value: !Ref SlidesButtonFunction
+
+

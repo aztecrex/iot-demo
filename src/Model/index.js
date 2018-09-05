@@ -185,8 +185,9 @@ const evtTypePasswordChangeRequested = ({type}) => type === ETP_PASSWORD_CHANGE_
 
 const presentationKey = presPre + "/presentation"
 
-const setPresentationStatus = (m = {}, status) => {
-    return R.assoc(presentationKey, status, m);
+const updatePresentationStatus = (m = {}, status) => {
+    const cur = m[presentationKey] || {};
+    return R.assoc(presentationKey, {...cur, ...status}, m);
 }
 
 const isPresenting = (m = {}) => ((m[presentationKey] || {}).presenting) || false;
@@ -198,10 +199,10 @@ const getSlideNumber = (m = {}) => {
 }
 
 
-const evtPresentationChanged = (presenting, powered, slide) => {
+const evtPresentationChanged = status => {
     return {
         type: ETP_PRESENTATION_CHANGED,
-        status: {presenting, powered, slide}
+        status: status
     }
 };
 
@@ -254,7 +255,7 @@ const reduce = (m = {}, evt = {}) => {
             m = setLoginUser(m, evt.user);
             break;
 
-        case ETP_PRESENTATION_CHANGED: m = setPresentationStatus(m, evt.status); break;
+        case ETP_PRESENTATION_CHANGED: m = updatePresentationStatus(m, evt.status); break;
 
         default:
             break;

@@ -57,7 +57,7 @@ const transduce = getState => evt => {
             Promise.resolve(evtLampStatus(wheelCoord("colorwheel_0",3),"#00ff00")),
             Promise.resolve(evtLampStatus(wheelCoord("colorwheel_0",7),"#ff0000")),
             Promise.resolve(evtLampStatus(wheelCoord("colorwheel_0",11),"#0000ff")),
-            Promise.resolve(evtPresentationChanged(true,true,1)),
+            Promise.resolve(evtPresentationChanged({presenting: false,powered: false, slide: 1})),
         ];
     }
     return emit;
@@ -68,13 +68,12 @@ var IoTHandler = d => console.log(d);
 const makeIoTHandler = dispatch => {
 
     return d => {
-        // console.log("GOT IOT EVENT: ", d);
+        console.log("GOT IOT EVENT: ", d);
         if (d.type === "STATUS" || d.type === "FOREIGN") {
             if (d.name === "SBHS_Presentation") {
-                const slide         = R.path(['obj','state','desired','slide'],d) || 1;
-                const powered       = !!(R.path(['obj','state','desired','powered'],d)) || false;
-                const presenting   = !!(R.path(['obj','state','desired','presenting'],d)) || false;
-                dispatch(evtPresentationChanged(presenting, powered, slide));
+                const sup = R.path(['obj','state','desired'],d) || {};
+                console.log(sup);
+                dispatch(evtPresentationChanged(sup));
             }
         }
     };

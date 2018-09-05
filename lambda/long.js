@@ -1,5 +1,5 @@
 const handler = require('./presentation').handle;
 
-handler({action:"single"}, {}, console.log);
+handler({clickType:"LONG"}, {}, console.log);
 
 

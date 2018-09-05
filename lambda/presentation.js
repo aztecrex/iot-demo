@@ -8,11 +8,6 @@ const Data = new IoTData({
 
 const NumSlides = 8;
 
-const SINGLE="single";
-const DOUBLE="double";
-const LONG="long";
-const UNKNOWN = "unknown";
-
 const ThingName = process.env.IOT_THING;  // only one for now
 
 const fetchDesired = async () => {
@@ -64,8 +59,22 @@ const togglePresentation = async () => {
     updateDesired({presenting: !current});
 };
 
+
+// here's what the message from the button looks like
+// {
+//     "serialNumber": "GXXXXXXXXXXXXXXXXX",
+//     "batteryVoltage": "xxmV",
+//     "clickType": "SINGLE" | "DOUBLE" | "LONG"
+// }
+
+const SINGLE="SINGLE";
+const DOUBLE="DOUBLE";
+const LONG="LONG";
+const UNKNOWN = "unknown";
+
+
 const eventAction = (evt = {}) => {
-    return evt.action || UNKNOWN;
+    return evt.clickType || UNKNOWN;
 };
 
 const dispatch = action => {

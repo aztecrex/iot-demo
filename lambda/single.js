@@ -1,5 +1,5 @@
 const handler = require('./presentation').handle;
 
-handler({action:"double"}, {}, console.log);
+handler({clickType:"SINGLE"}, {}, console.log);
 
 

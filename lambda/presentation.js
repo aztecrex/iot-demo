@@ -91,7 +91,7 @@ const handle = async (event, context, callback) => {
 
     await dispatch(eventAction(event))
             .catch(console.error);
-    callback({});
+    callback(null,{});
 
 };
 

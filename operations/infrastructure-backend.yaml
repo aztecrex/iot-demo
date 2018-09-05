@@ -26,6 +26,17 @@ Resources:
                   - iot:GetThingShadow
                 Resource:
                   - "*"
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                Resource:
+                  - "*"
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource:
+                  - "*"
 
   SlidesButtonFunction:
     Type: AWS::Lambda::Function

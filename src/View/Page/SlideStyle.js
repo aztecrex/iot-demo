@@ -68,5 +68,10 @@ const Blue = styled.span`
     color: blue;
 `
 
+const P = styled.p`
+    font-size: 3.4vmin
+`
+
+
 export {Outer, Column, FixedColumn, InnerCenter, InnerTop, Title, Ul, Li,
-        Red, Green, Blue, Section}
+        Red, Green, Blue, Section, P}

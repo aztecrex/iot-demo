@@ -21,4 +21,10 @@ yarn-debug.log*
 yarn-error.log*
 
 .vscode/
+*.zip
+*.gz
+*.tgz
+*.tar
+*.tar.gz
+*.tar.bz2
 

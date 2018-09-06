@@ -6,11 +6,13 @@ phases:
       - echo "pre build"
       - find . -name '*.sh' -type f | xargs chmod +x
       - npm i
+      -
   build:
     commands:
       - echo "build"
       - CI=true npm test
       - CI=true npm run build
+      - ./lambda/build.sh
       - ./operations/cd-publish.sh
   post_build:
     commands:

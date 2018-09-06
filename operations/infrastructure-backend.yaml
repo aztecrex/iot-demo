@@ -50,6 +50,10 @@ Resources:
         Handler: index.handler
         Role: !GetAtt ControlFunctionRole.Arn
         Runtime: nodejs6.10
+        Environment:
+          Variables:
+            IOT_ENDPOINT: ad78o9k6p57sk.iot.us-east-1.amazonaws.com
+            IOT_THING: SBHS_Presentation
 
   SlidesButtonRule:
     Type: AWS::IoT::TopicRule

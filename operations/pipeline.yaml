@@ -76,6 +76,16 @@ Resources:
                           - !Sub ${ArtifactStore.Arn}/*
                       - Effect: Allow
                         Action:
+                          - lambda:GetFunction
+                          - lambda:GetFunctionConfiguration
+                          - lambda:ListFunctions
+                          - lambda:PublishVersion
+                          - lambda:UpdateFunctionCode
+                          - lambda:UpdateFunctionConfiguration
+                        Resource:
+                          - arn:aws:lambda:us-east-1:299766559344:function:iot-demo-backend-SlidesButtonFunction-1X4YNKHYEXAK0
+                      - Effect: Allow
+                        Action:
                           - logs:CreateLogGroup
                           - logs:CreateLogStream
                           - logs:PutLogEvents

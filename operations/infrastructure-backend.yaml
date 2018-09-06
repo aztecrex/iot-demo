@@ -72,5 +72,7 @@ Resources:
 Outputs:
   SlidesButtonFunction:
     Value: !Ref SlidesButtonFunction
+  SlidesButtonFunctionArn:
+    Value: !GetAtt SlidesButtonFunction.Arn
 
 

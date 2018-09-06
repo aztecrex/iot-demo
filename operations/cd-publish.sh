@@ -48,4 +48,4 @@ update-lambda() {
 update-lambda \
     'iot-demo-backend-SlidesButtonFunction-1X4YNKHYEXAK0' \
     'presentation.handle' \
-    "./lambda/presentation.zip"
+    "./lambda/build/presentation.zip"

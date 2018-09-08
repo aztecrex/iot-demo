@@ -74,7 +74,7 @@ const makeIoTHandler = dispatch => {
                 const sup = R.path(['obj','state','desired'],d) || {};
                 console.log(sup);
                 dispatch(evtPresentationChanged(sup));
-            } else if (d.name === "Ring0") {
+            } else if (d.name === "Ring0" || d.name === "Ring1") {
                 const sup = R.path(['obj','state','desired'], d) || {};
                 console.log(JSON.stringify(sup));
                 const lampChanges = R.pickBy((_,k) => k.startsWith("lamp_"), sup);

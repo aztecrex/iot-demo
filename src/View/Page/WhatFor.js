@@ -74,11 +74,11 @@ const WhatForSlide2 = () => {
                 </InnerTop>
             </FixedColumn>
             <Column>
-                <InnerCenter>
-                    <ConnectedWheel device="colorwheel_9" />
+            <InnerCenter>
+                    <ConnectedWheel device="Ring0" />
                 </InnerCenter>
                 <InnerCenter>
-                    <ConnectedWheel device="colorwheel_9" />
+                    <ConnectedWheel device="Ring1" />
                 </InnerCenter>
             </Column>
         </Outer>
@@ -99,11 +99,11 @@ const WhatForSlide3 = () => {
                 </InnerTop>
             </FixedColumn>
             <Column>
-                <InnerCenter>
-                    <ConnectedWheel device="colorwheel_9" />
+            <InnerCenter>
+                    <ConnectedWheel device="Ring0" />
                 </InnerCenter>
                 <InnerCenter>
-                    <ConnectedWheel device="colorwheel_9" />
+                    <ConnectedWheel device="Ring1" />
                 </InnerCenter>
             </Column>
         </Outer>
@@ -123,11 +123,11 @@ const WhatForSlide4 = () => {
                 </InnerTop>
             </FixedColumn>
             <Column>
-                <InnerCenter>
-                    <ConnectedWheel device="colorwheel_9" />
+            <InnerCenter>
+                    <ConnectedWheel device="Ring0" />
                 </InnerCenter>
                 <InnerCenter>
-                    <ConnectedWheel device="colorwheel_9" />
+                    <ConnectedWheel device="Ring1" />
                 </InnerCenter>
             </Column>
         </Outer>

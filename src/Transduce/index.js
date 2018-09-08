@@ -1,8 +1,8 @@
 import * as R from 'ramda';
 
 import {Login, currentUser, Logout, ChangePass} from '../AWS/Authenticate';
-import { isLampOn, lampColor, evtTypeLampPressed, evtLampStatus, evtLampStatusOff, coordinates, evtTypeLoginRequested, evtLoginFailed, matrixCoord, wheelCoord, evtLoginSucceeded, credentials, evtTypeLogoutRequested, evtPasswordChangeRequired, evtTypePasswordChangeRequested, getCurrentUser, evtTypeLoginSucceeded, evtPresentationChanged } from '../Model';
-import { bringUp, bringDown } from '../AWS/IoT';
+import { isLampOn, lampColor, evtTypeLampPressed, evtLampStatus, evtLampStatusOff, coordinates, evtTypeLoginRequested, evtLoginFailed, matrixCoord, wheelCoord, evtLoginSucceeded, credentials, evtTypeLogoutRequested, evtPasswordChangeRequired, evtTypePasswordChangeRequested, getCurrentUser, evtTypeLoginSucceeded, evtPresentationChanged, index, device } from '../Model';
+import { bringUp, bringDown, setLampColor } from '../AWS/IoT';
 
 
 const transduce = getState => evt => {
@@ -10,17 +10,29 @@ const transduce = getState => evt => {
     if (evtTypeLampPressed(evt)) {
         const coords = coordinates(evt);
         const state = getState();
+        var nextColor;
         if (isLampOn(state, coords)) {
             const color = lampColor(state, coords);
             switch (color) {
-                case "#ff0000": emit =[Promise.resolve(evtLampStatus(coords,"#00ff00"))]; break;
-                case "#00ff00": emit =[Promise.resolve(evtLampStatus(coords,"#0000ff"))]; break;
-                case "#0000ff": emit =[Promise.resolve(evtLampStatusOff(coords))]; break;
-                default: emit =[Promise.resolve(evtLampStatusOff(coords))]; break;
-
+                case "#ff0000": nextColor = "#00ff00"; break;
+                case "#00ff00": nextColor = "#0000ff"; break;
+                case "#0000ff": nextColor = null; break;
+                default: nextColor = null; break;
             }
-        } else
-            emit = [Promise.resolve(evtLampStatus(coords, "#ff0000"))];
+        } else {
+            nextColor = "#ff0000";
+        }
+        var nextColorI = 0;
+        if (nextColor) {
+            emit = [Promise.resolve(evtLampStatus(coords, nextColor))];
+            nextColorI = parseInt(nextColor.substr(1),16);
+        } else {
+            emit = [Promise.resolve(evtLampStatusOff(coords))];
+            nextColorI = 0;
+        }
+        const dev = device(coords);
+        const key = "lamp_" + index(coords);
+        setLampColor(dev, key, nextColorI);
     } else if (evtTypeLoginRequested(evt)) {
         const {user,pass} = credentials(evt);
         emit = [
@@ -54,9 +66,9 @@ const transduce = getState => evt => {
             Promise.resolve(evtLampStatus(matrixCoord("matrix_0",3,2),"#00ff00")),
             Promise.resolve(evtLampStatus(matrixCoord("matrix_0",1,4),"#0000ff")),
             Promise.resolve(evtLampStatus(matrixCoord("matrix_0",4,1),"#00ff00")),
-            Promise.resolve(evtLampStatus(wheelCoord("colorwheel_0",3),"#00ff00")),
-            Promise.resolve(evtLampStatus(wheelCoord("colorwheel_0",7),"#ff0000")),
-            Promise.resolve(evtLampStatus(wheelCoord("colorwheel_0",11),"#0000ff")),
+            Promise.resolve(evtLampStatus(wheelCoord("Ring0",3),"#00ff00")),
+            Promise.resolve(evtLampStatus(wheelCoord("Ring0",7),"#ff0000")),
+            Promise.resolve(evtLampStatus(wheelCoord("Ring0",11),"#0000ff")),
             Promise.resolve(evtPresentationChanged({presenting: false,powered: false, slide: 1})),
         ];
     }

@@ -66,7 +66,21 @@ const Thing = (() => {
         return true;
     };
 
-    return {up, down};
+    const setLampColor = (logical, key, color ) => {
+        if (!client) return;
+        const physical = PhysicalNames[logical];
+        const updateState = {
+            state: {
+                desired: {
+                    [key]: color
+                }
+            }
+        };
+
+        return client.then(c => c.update(physical, updateState));
+    }
+
+    return {up, down, setLampColor};
 
 
 })();
@@ -156,6 +170,10 @@ const bringDown = async () => {
     return await Thing.down();
 };
 
+const setLampColor = async (logical, key, color) => {
+    Thing.setLampColor(logical, key, color).catch(err => console.error(err));
+}
 
-export {bringUp, bringDown};
+
+export {bringUp, bringDown, setLampColor};
 

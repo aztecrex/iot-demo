@@ -28,3 +28,5 @@ yarn-error.log*
 *.tar.gz
 *.tar.bz2
 
+*.key
+*.crt

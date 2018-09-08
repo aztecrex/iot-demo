@@ -1,0 +1,25 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Parameters:
+  CertificateArn:
+    Type: String
+    MinLength: 1
+
+
+Resources:
+
+  Device:
+    Type: AWS::IoT::Thing
+
+  DevicePrincipal:
+    Type: AWS::IoT::ThingPrincipalAttachment
+    Properties:
+      Principal: !Ref CertificateArn
+      ThingName: !Ref Device
+
+  PrincipalPolicy:
+    Type: AWS::IoT::PolicyPrincipalAttachment
+    Properties:
+      PolicyName: !ImportValue iot-demo-devices-DevicePolicy
+      Principal: !Ref CertificateArn
+

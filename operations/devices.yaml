@@ -1,0 +1,36 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Resources:
+
+  Policy:
+    Type: AWS::IoT::Policy
+    Properties:
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action:
+              - iot:Connect
+            Resource:
+              - "*"
+          - Effect: Allow
+            Action:
+              - iot:UpdateThingShadow
+              - iot:GetThingShadow
+            Resource:
+              - !Sub arn:aws:iot:${AWS::Region}:${AWS::AccountId}:thing/${!iot:Connection.Thing.ThingName}
+          - Effect: Allow
+            Action:
+              - iot:Publish
+              - iot:Subscribe
+              - iot:Receive
+            Resource:
+              - !Sub arn:aws:iot:${AWS::Region}:${AWS::AccountId}:topic/$aws/things/${!iot:Connection.Thing.ThingName}/shadow/*
+              - !Sub arn:aws:iot:${AWS::Region}:${AWS::AccountId}:topic/iot-demo/${!iot:Connection.Thing.ThingName}
+              - !Sub arn:aws:iot:${AWS::Region}:${AWS::AccountId}:topic/iot-demo/general
+
+Outputs:
+  DevicePolicy:
+    Value: !Ref Policy
+    Export:
+        Name: !Sub ${AWS::StackName}-DevicePolicy

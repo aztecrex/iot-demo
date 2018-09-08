@@ -8,16 +8,28 @@ const clientId = () =>
 
 
 const PRES_THING = 'Presentation';
-const RING_THING_0 = 'Ring0';
+const RING_THING_0 = 'iot-demo-thing-Ring0-Device-W4VQWR2ALD3T';
+const RING_THING_1 = 'iot-demo-thing-Ring1-Device-VG0H11KPBHUW';
 
 const RawThings = [
     PRES_THING,
-    RING_THING_0
+    RING_THING_0,
+    RING_THING_1
 ];
 
-const thingNamespace = "SBHS";
+const LogicalNames = {
+    [PRES_THING]: "Presentation",
+    [RING_THING_0]: "Ring0",
+    [RING_THING_1]: "Ring1"
+}
 
-const Things = R.map(rt => thingNamespace + "_" + rt, RawThings);
+const PhysicalNames = {
+    "Presentation": PRES_THING,
+    "Ring0": RING_THING_0,
+    "Ring1": RING_THING_1
+}
+
+// const Things = R.map(rt => thingNamespace + "_" + rt, RawThings);
 
 
 const register = (client, thing) => {
@@ -76,46 +88,33 @@ const createClient = async (callback) => {
         sessionToken: cred.sessionToken
     });
     client.on('connect', async () => {
-        await Promise.all(R.map(thing => register(client,thing), Things))
+        await Promise.all(R.map(thing => register(client,thing), RawThings))
             .catch(error => console.error("Error registering", error));
-        Things.forEach(thing => client.get(thing));
+        RawThings.forEach(thing => client.get(thing));
     });
     client.on('reconnect', () => {
         console.log("client is reconnect")
     });
-    // client.on('delta', function (name, stateObj) {
-    //     console.log(name, "DELTA: " + JSON.stringify(stateObj));
-    // });
     client.on('status', function (name, statusType, token, obj) {
         if (callback)
             callback({
                 type: 'STATUS',
-                name,
+                name: LogicalNames[name],
                 statusType,
                 token,
                 obj
             });
-        // console.log(name, type, token, "STATUS: " + JSON.stringify(stateObj));
     });
     client.on('foreignStateChange', (name, foreignOp, obj) => {
         // console.log(name, op, obj, "foreign state change");
         if (callback)
             callback({
                 type: 'FOREIGN',
-                name,
+                name: LogicalNames[name],
                 foreignOp,
                 obj
             });
     });
-    // client.on('close', () => {
-    //     console.log("client closed");
-    // });
-    // client.on('offline', () => {
-    //     console.log("client offline");
-    // });
-    // client.on('end', () => {
-    //     console.log("client end");
-    // });
     client.on('error', (error) => {
         console.error("client error", error);
     });
@@ -159,47 +158,4 @@ const bringDown = async () => {
 
 
 export {bringUp, bringDown};
-
-// const createDevice_ = (credentials) => {
-//     const thing = 'Temp';
-//     var registered = false;
-//     const shadow = IOT.thingShadow({
-//         region: 'us-east-1',
-//         protocol: 'wss',
-//         host: 'ad78o9k6p57sk.iot.us-east-1.amazonaws.com',
-//         clientId: 'iot-demo' + Math.random(10000000),
-//         maximumReconnectTimeMs: 8000,
-//         debug: true,
-//         accessKeyId: credentials.accessKeyId,
-//         secretKey: credentials.secretAccessKey,
-//         sessionToken: credentials.sessionToken
-//     });
-//     shadow.on('connect', () => {
-//         console.log("connected");
-//         if (!registered) {
-//             shadow.register(thing, {
-//                 persistentSubscribe: true
-//             });
-//             console.log("registered");
-//             registered = true;
-//         }
-//     });
-//     shadow.on('reconnect', function () {
-//         console.log("reconnect")
-//     });
-//     shadow.on('delta', function (name, stateObj) {
-//         console.log(name, "DELTA: " + JSON.stringify(stateObj));
-//     });
-//     shadow.on('status', function (name, type, token, stateObj) {
-//         console.log(name, "STATUS: " + JSON.stringify(stateObj));
-//     });
-//     shadow.on('foreignStateChange', (name, op, obj) => {
-//         console.log("foreign state change", (name, op, obj));
-//     });
-//     setTimeout( function () {
-//         const v = shadow.get(thing);
-//         console.log("GET CODE:", v);
-//     }, 3000);
-// };
-
 

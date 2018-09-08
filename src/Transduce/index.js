@@ -70,10 +70,22 @@ const makeIoTHandler = dispatch => {
     return d => {
         console.log("GOT IOT EVENT: ", d);
         if (d.type === "STATUS" || d.type === "FOREIGN") {
-            if (d.name === "SBHS_Presentation") {
+            if (d.name === "Presentation") {
                 const sup = R.path(['obj','state','desired'],d) || {};
                 console.log(sup);
                 dispatch(evtPresentationChanged(sup));
+            } else if (d.name === "Ring0") {
+                const sup = R.path(['obj','state','desired'], d) || {};
+                console.log(JSON.stringify(sup));
+                const lampChanges = R.pickBy((_,k) => k.startsWith("lamp_"), sup);
+                R.forEachObjIndexed((v, k) => {
+                    if (v >= 0 && v < 16777216) {
+                        const index = parseInt(k.split("_")[1],10);
+                        const color = "#" + ("000000" + v.toString(16)).slice(-6);
+                        const coord = wheelCoord(d.name, index);
+                        dispatch(evtLampStatus(coord, color));
+                    }
+                }, lampChanges);
             }
         }
     };

@@ -8,6 +8,7 @@ gencert() {
     aws iot create-keys-and-certificate \
         --private-key-outfile "$d-private.pem.key" \
         --certificate-pem-outfile "$d-certificate.pem.crt" \
+        --set-as-active \
         --query 'certificateArn' \
         --output text
 }

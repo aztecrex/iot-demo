@@ -24,18 +24,16 @@ Resources:
               - iot:UpdateThingShadow
               - iot:GetThingShadow
             Resource:
-              - "*"
-              # - !Sub arn:aws:iot:${AWS::Region}:${AWS::AccountId}:thing/${!iot:Connection.Thing.ThingName}
+              - !Sub arn:aws:iot:${AWS::Region}:${AWS::AccountId}:thing/${!iot:Connection.Thing.ThingName}
           - Effect: Allow
             Action:
               - iot:Publish
               - iot:Subscribe
               - iot:Receive
             Resource:
-              - "*"
-              # - !Sub arn:aws:iot:${AWS::Region}:${AWS::AccountId}:topic/$aws/things/${!iot:Connection.Thing.ThingName}/shadow/*
-              # - !Sub arn:aws:iot:${AWS::Region}:${AWS::AccountId}:topic/iot-demo/${!iot:Connection.Thing.ThingName}
-              # - !Sub arn:aws:iot:${AWS::Region}:${AWS::AccountId}:topic/iot-demo/general
+              - !Sub arn:aws:iot:${AWS::Region}:${AWS::AccountId}:topic/$aws/things/${!iot:Connection.Thing.ThingName}/shadow/*
+              - !Sub arn:aws:iot:${AWS::Region}:${AWS::AccountId}:topic/iot-demo/${!iot:Connection.Thing.ThingName}
+              - !Sub arn:aws:iot:${AWS::Region}:${AWS::AccountId}:topic/iot-demo/general
 
 
   Policy2:

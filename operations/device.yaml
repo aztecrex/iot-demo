@@ -17,9 +17,12 @@ Resources:
       Principal: !Ref CertificateArn
       ThingName: !Ref Device
 
+
+  ## swap between device policy 1 and 2 when they
+  ## are changed.
   PrincipalPolicy:
     Type: AWS::IoT::PolicyPrincipalAttachment
     Properties:
-      PolicyName: !ImportValue iot-demo-devices-DevicePolicy
+      PolicyName: !ImportValue iot-demo-devices-DevicePolicy2
       Principal: !Ref CertificateArn
 

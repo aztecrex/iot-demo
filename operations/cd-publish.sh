@@ -49,3 +49,9 @@ update-lambda \
     'iot-demo-backend-SlidesButtonFunction-1X4YNKHYEXAK0' \
     'presentation.handle' \
     "./lambda-build/presentation.zip"
+
+update-lambda \
+    'iot-demo-backend-PresentationMasterFunction-7I3MS5XU5C4V' \
+    'controller.handle' \
+    "./lambda-build/controller.zip"
+

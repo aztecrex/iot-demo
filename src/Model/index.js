@@ -92,6 +92,17 @@ const coordinates = ({coord}) => {
     return coord || {};
 };
 
+const device = coord => {
+    return coord.device;
+};
+
+const index = coord => {
+    if (coord.displayType === DT_WHEEL)
+        return coord.index
+    else
+        return coord.row * 16 + coord.col;
+};
+
 const NAV_LOGGED_IN = navPre + "/LOGGEDIN";
 const NAV_LOGGED_OUT = navPre + "/LOGGEDOUT";
 const NAV_LOGGING_IN = navPre + "/LOGGINGIN";
@@ -281,6 +292,7 @@ export {
     evtLampPressed, evtTypeLampPressed,
     coordinates, wheelCoord, matrixCoord,
     colors,
+    index, device,
     setLoginState, isLoggedIn, getLoginState,
     evtLoginRequested, evtLogoutRequested, evtLoginSucceeded, evtLoginFailed,
     evtLoginCanceled, evtLoginLoginDesired, evtPasswordChangeRequired, evtPasswordChangeRequested,

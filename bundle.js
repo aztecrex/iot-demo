@@ -15,3 +15,16 @@ bundler({
         console.log("bundled: 'presentation.zip'");
 });
 
+bundler({
+    entry: 'controller.js',
+    export: 'handle',
+    output: 'lambda-build/controller.zip',
+    exclude: ['aws-sdk']
+}, (err, buffer, artifacts) => {
+    if (err) {
+        console.error(err);
+        return;
+    }
+    console.log("bundled: 'controller.zip'");
+});
+

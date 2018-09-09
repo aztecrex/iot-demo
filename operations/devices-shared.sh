@@ -22,7 +22,7 @@ provision() {
 }
 
 stack="iot-demo-devices"
-op=$(operation "$stackname")
+op=$(operation "$stack")
 
 provision "$stack" "$op"
 

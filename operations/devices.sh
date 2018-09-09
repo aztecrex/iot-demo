@@ -8,6 +8,7 @@ gencert() {
     aws iot create-keys-and-certificate \
         --private-key-outfile "$d-private.pem.key" \
         --certificate-pem-outfile "$d-certificate.pem.crt" \
+        --set-as-active \
         --query 'certificateArn' \
         --output text
 }
@@ -57,8 +58,8 @@ createOrUpdate() {
 
 }
 
-createOrUpdate Ring0
-createOrUpdate Ring1
-createOrUpdate Matrix0
-
+createOrUpdate Ring0 || echo $?
+createOrUpdate Ring1 || echo $?
+createOrUpdate Matrix0 || echo $?
+createOrUpdate Presentation || echo $?
 

@@ -38,6 +38,23 @@ Resources:
                 Resource:
                   - "*"
 
+  PresentationMasterFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+        Code:
+            ZipFile: >
+                exports.handler = (event, context, callback) => {
+                    console.log("gen content placeholder invoked with ", event);
+                    callback(null, {});
+                };
+        Handler: index.handler
+        Role: !GetAtt ControlFunctionRole.Arn
+        Runtime: nodejs6.10
+        Environment:
+          Variables:
+            IOT_ENDPOINT: ad78o9k6p57sk.iot.us-east-1.amazonaws.com
+            IOT_THING: iot-demo-thing-Presentation-Device-1ROQMZ1DS7LHY
+
   SlidesButtonFunction:
     Type: AWS::Lambda::Function
     Properties:
@@ -73,10 +90,39 @@ Resources:
         Principal: iot.amazonaws.com
         SourceArn: !GetAtt SlidesButtonRule.Arn
 
+
+  ControllerUser:
+    Type: AWS::IAM::User
+    Properties:
+      Policies:
+        - PolicyName: ControllerUserPolicy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - lambda:InvokeFunction
+                Resource:
+                  - !GetAtt PresentationMasterFunction.Arn
+
+
+  ControllerUserCredentials:
+    Type: AWS::IAM::AccessKey
+    Properties:
+      Serial: 1
+      UserName: !Ref ControllerUser
+
+
 Outputs:
   SlidesButtonFunction:
     Value: !Ref SlidesButtonFunction
   SlidesButtonFunctionArn:
     Value: !GetAtt SlidesButtonFunction.Arn
+  ControllerUser:
+    Value: !Ref ControllerUserCredentials
+  ControllerUserSecret:
+    Value: !GetAtt ControllerUserCredentials.SecretAccessKey
+  PresentationMasterFunction:
+    Value: !Ref PresentationMasterFunction
 
 

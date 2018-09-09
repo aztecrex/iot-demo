@@ -7,9 +7,9 @@ Restart=always
 StandardOutput=syslog
 StandardError=syslog
 SyslogIdentifier=PRESCONTROL
-Environment=AWS_ACCESS_KEY_ID=AKIAIT3HGTIV5XSAJYOA
-Environment=AWS_SECRET_ACCESS_KEY=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
-Environment=AWS_DEFAULT_REGION=us-east-1
+Environment=AWS_ACCESS_KEY_ID=
+Environment=AWS_SECRET_ACCESS_KEY=
+Environment=AWS_DEFAULT_REGION=
 User=pi
 Group=pi
 

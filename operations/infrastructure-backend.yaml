@@ -109,7 +109,7 @@ Resources:
   ControllerUserCredentials:
     Type: AWS::IAM::AccessKey
     Properties:
-      Serial: 1
+      Serial: 2
       UserName: !Ref ControllerUser
 
 

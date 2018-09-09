@@ -42,6 +42,7 @@ ACT_UNPRESENT = 3
 ACT_RESET = 4
 ACT_FIRST = 5
 ACT_LAST = 6
+ACT_DETAILS = 7
 ACT_UNKNOWN = -1
 
 
@@ -53,6 +54,8 @@ def interpret(event):
             return ACT_FIRST
         elif event.code == PAD_R:
             return ACT_LAST
+        elif event.code == PAD_A:
+            return ACT_DETAILS
     elif event.type == ecodes.EV_ABS:
         if event.code == PAD_HZ:
             if event.value == PAD_HZ_LEFT:
@@ -100,6 +103,9 @@ def presentation_hide():
 def presentation_reset():
     invoke_lambda("reset")
 
+def presentation_toggle_details():
+    invoke_lambda("toggle-details")
+
 
 def dispatch(action):
     if action == ACT_FORWARD:
@@ -116,6 +122,8 @@ def dispatch(action):
         presentation_hide()
     elif action == ACT_RESET:
         presentation_reset()
+    elif action == ACT_DETAILS:
+        presentation_toggle_details()
 
 
 

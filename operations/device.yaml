@@ -20,6 +20,6 @@ Resources:
   PrincipalPolicy:
     Type: AWS::IoT::PolicyPrincipalAttachment
     Properties:
-      PolicyName: !ImportValue iot-demo-devices-DevicePolicy
+      PolicyName: !ImportValue iot-demo-devices-DevicePolicy2
       Principal: !Ref CertificateArn
 

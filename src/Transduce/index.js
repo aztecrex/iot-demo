@@ -91,11 +91,14 @@ const makeIoTHandler = dispatch => {
                 console.log(JSON.stringify(sup));
                 const lampChanges = R.pickBy((_,k) => k.startsWith("lamp_"), sup);
                 R.forEachObjIndexed((v, k) => {
-                    if (v >= 0 && v < 16777216) {
+                    const index = parseInt(k.split("_")[1],10);
+                    const coord = wheelCoord(d.name, index);
+                        if (v > 0 && v < 16777216) {
                         const index = parseInt(k.split("_")[1],10);
                         const color = "#" + ("000000" + v.toString(16)).slice(-6);
-                        const coord = wheelCoord(d.name, index);
                         dispatch(evtLampStatus(coord, color));
+                    } else {
+                        dispatch(evtLampStatusOff(coord));
                     }
                 }, lampChanges);
             }

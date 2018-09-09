@@ -84,7 +84,7 @@ const Right_ = ({classes}) => {
     return (
         <Grid item sm>
             <Paper className={classes.device + ' ' + classes.paper}>
-                <ConnectedWheel dim="250" device="Ring0" />
+                <ConnectedWheel dim="250" device="Ring1" />
             </Paper>
             <Paper className={classes.device + ' ' + classes.paper}>
                 <ConnectedMatrix dim="250" device="matrix_0" />

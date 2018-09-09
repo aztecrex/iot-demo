@@ -9,7 +9,7 @@ const clientId = () =>
 
 const PRES_THING = 'Presentation';
 const RING_THING_0 = 'iot-demo-thing-Ring0-Device-759W16L3V7JJ';
-const RING_THING_1 = 'iot-demo-thing-Ring1-Device-VG0H11KPBHUW';
+const RING_THING_1 = 'iot-demo-thing-Ring1-Device-GF47OOHQKUBT';
 
 const RawThings = [
     PRES_THING,

@@ -93,8 +93,7 @@ const makeIoTHandler = dispatch => {
                 R.forEachObjIndexed((v, k) => {
                     const index = parseInt(k.split("_")[1],10);
                     const coord = wheelCoord(d.name, index);
-                        if (v > 0 && v < 16777216) {
-                        const index = parseInt(k.split("_")[1],10);
+                    if (v > 0 && v < 16777216) {
                         const color = "#" + ("000000" + v.toString(16)).slice(-6);
                         dispatch(evtLampStatus(coord, color));
                     } else {

@@ -94,8 +94,8 @@ const eventAction = (evt = {}) => {
 
 const dispatch = action => {
     switch (action) {
-        case "advance":         return advance();
-        case "retreat":         return retreat();
+        case "next":         return advance();
+        case "previous":         return retreat();
         case "first":           return first();
         case "last":            return last();
         case "reset":           return reset();

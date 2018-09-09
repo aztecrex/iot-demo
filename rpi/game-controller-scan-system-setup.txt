@@ -1,0 +1,8 @@
+sudo pip install evdev
+sudo apt-get install vim
+sudo pip install boto3
+sudo pip install awscli
+sudo cp presentation-controller.service /etc/systemd/system/
+sudo systemctl enable presentation-controller.service
+sudo systemctl start presentation-controller.service
+

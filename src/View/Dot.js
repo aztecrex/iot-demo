@@ -26,7 +26,8 @@ const defaultColor = "#CCC";
 
 const Dot = ({ coord, x, y, radius, color, handleClick }) => {
     const colorOutside = luminance(color, -.5);
-    const gid = x + "_" + y
+    const gradId = "grad" + color
+    const glowId = "glow" + color
     if (color === "off") {
         return (
             <circle cx={x} cy={y}
@@ -40,7 +41,7 @@ const Dot = ({ coord, x, y, radius, color, handleClick }) => {
         return (
             <React.Fragment>
                 <defs>
-                    <filter id={"sofGlow" + color} height="400%" width="400%" x="-75%" y="-75%">
+                    <filter id={glowId} height="400%" width="400%" x="-75%" y="-75%">
                         <feMorphology operator="dilate" radius="4" in="SourceAlpha" result="thicken" />
                         <feGaussianBlur in="thicken" stdDeviation="10" result="blurred" />
                         <feFlood floodColor={color} result="glowColor" />
@@ -50,7 +51,7 @@ const Dot = ({ coord, x, y, radius, color, handleClick }) => {
                             <feMergeNode in="SourceGraphic"/>
                         </feMerge>
                     </filter>
-                    <radialGradient id={gid}>
+                    <radialGradient id={gradId}>
                         <stop offset="43%" stopColor={color} />
                         <stop offset="100%" stopColor={colorOutside} />
                     </radialGradient>
@@ -58,7 +59,7 @@ const Dot = ({ coord, x, y, radius, color, handleClick }) => {
                 </defs>
                 <circle cx={x} cy={y}
                     r={radius}
-                    fill={"url(#" + gid + ")"} stroke="#333" filter={"url(#sofGlow"+ color +")"}
+                    fill={"url(#" + gradId + ")"} stroke="#333" filter={"url(#" + glowId +")"}
                     onClick={handleClick}
                     className="DotClickable" />
             </React.Fragment>

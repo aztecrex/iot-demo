@@ -62,4 +62,5 @@ createOrUpdate Ring0 || echo $?
 createOrUpdate Ring1 || echo $?
 createOrUpdate Matrix0 || echo $?
 createOrUpdate Presentation || echo $?
-
+createOrUpdate LightSwitch || echo $?
+createOrUpdate Lanyard || echo $?

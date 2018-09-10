@@ -67,7 +67,7 @@ const Thing = (() => {
     };
 
     const setLampColor = (logical, key, color ) => {
-        if (!client) return;
+        if (!client) return Promise.resolve({});
         const physical = PhysicalNames[logical];
         const updateState = {
             state: {
@@ -77,7 +77,9 @@ const Thing = (() => {
             }
         };
 
-        return client.then(c => c.update(physical, updateState));
+        return client
+            .then(c => c.update(physical, updateState))
+            .then({});
     }
 
     return {up, down, setLampColor};

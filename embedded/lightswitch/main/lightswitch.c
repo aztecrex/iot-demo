@@ -47,7 +47,7 @@
 #include "aws_iot_shadow_interface.h"
 #include "driver/gpio.h"
 
-#define SWITCH_PIN 27
+#define SWITCH_PIN 26
 
 static const char *TAG = "shadow";
 

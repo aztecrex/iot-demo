@@ -31,7 +31,6 @@ void fade(unsigned frame) {
     if (frame >= 15) {
         bright = 30 - frame;
     }
-    printf("bright is %u\n", bright);
     pixel dots[] = {
         {bright, 255, 255, 255},
         {bright, 255, 255, 255},
@@ -69,13 +68,14 @@ void clear() {
 void animation_task(void *param) {
     unsigned frame = 0;
     while(1) {
+        printf("switch to running\n");
         while (running) {
             show_frame(frame);
             frame += 1;
         }
         clear();
+        printf("switch to idle\n");
         while (!running) {
-            printf("animation idling\n");
             vTaskDelay(1000 / portTICK_PERIOD_MS);
         }
     }

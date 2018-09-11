@@ -155,6 +155,7 @@ void display_visible_callback(const char *pJsonString, uint32_t JsonStringDataLe
             animation_enable();
         else
             animation_disable();
+        should_report = true;
     } else {
         ESP_LOGI(TAG, "cb with no data, hmm");
     }
@@ -165,6 +166,7 @@ void display_type_callback(const char *pJsonString, uint32_t JsonStringDataLen, 
     if(pContext != NULL) {
         bool tp = *(uint8_t *)(pContext->pData);
         animation_select(tp);
+        should_report = true;
     } else {
         ESP_LOGI(TAG, "cb with no data, hmm");
     }

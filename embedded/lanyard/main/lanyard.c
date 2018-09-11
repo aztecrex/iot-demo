@@ -47,6 +47,9 @@
 #include "aws_iot_shadow_interface.h"
 #include "driver/gpio.h"
 
+#include "dotstar.h"
+#include "animation.h"
+
 #define SWITCH_PIN 27
 
 static const char *TAG = "shadow";
@@ -357,12 +360,21 @@ static void initialise_wifi(void)
 
 void app_main()
 {
+
     esp_err_t err = nvs_flash_init();
     if (err == ESP_ERR_NVS_NO_FREE_PAGES || err == ESP_ERR_NVS_NEW_VERSION_FOUND) {
         ESP_ERROR_CHECK(nvs_flash_erase());
         err = nvs_flash_init();
     }
     ESP_ERROR_CHECK( err );
+
+    dotstar_configure();
+    animation_enable();
+    animation_start();
+    vTaskDelay(2000 / portTICK_RATE_MS);
+    animation_disable();
+    vTaskDelay(2000 / portTICK_RATE_MS);
+    animation_enable();
 
     initialise_wifi();
     /* Temporarily pin task to core, due to FPU uncertainty */

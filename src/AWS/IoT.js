@@ -7,7 +7,7 @@ const clientId = () =>
         .then(c => c.identityId);
 
 
-const PRES_THING = 'Presentation';
+const PRES_THING = 'iot-demo-thing-Presentation-Device-1ROQMZ1DS7LHY';
 const RING_THING_0 = 'iot-demo-thing-Ring0-Device-759W16L3V7JJ';
 const RING_THING_1 = 'iot-demo-thing-Ring1-Device-GF47OOHQKUBT';
 
@@ -67,7 +67,7 @@ const Thing = (() => {
     };
 
     const setLampColor = (logical, key, color ) => {
-        if (!client) return;
+        if (!client) return Promise.resolve({});
         const physical = PhysicalNames[logical];
         const updateState = {
             state: {
@@ -77,7 +77,9 @@ const Thing = (() => {
             }
         };
 
-        return client.then(c => c.update(physical, updateState));
+        return client
+            .then(c => c.update(physical, updateState))
+            .then({});
     }
 
     return {up, down, setLampColor};

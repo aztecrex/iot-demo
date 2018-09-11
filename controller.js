@@ -69,7 +69,7 @@ const last = () => {
 };
 
 const reset = () => {
-    return updateDesired({slide: 1, presenting: false});
+    return updateDesired({slide: 1, presenting: false, details: false});
 }
 
 const powerOn = () => {

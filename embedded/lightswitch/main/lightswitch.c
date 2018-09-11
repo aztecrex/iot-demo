@@ -45,6 +45,9 @@
 #include "aws_iot_version.h"
 #include "aws_iot_mqtt_client_interface.h"
 #include "aws_iot_shadow_interface.h"
+#include "driver/gpio.h"
+
+#define SWITCH_PIN 27
 
 static const char *TAG = "shadow";
 
@@ -58,7 +61,6 @@ static const char *TAG = "shadow";
 */
 #define EXAMPLE_WIFI_SSID CONFIG_WIFI_SSID
 #define EXAMPLE_WIFI_PASS CONFIG_WIFI_PASSWORD
-
 
 /* FreeRTOS event group to signal when we are connected & ready to make a request */
 static EventGroupHandle_t wifi_event_group;
@@ -143,36 +145,46 @@ void ShadowUpdateStatusCallback(const char *pThingName, ShadowActions_t action, 
     }
 }
 
-void lamp_callback(const char *pJsonString, uint32_t JsonStringDataLen, jsonStruct_t *pContext) {
+void device_callback(const char *pJsonString, uint32_t JsonStringDataLen, jsonStruct_t *pContext) {
     IOT_UNUSED(pJsonString);
     IOT_UNUSED(JsonStringDataLen);
-    if(pContext != NULL) {
-        ESP_LOGI(TAG," delta - string in lamp state change");
-        ESP_LOGI(TAG, "delta - lamp state changed to %d", *(uint32_t *)(pContext->pData));
-        should_report = true;
-    } else {
-        ESP_LOGI(TAG, "cb with no data, hmm");
-    }
+    IOT_UNUSED(pContext);
+    // if(pContext != NULL) {
+    //     ESP_LOGI(TAG," delta - string in lamp state change");
+    //     ESP_LOGI(TAG, "delta - lamp state changed to %d", *(uint32_t *)(pContext->pData));
+    //     should_report = true;
+    // } else {
+    //     ESP_LOGI(TAG, "cb with no data, hmm");
+    // }
 }
 
-#define NUM_LAMPS 16
-#define SZ_KEY_BUF 8
-static uint32_t lamp_states[NUM_LAMPS];
-static char lamp_names[NUM_LAMPS][SZ_KEY_BUF];
-static jsonStruct_t lamp_controls[NUM_LAMPS];
+static void initialize_perphipherals() {
 
-static void initialize_lamps() {
-    for (int i = 0; i< NUM_LAMPS; ++i) {
+    gpio_config_t io_conf;
+    io_conf.intr_type = GPIO_PIN_INTR_DISABLE;
+    io_conf.mode = GPIO_MODE_INPUT;
+    //bit mask of the pins that you want to set,e.g.GPIO18/19
+    io_conf.pin_bit_mask = 1ULL << SWITCH_PIN;
+    io_conf.pull_down_en = 0;
+    io_conf.pull_up_en = 1;
+    gpio_config(&io_conf);
 
-        lamp_states[i] = 0;
-        snprintf(lamp_names[i], SZ_KEY_BUF, "lamp_%d", i);
 
-        lamp_controls[i].cb = lamp_callback;
-        lamp_controls[i].pData = &(lamp_states[i]);
-        lamp_controls[i].pKey = lamp_names[i];
-        lamp_controls[i].type = SHADOW_JSON_UINT32;
-        lamp_controls[i].dataLength = sizeof(uint32_t);
-    }
+}
+
+static bool check_switch_status() {
+    return gpio_get_level(SWITCH_PIN) ? true : false;
+}
+
+static bool switch_state = false;
+static jsonStruct_t switch_control;
+
+static void initialize_switch() {
+        switch_control.cb = device_callback;
+        switch_control.pData = &switch_state;
+        switch_control.pKey = "switch";
+        switch_control.type = SHADOW_JSON_BOOL;
+        switch_control.dataLength = sizeof(bool);
 }
 
 void aws_iot_task(void *param) {
@@ -181,7 +193,10 @@ void aws_iot_task(void *param) {
     char JsonDocumentBuffer[MAX_LENGTH_OF_UPDATE_JSON_BUFFER];
     size_t sizeOfJsonDocumentBuffer = sizeof(JsonDocumentBuffer) / sizeof(JsonDocumentBuffer[0]);
 
-    initialize_lamps();
+    initialize_perphipherals();
+    initialize_switch();
+
+    // initialize_lamps();
 
     ESP_LOGI(TAG, "AWS IoT SDK Version %d.%d.%d-%s", VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH, VERSION_TAG);
 
@@ -253,11 +268,11 @@ void aws_iot_task(void *param) {
         abort();
     }
 
-    for (int i=0; i< NUM_LAMPS; ++i) {
-        rc = aws_iot_shadow_register_delta(&mqttClient, &(lamp_controls[i]));
-        if (rc != SUCCESS)
-            break;
-    }
+    // for (int i=0; i< NUM_LAMPS; ++i) {
+    //     rc = aws_iot_shadow_register_delta(&mqttClient, &(lamp_controls[i]));
+    //     if (rc != SUCCESS)
+    //         break;
+    // }
 
     if(SUCCESS != rc) {
         ESP_LOGE(TAG, "Shadow Register Delta Error");
@@ -273,30 +288,20 @@ void aws_iot_task(void *param) {
             continue;
         }
 
+        bool sstat = check_switch_status();
+        ESP_LOGI(TAG, "switch status is %d", sstat);
+        if (sstat != switch_state) {
+            should_report = true;
+            switch_state = sstat;
+        }
+
         if (should_report && !shadowUpdateInProgress) {
 
             rc = aws_iot_shadow_init_json_document(JsonDocumentBuffer, sizeOfJsonDocumentBuffer);
             if (rc != SUCCESS) ESP_LOGE(TAG, "non-success result from init json document %d", rc);
             if(SUCCESS == rc) {
-                rc = aws_iot_shadow_add_reported (
-                    JsonDocumentBuffer, sizeOfJsonDocumentBuffer, 16,
-                        &(lamp_controls[0]),
-                        &(lamp_controls[1]),
-                        &(lamp_controls[2]),
-                        &(lamp_controls[3]),
-                        &(lamp_controls[4]),
-                        &(lamp_controls[5]),
-                        &(lamp_controls[6]),
-                        &(lamp_controls[7]),
-                        &(lamp_controls[8]),
-                        &(lamp_controls[9]),
-                        &(lamp_controls[10]),
-                        &(lamp_controls[11]),
-                        &(lamp_controls[12]),
-                        &(lamp_controls[13]),
-                        &(lamp_controls[14]),
-                        &(lamp_controls[15])
-                );
+                rc = aws_iot_shadow_add_reported(
+                    JsonDocumentBuffer, sizeOfJsonDocumentBuffer, 1, &switch_control);
                 if (rc != SUCCESS) ESP_LOGE(TAG, "non-success result from add reported %d", rc);
                 if(SUCCESS == rc) {
                     rc = aws_iot_finalize_json_document(JsonDocumentBuffer, sizeOfJsonDocumentBuffer);

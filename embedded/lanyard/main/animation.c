@@ -9,11 +9,11 @@
 
 #define NUM_ANIMATIONS 1
 
-static unsigned curanimation = 0;
+static uint8_t curanimation = 0;
 static bool running = false;
 static bool started = false;
 
-void animation_select(unsigned index) {
+void animation_select(uint8_t index) {
     curanimation = index % NUM_ANIMATIONS;
 }
 

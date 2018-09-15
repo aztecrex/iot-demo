@@ -46,6 +46,12 @@
 #include "aws_iot_mqtt_client_interface.h"
 #include "aws_iot_shadow_interface.h"
 
+#include "display.h"
+
+#define LAMP_PIN 14
+#define NUM_LAMPS 16
+
+
 static const char *TAG = "shadow";
 
 #define MAX_LENGTH_OF_UPDATE_JSON_BUFFER 800
@@ -89,11 +95,11 @@ extern const uint8_t certificate_pem_crt_end[] asm("_binary_certificate_pem_crt_
 extern const uint8_t private_pem_key_start[] asm("_binary_private_pem_key_start");
 extern const uint8_t private_pem_key_end[] asm("_binary_private_pem_key_end");
 
-#elif defined(CONFIG_EXAMPLE_FILESYSTEM_CERTS)
+// #elif defined(CONFIG_EXAMPLE_FILESYSTEM_CERTS)
 
-static const char * DEVICE_CERTIFICATE_PATH = CONFIG_EXAMPLE_CERTIFICATE_PATH;
-static const char * DEVICE_PRIVATE_KEY_PATH = CONFIG_EXAMPLE_PRIVATE_KEY_PATH;
-static const char * ROOT_CA_PATH = CONFIG_EXAMPLE_ROOT_CA_PATH;
+// static const char * DEVICE_CERTIFICATE_PATH = CONFIG_EXAMPLE_CERTIFICATE_PATH;
+// static const char * DEVICE_PRIVATE_KEY_PATH = CONFIG_EXAMPLE_PRIVATE_KEY_PATH;
+// static const char * ROOT_CA_PATH = CONFIG_EXAMPLE_ROOT_CA_PATH;
 
 #else
 #error "Invalid method for loading certs"
@@ -147,22 +153,28 @@ void lamp_callback(const char *pJsonString, uint32_t JsonStringDataLen, jsonStru
     IOT_UNUSED(pJsonString);
     IOT_UNUSED(JsonStringDataLen);
     if(pContext != NULL) {
-        ESP_LOGI(TAG," delta - string in lamp state change");
-        ESP_LOGI(TAG, "delta - lamp state changed to %d", *(uint32_t *)(pContext->pData));
+        char *sep = strchr((*pContext).pKey,'_');
+        if (sep) {
+            uint8_t index = atoi(sep + 1);
+            display_set_color(index, *(uint32_t *)(pContext->pData));
+            ESP_LOGI(TAG, "delta %d %d", index, *(uint32_t *)(pContext->pData));
+        } else {
+            ESP_LOGI(TAG, "could not parse %s", ((*pContext).pKey));
+        }
         should_report = true;
     } else {
         ESP_LOGI(TAG, "cb with no data, hmm");
     }
 }
 
-#define NUM_LAMPS 16
+
 #define SZ_KEY_BUF 8
 static uint32_t lamp_states[NUM_LAMPS];
 static char lamp_names[NUM_LAMPS][SZ_KEY_BUF];
 static jsonStruct_t lamp_controls[NUM_LAMPS];
 
 static void initialize_lamps() {
-    for (int i = 0; i< NUM_LAMPS; ++i) {
+    for (uint8_t i = 0; i< NUM_LAMPS; ++i) {
 
         lamp_states[i] = 0;
         snprintf(lamp_names[i], SZ_KEY_BUF, "lamp_%d", i);
@@ -182,6 +194,8 @@ void aws_iot_task(void *param) {
     size_t sizeOfJsonDocumentBuffer = sizeof(JsonDocumentBuffer) / sizeof(JsonDocumentBuffer[0]);
 
     initialize_lamps();
+    display_init(LAMP_PIN, NUM_LAMPS);
+    display_on();
 
     ESP_LOGI(TAG, "AWS IoT SDK Version %d.%d.%d-%s", VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH, VERSION_TAG);
 
@@ -202,22 +216,6 @@ void aws_iot_task(void *param) {
 #endif
     sp.enableAutoReconnect = false;
     sp.disconnectHandler = NULL;
-
-#ifdef CONFIG_EXAMPLE_SDCARD_CERTS
-    ESP_LOGI(TAG, "Mounting SD card...");
-    sdmmc_host_t host = SDMMC_HOST_DEFAULT();
-    sdmmc_slot_config_t slot_config = SDMMC_SLOT_CONFIG_DEFAULT();
-    esp_vfs_fat_sdmmc_mount_config_t mount_config = {
-        .format_if_mount_failed = false,
-        .max_files = 3,
-    };
-    sdmmc_card_t* card;
-    esp_err_t ret = esp_vfs_fat_sdmmc_mount("/sdcard", &host, &slot_config, &mount_config, &card);
-    if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "Failed to mount SD card VFAT filesystem. Error: %s", esp_err_to_name(ret));
-        abort();
-    }
-#endif
 
     /* Wait for WiFI to show as connected */
     xEventGroupWaitBits(wifi_event_group, CONNECTED_BIT,

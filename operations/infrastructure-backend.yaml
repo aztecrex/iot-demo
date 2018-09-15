@@ -55,6 +55,44 @@ Resources:
             IOT_ENDPOINT: ad78o9k6p57sk.iot.us-east-1.amazonaws.com
             IOT_THING: iot-demo-thing-Presentation-Device-1ROQMZ1DS7LHY
 
+  PowerDispatchFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+        Code:
+            ZipFile: >
+                exports.handler = (event, context, callback) => {
+                    console.log("gen content placeholder invoked with ", event);
+                    callback(null, {});
+                };
+        Handler: index.handler
+        Role: !GetAtt ControlFunctionRole.Arn
+        Runtime: nodejs6.10
+        Environment:
+          Variables:
+            IOT_ENDPOINT: ad78o9k6p57sk.iot.us-east-1.amazonaws.com
+            IOT_THING_RING0: iot-demo-thing-Ring0-Device-759W16L3V7JJ
+            IOT_THING_RING1: iot-demo-thing-Ring1-Device-GF47OOHQKUBT
+            IOT_THING_LANYARD: iot-demo-thing-Lanyard-Device-YY67CDETS8PP
+            IOT_THING_PRESENTATION: iot-demo-thing-Presentation-Device-1ROQMZ1DS7LHY
+
+  PowerSwitchRule:
+    Type: AWS::IoT::TopicRule
+    Properties:
+      TopicRulePayload:
+        Actions:
+          - Lambda:
+              FunctionArn: !GetAtt PowerDispatchFunction.Arn
+        RuleDisabled: false
+        Sql: SELECT * FROM '$aws/things/iot-demo-thing-LightSwitch-Device-W8NX19X0CBKG/shadow/update/accepted'
+
+  PoserDispatchFunctionPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+        FunctionName: !GetAtt PowerDispatchFunction.Arn
+        Action: lambda:InvokeFunction
+        Principal: iot.amazonaws.com
+        SourceArn: !GetAtt PowerSwitchRule.Arn
+
   SlidesButtonFunction:
     Type: AWS::Lambda::Function
     Properties:

@@ -128,6 +128,7 @@ static esp_err_t event_handler(void *ctx, system_event_t *event)
 
 static bool shadowUpdateInProgress = false;
 static bool should_report = true;
+static bool was_powered = false;
 
 void ShadowUpdateStatusCallback(const char *pThingName, ShadowActions_t action, Shadow_Ack_Status_t status,
                                 const char *pReceivedJsonDocument, void *pContextData) {
@@ -149,6 +150,25 @@ void ShadowUpdateStatusCallback(const char *pThingName, ShadowActions_t action, 
     }
 }
 
+void powered_callback(const char *pJsonString, uint32_t JsonStringDataLen, jsonStruct_t *pContext) {
+    IOT_UNUSED(pJsonString);
+    IOT_UNUSED(JsonStringDataLen);
+    if(pContext != NULL) {
+        bool next = *(bool *)(pContext->pData);
+        ESP_LOGI(TAG, "power from %d to %d", was_powered, next);
+        if (next != was_powered) {
+            if (next)
+                display_on();
+            else
+                display_off();
+        }
+        was_powered = next;
+        should_report = true;
+    } else {
+        ESP_LOGI(TAG, "cb with no data, hmm");
+    }
+}
+
 void lamp_callback(const char *pJsonString, uint32_t JsonStringDataLen, jsonStruct_t *pContext) {
     IOT_UNUSED(pJsonString);
     IOT_UNUSED(JsonStringDataLen);
@@ -167,6 +187,20 @@ void lamp_callback(const char *pJsonString, uint32_t JsonStringDataLen, jsonStru
     }
 }
 
+static bool powered;
+static jsonStruct_t powered_control;
+
+static void initialize_powered() {
+
+    was_powered = false;
+    powered = false;
+    powered_control.cb = powered_callback;
+    powered_control.pData = &powered;
+    powered_control.pKey = "powered";
+    powered_control.type = SHADOW_JSON_BOOL;
+    powered_control.dataLength = sizeof(bool);
+
+}
 
 #define SZ_KEY_BUF 8
 static uint32_t lamp_states[NUM_LAMPS];
@@ -187,15 +221,18 @@ static void initialize_lamps() {
     }
 }
 
+
+
 void aws_iot_task(void *param) {
     IoT_Error_t rc = FAILURE;
 
     char JsonDocumentBuffer[MAX_LENGTH_OF_UPDATE_JSON_BUFFER];
     size_t sizeOfJsonDocumentBuffer = sizeof(JsonDocumentBuffer) / sizeof(JsonDocumentBuffer[0]);
 
+    initialize_powered();
+
     initialize_lamps();
     display_init(LAMP_PIN, NUM_LAMPS);
-    display_on();
 
     ESP_LOGI(TAG, "AWS IoT SDK Version %d.%d.%d-%s", VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH, VERSION_TAG);
 
@@ -256,6 +293,8 @@ void aws_iot_task(void *param) {
         if (rc != SUCCESS)
             break;
     }
+
+    aws_iot_shadow_register_delta(&mqttClient, &powered_control);
 
     if(SUCCESS != rc) {
         ESP_LOGE(TAG, "Shadow Register Delta Error");

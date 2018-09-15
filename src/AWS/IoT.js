@@ -112,7 +112,7 @@ const createClient = async (callback) => {
         console.log("client is reconnect")
     });
     client.on('status', function (name, statusType, token, obj) {
-        if (callback)
+        if (callback) {
             callback({
                 type: 'STATUS',
                 name: LogicalNames[name],
@@ -120,6 +120,7 @@ const createClient = async (callback) => {
                 token,
                 obj
             });
+        }
     });
     client.on('foreignStateChange', (name, foreignOp, obj) => {
         // console.log(name, op, obj, "foreign state change");

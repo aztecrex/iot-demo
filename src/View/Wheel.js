@@ -14,17 +14,19 @@ const generatePoints = (count, dim, colors) => {
     const cidx = idx => idx+"_";
     const combine = (m,{index,color}) => ({...m, [cidx(index)]:color});
     const colors_ = R.reduce(combine, {}, colors);
+
     return R.map(i => {
+        const pos = count - i - 1;
         const x = Math.cos(i * theta) * (innerDim/2) + (dim/2);
         const y = Math.sin(i * theta) * (innerDim/2) + (dim/2);
-        const color = colors_[cidx(i)] || "off";
-        const coord = {index: i};
+        const color = colors_[cidx(pos)] || "off";
+        const coord = {index: pos};
         return {x,y,radius,color,coord}
     }, R.range(0, count));
 };
 
 const Wheel = ( {device, dim = 300,
-                count = 16, colors = [{index: 3, color: "#FF3344"}],
+                count = 16, colors = [],
                 handleDotClicked}) => {
     const points = generatePoints(count, dim, colors);
     const hclick = coord => handleDotClicked(wheelCoord(device, coord.index));

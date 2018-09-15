@@ -45,10 +45,12 @@
 #include "aws_iot_version.h"
 #include "aws_iot_mqtt_client_interface.h"
 #include "aws_iot_shadow_interface.h"
-#include "driver/gpio.h"
 
-#include "dotstar.h"
-#include "animation.h"
+#include "display.h"
+
+#define LAMP_PIN 14
+#define NUM_LAMPS 16
+
 
 static const char *TAG = "shadow";
 
@@ -62,6 +64,7 @@ static const char *TAG = "shadow";
 */
 #define EXAMPLE_WIFI_SSID CONFIG_WIFI_SSID
 #define EXAMPLE_WIFI_PASS CONFIG_WIFI_PASSWORD
+
 
 /* FreeRTOS event group to signal when we are connected & ready to make a request */
 static EventGroupHandle_t wifi_event_group;
@@ -92,11 +95,11 @@ extern const uint8_t certificate_pem_crt_end[] asm("_binary_certificate_pem_crt_
 extern const uint8_t private_pem_key_start[] asm("_binary_private_pem_key_start");
 extern const uint8_t private_pem_key_end[] asm("_binary_private_pem_key_end");
 
-#elif defined(CONFIG_EXAMPLE_FILESYSTEM_CERTS)
+// #elif defined(CONFIG_EXAMPLE_FILESYSTEM_CERTS)
 
-static const char * DEVICE_CERTIFICATE_PATH = CONFIG_EXAMPLE_CERTIFICATE_PATH;
-static const char * DEVICE_PRIVATE_KEY_PATH = CONFIG_EXAMPLE_PRIVATE_KEY_PATH;
-static const char * ROOT_CA_PATH = CONFIG_EXAMPLE_ROOT_CA_PATH;
+// static const char * DEVICE_CERTIFICATE_PATH = CONFIG_EXAMPLE_CERTIFICATE_PATH;
+// static const char * DEVICE_PRIVATE_KEY_PATH = CONFIG_EXAMPLE_PRIVATE_KEY_PATH;
+// static const char * ROOT_CA_PATH = CONFIG_EXAMPLE_ROOT_CA_PATH;
 
 #else
 #error "Invalid method for loading certs"
@@ -146,59 +149,42 @@ void ShadowUpdateStatusCallback(const char *pThingName, ShadowActions_t action, 
     }
 }
 
-void display_visible_callback(const char *pJsonString, uint32_t JsonStringDataLen, jsonStruct_t *pContext) {
+void lamp_callback(const char *pJsonString, uint32_t JsonStringDataLen, jsonStruct_t *pContext) {
     IOT_UNUSED(pJsonString);
     IOT_UNUSED(JsonStringDataLen);
     if(pContext != NULL) {
-        bool visible = *(bool *)(pContext->pData);
-        if (visible)
-            animation_enable();
-        else
-            animation_disable();
-        should_report = true;
-    } else {
-        ESP_LOGI(TAG, "cb with no data, hmm");
-    }
-}
-void display_type_callback(const char *pJsonString, uint32_t JsonStringDataLen, jsonStruct_t *pContext) {
-    IOT_UNUSED(pJsonString);
-    IOT_UNUSED(JsonStringDataLen);
-    if(pContext != NULL) {
-        bool tp = *(uint8_t *)(pContext->pData);
-        animation_select(tp);
+        char *sep = strchr((*pContext).pKey,'_');
+        if (sep) {
+            uint8_t index = atoi(sep + 1);
+            display_set_color(index, *(uint32_t *)(pContext->pData));
+            ESP_LOGI(TAG, "delta %d %d", index, *(uint32_t *)(pContext->pData));
+        } else {
+            ESP_LOGI(TAG, "could not parse %s", ((*pContext).pKey));
+        }
         should_report = true;
     } else {
         ESP_LOGI(TAG, "cb with no data, hmm");
     }
 }
 
-static void initialize_display() {
 
-    dotstar_configure();
-    animation_disable();
-    animation_start();
+#define SZ_KEY_BUF 8
+static uint32_t lamp_states[NUM_LAMPS];
+static char lamp_names[NUM_LAMPS][SZ_KEY_BUF];
+static jsonStruct_t lamp_controls[NUM_LAMPS];
 
-}
+static void initialize_lamps() {
+    for (uint8_t i = 0; i< NUM_LAMPS; ++i) {
 
+        lamp_states[i] = 0;
+        snprintf(lamp_names[i], SZ_KEY_BUF, "lamp_%d", i);
 
-static bool display_visible = false;
-static jsonStruct_t display_visible_ctl;
-static uint8_t display_type = 0;
-static jsonStruct_t display_type_ctl;
-
-static void initialize_display_control() {
-        display_visible_ctl.cb = display_visible_callback;
-        display_visible_ctl.pData = &display_visible;
-        display_visible_ctl.pKey = "visible";
-        display_visible_ctl.type = SHADOW_JSON_BOOL;
-        display_visible_ctl.dataLength = sizeof(bool);
-
-        display_type_ctl.cb = display_type_callback;
-        display_type_ctl.pData = &display_type;
-        display_type_ctl.pKey = "type";
-        display_type_ctl.type = SHADOW_JSON_UINT8;
-        display_type_ctl.dataLength = sizeof(uint8_t);
-
+        lamp_controls[i].cb = lamp_callback;
+        lamp_controls[i].pData = &(lamp_states[i]);
+        lamp_controls[i].pKey = lamp_names[i];
+        lamp_controls[i].type = SHADOW_JSON_UINT32;
+        lamp_controls[i].dataLength = sizeof(uint32_t);
+    }
 }
 
 void aws_iot_task(void *param) {
@@ -207,8 +193,9 @@ void aws_iot_task(void *param) {
     char JsonDocumentBuffer[MAX_LENGTH_OF_UPDATE_JSON_BUFFER];
     size_t sizeOfJsonDocumentBuffer = sizeof(JsonDocumentBuffer) / sizeof(JsonDocumentBuffer[0]);
 
-    initialize_display();
-    initialize_display_control();
+    initialize_lamps();
+    display_init(LAMP_PIN, NUM_LAMPS);
+    display_on();
 
     ESP_LOGI(TAG, "AWS IoT SDK Version %d.%d.%d-%s", VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH, VERSION_TAG);
 
@@ -229,22 +216,6 @@ void aws_iot_task(void *param) {
 #endif
     sp.enableAutoReconnect = false;
     sp.disconnectHandler = NULL;
-
-#ifdef CONFIG_EXAMPLE_SDCARD_CERTS
-    ESP_LOGI(TAG, "Mounting SD card...");
-    sdmmc_host_t host = SDMMC_HOST_DEFAULT();
-    sdmmc_slot_config_t slot_config = SDMMC_SLOT_CONFIG_DEFAULT();
-    esp_vfs_fat_sdmmc_mount_config_t mount_config = {
-        .format_if_mount_failed = false,
-        .max_files = 3,
-    };
-    sdmmc_card_t* card;
-    esp_err_t ret = esp_vfs_fat_sdmmc_mount("/sdcard", &host, &slot_config, &mount_config, &card);
-    if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "Failed to mount SD card VFAT filesystem. Error: %s", esp_err_to_name(ret));
-        abort();
-    }
-#endif
 
     /* Wait for WiFI to show as connected */
     xEventGroupWaitBits(wifi_event_group, CONNECTED_BIT,
@@ -280,14 +251,11 @@ void aws_iot_task(void *param) {
         abort();
     }
 
-    rc = aws_iot_shadow_register_delta(&mqttClient, &display_visible_ctl);
-    rc = aws_iot_shadow_register_delta(&mqttClient, &display_type_ctl);
-
-    // for (int i=0; i< NUM_LAMPS; ++i) {
-    //     rc = aws_iot_shadow_register_delta(&mqttClient, &(lamp_controls[i]));
-    //     if (rc != SUCCESS)
-    //         break;
-    // }
+    for (int i=0; i< NUM_LAMPS; ++i) {
+        rc = aws_iot_shadow_register_delta(&mqttClient, &(lamp_controls[i]));
+        if (rc != SUCCESS)
+            break;
+    }
 
     if(SUCCESS != rc) {
         ESP_LOGE(TAG, "Shadow Register Delta Error");
@@ -308,10 +276,25 @@ void aws_iot_task(void *param) {
             rc = aws_iot_shadow_init_json_document(JsonDocumentBuffer, sizeOfJsonDocumentBuffer);
             if (rc != SUCCESS) ESP_LOGE(TAG, "non-success result from init json document %d", rc);
             if(SUCCESS == rc) {
-                rc = aws_iot_shadow_add_reported(
-                    JsonDocumentBuffer, sizeOfJsonDocumentBuffer, 2,
-                            &display_visible_ctl,
-                            &display_type_ctl);
+                rc = aws_iot_shadow_add_reported (
+                    JsonDocumentBuffer, sizeOfJsonDocumentBuffer, 16,
+                        &(lamp_controls[0]),
+                        &(lamp_controls[1]),
+                        &(lamp_controls[2]),
+                        &(lamp_controls[3]),
+                        &(lamp_controls[4]),
+                        &(lamp_controls[5]),
+                        &(lamp_controls[6]),
+                        &(lamp_controls[7]),
+                        &(lamp_controls[8]),
+                        &(lamp_controls[9]),
+                        &(lamp_controls[10]),
+                        &(lamp_controls[11]),
+                        &(lamp_controls[12]),
+                        &(lamp_controls[13]),
+                        &(lamp_controls[14]),
+                        &(lamp_controls[15])
+                );
                 if (rc != SUCCESS) ESP_LOGE(TAG, "non-success result from add reported %d", rc);
                 if(SUCCESS == rc) {
                     rc = aws_iot_finalize_json_document(JsonDocumentBuffer, sizeOfJsonDocumentBuffer);
@@ -367,7 +350,6 @@ static void initialise_wifi(void)
 
 void app_main()
 {
-
     esp_err_t err = nvs_flash_init();
     if (err == ESP_ERR_NVS_NO_FREE_PAGES || err == ESP_ERR_NVS_NEW_VERSION_FOUND) {
         ESP_ERROR_CHECK(nvs_flash_erase());

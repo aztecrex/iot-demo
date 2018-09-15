@@ -1,5 +1,5 @@
 import React from 'react';
-import { ConnectedWheel } from '../Wheel';
+import { Ring0, Ring1 } from '../Wheel';
 import { Column, Outer, FixedColumn, InnerTop,
          InnerCenter, Ul, Li, Title, Red, Section} from './SlideStyle'
 
@@ -19,10 +19,10 @@ const WhatSlide1 = () => {
             </FixedColumn>
             <Column>
             <InnerCenter>
-                    <ConnectedWheel device="Ring0" />
+                    <Ring0 />
                 </InnerCenter>
                 <InnerCenter>
-                    <ConnectedWheel device="Ring1" />
+                    <Ring1 />
                 </InnerCenter>
             </Column>
         </Outer>
@@ -42,11 +42,11 @@ const WhatSlide2 = () => {
                 </InnerTop>
             </FixedColumn>
             <Column>
-            <InnerCenter>
-                    <ConnectedWheel device="Ring0" />
+                <InnerCenter>
+                    <Ring0 />
                 </InnerCenter>
                 <InnerCenter>
-                    <ConnectedWheel device="Ring1" />
+                    <Ring1 />
                 </InnerCenter>
             </Column>
         </Outer>
@@ -69,10 +69,10 @@ const WhatSlide3 = () => {
             </FixedColumn>
             <Column>
                 <InnerCenter>
-                    <ConnectedWheel device="Ring0" />
+                    <Ring0 />
                 </InnerCenter>
                 <InnerCenter>
-                    <ConnectedWheel device="Ring1" />
+                    <Ring1 />
                 </InnerCenter>
             </Column>
         </Outer>
@@ -92,11 +92,11 @@ const WhatSlide4 = () => {
                 </InnerTop>
             </FixedColumn>
             <Column>
-            <InnerCenter>
-                    <ConnectedWheel device="Ring0" />
+                <InnerCenter>
+                    <Ring0 />
                 </InnerCenter>
                 <InnerCenter>
-                    <ConnectedWheel device="Ring1" />
+                    <Ring1 />
                 </InnerCenter>
             </Column>
         </Outer>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ConnectedWheel } from '../Wheel';
+import { Ring0, Ring1 } from '../Wheel';
 import { Column, Outer, FixedColumn, InnerTop,
          InnerCenter, Ul, Li, Title, P} from './SlideStyle'
 import CokeMachineImg from '../../images/internet-coke-machine.png'
@@ -74,11 +74,11 @@ const WhatForSlide2 = () => {
                 </InnerTop>
             </FixedColumn>
             <Column>
-            <InnerCenter>
-                    <ConnectedWheel device="Ring0" />
+                <InnerCenter>
+                    <Ring0 />
                 </InnerCenter>
                 <InnerCenter>
-                    <ConnectedWheel device="Ring1" />
+                    <Ring1 />
                 </InnerCenter>
             </Column>
         </Outer>
@@ -99,11 +99,11 @@ const WhatForSlide3 = () => {
                 </InnerTop>
             </FixedColumn>
             <Column>
-            <InnerCenter>
-                    <ConnectedWheel device="Ring0" />
+                <InnerCenter>
+                    <Ring0 />
                 </InnerCenter>
                 <InnerCenter>
-                    <ConnectedWheel device="Ring1" />
+                    <Ring1 />
                 </InnerCenter>
             </Column>
         </Outer>
@@ -123,11 +123,11 @@ const WhatForSlide4 = () => {
                 </InnerTop>
             </FixedColumn>
             <Column>
-            <InnerCenter>
-                    <ConnectedWheel device="Ring0" />
+                <InnerCenter>
+                    <Ring0 />
                 </InnerCenter>
                 <InnerCenter>
-                    <ConnectedWheel device="Ring1" />
+                    <Ring1 />
                 </InnerCenter>
             </Column>
         </Outer>

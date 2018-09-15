@@ -6,7 +6,7 @@ import { evtLampPressed, wheelCoord, colors } from '../Model';
 
 import {Dot} from './Dot';
 
-const generatePoints = (count, dim, colors) => {
+const generatePoints = (count, dim, colors, clockwise) => {
 
     const innerDim = dim * .70;
     const theta = (2 * Math.PI) / count;
@@ -16,7 +16,7 @@ const generatePoints = (count, dim, colors) => {
     const colors_ = R.reduce(combine, {}, colors);
 
     return R.map(i => {
-        const pos = count - i - 1;
+        const pos = clockwise ? i : (count - i - 1);
         const x = Math.cos(i * theta) * (innerDim/2) + (dim/2);
         const y = Math.sin(i * theta) * (innerDim/2) + (dim/2);
         const color = colors_[cidx(pos)] || "off";
@@ -27,8 +27,9 @@ const generatePoints = (count, dim, colors) => {
 
 const Wheel = ( {device, dim = 300,
                 count = 16, colors = [],
-                handleDotClicked}) => {
-    const points = generatePoints(count, dim, colors);
+                handleDotClicked},
+                clockwise=true) => {
+    const points = generatePoints(count, dim, colors, clockwise);
     const hclick = coord => handleDotClicked(wheelCoord(device, coord.index));
     return (
         <div>
@@ -63,5 +64,8 @@ const ConnectedWheel = connect(
 )(Wheel);
 
 
-export {Wheel, ConnectedWheel};
+const Ring0 = () => <ConnectedWheel device="Ring0" count={12} />;
+const Ring1 = () => <ConnectedWheel device="Ring1" count={16} clockwise={false} />;
+
+export {Wheel, Ring0, Ring1};
 

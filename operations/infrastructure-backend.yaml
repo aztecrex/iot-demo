@@ -83,7 +83,7 @@ Resources:
           - Lambda:
               FunctionArn: !GetAtt PowerDispatchFunction.Arn
         RuleDisabled: false
-        Sql: SELECT * FROM '$aws/things/iot-demo-thing-LightSwitch-Device-W8NX19X0CBKG/shadow/update/accepted'
+        Sql: SELECT * FROM '$aws/things/iot-demo-thing-LightSwitch-Device-W8NX19X0CBKG/shadow/update'
 
   PoserDispatchFunctionPermission:
     Type: AWS::Lambda::Permission

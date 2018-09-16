@@ -14,7 +14,7 @@ const updateDesired = position => {
     const payload = {state: {desired: {position}}};
     return new Promise((resolve, reject) => {
         Data.updateThingShadow({
-            thingName: thing,
+            thingName: Thing,
             payload: JSON.stringify(payload)
         }, (err, data) => {
             if (err) reject(err);

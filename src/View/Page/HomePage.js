@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid, Paper, withStyles, Typography } from '@material-ui/core';
 import { Ring0 } from '../Wheel';
-import { ConnectedMatrix } from '../Matrix';
+import { ColorMatrix } from '../Matrix';
 import { Blue, Green, Red } from './SlideStyle';
 import styled from 'styled-components';
 
@@ -87,7 +87,7 @@ const Right_ = ({classes}) => {
                 <Ring0 />
             </Paper>
             <Paper className={classes.device + ' ' + classes.paper}>
-                <ConnectedMatrix dim="250" device="matrix_0" />
+                <ColorMatrix dim="250" device="Matrix" />
             </Paper>
         </Grid>
     );

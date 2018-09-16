@@ -10,8 +10,8 @@ const Data = new IoTData({
 const Thing = process.env.IOT_THING;
 
 
-const updateDesired = position => {
-    const payload = {state: {desired: {position}}};
+const updateReported = position => {
+    const payload = {state: {reported: position}};
     return new Promise((resolve, reject) => {
         Data.updateThingShadow({
             thingName: Thing,
@@ -25,7 +25,7 @@ const updateDesired = position => {
 
 const dispatch = position => {
     if (position)
-        return updateDesired(position);
+        return updateReported(position);
     else return Promise.reject(e => "no position");
 };
 

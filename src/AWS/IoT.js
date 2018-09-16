@@ -10,26 +10,28 @@ const clientId = () =>
 const PRES_THING = 'iot-demo-thing-Presentation-Device-1ROQMZ1DS7LHY';
 const RING_THING_0 = 'iot-demo-thing-Ring0-Device-759W16L3V7JJ';
 const RING_THING_1 = 'iot-demo-thing-Ring1-Device-GF47OOHQKUBT';
+const MATRIX_THING = 'iot-demo-thing-Matrix0-Device-163UIKMS5LRI3'
 
 const RawThings = [
     PRES_THING,
     RING_THING_0,
-    RING_THING_1
+    RING_THING_1,
+    MATRIX_THING,
 ];
 
 const LogicalNames = {
     [PRES_THING]: "Presentation",
     [RING_THING_0]: "Ring0",
-    [RING_THING_1]: "Ring1"
+    [RING_THING_1]: "Ring1",
+    [MATRIX_THING]: "Matrix",
 }
 
 const PhysicalNames = {
     "Presentation": PRES_THING,
     "Ring0": RING_THING_0,
-    "Ring1": RING_THING_1
+    "Ring1": RING_THING_1,
+    "Matrix": MATRIX_THING,
 }
-
-// const Things = R.map(rt => thingNamespace + "_" + rt, RawThings);
 
 
 const register = (client, thing) => {
@@ -109,7 +111,7 @@ const createClient = async (callback) => {
         RawThings.forEach(thing => client.get(thing));
     });
     client.on('reconnect', () => {
-        console.log("client is reconnect")
+        RawThings.forEach(thing => client.get(thing));
     });
     client.on('status', function (name, statusType, token, obj) {
         if (callback) {

@@ -59,3 +59,8 @@ update-lambda \
     'iot-demo-backend-PowerDispatchFunction-4AGV9SKKGECG' \
     'power.handle' \
     "./lambda-build/power.zip"
+
+update-lambda \
+    'iot-demo-backend-MatrixPositionFunction-UNXXJVAZ1SLM' \
+    'matrix.handle' \
+    "./lambda-build/matrix.zip"

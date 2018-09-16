@@ -6,7 +6,7 @@ import time
 import boto3
 import json
 
-
+awsLambda = boto3.client('lambda')
 sense = SenseHat()
 
 r = 128
@@ -70,13 +70,14 @@ sense.stick.direction_right = pushed_right
 sense.stick.direction_middle = pushed_middle
 
 def report(x,y):
+    print ("sending " + str(x) + "," + str(y))
     coord = {}
-    coord.x = x
-    coord.y = y
+    coord['x'] = x
+    coord['y'] = y
     payload = {}
     payload['position'] = coord
     result = awsLambda.invoke(
-             FunctionName='',
+             FunctionName='iot-demo-backend-MatrixPositionFunction-UNXXJVAZ1SLM',
              InvocationType='Event',
              LogType='None',
              Payload=json.dumps(payload)
@@ -87,15 +88,18 @@ sense.clear()
 x = 3
 y = 3
 draw(x, y)
+report(x, y)
 while True:
     accel = sense.get_accelerometer_raw()
     gx, gy = accel['x'], accel['y']
     mag = math.sqrt(gx * gx + gy * gy)
+    oldx = x
+    oldy = y
     x = clamp(next(x, gx))
     y = clamp(next(y, gy))
-    draw(x, y)
-    report(x, y)
-    mag = math.sqrt(gx * gx + gy * gy)
+    if (oldx != x) or (oldy != y):
+        draw(x, y)
+        report(x, y)
     amount = mag / .6
     adjust = .1 * amount
     time.sleep(clamp(.15 - adjust, .01, .15))

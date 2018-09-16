@@ -6,7 +6,8 @@ ExecStart=/home/pi/iot-demo/rpi/gravity-ball.py
 Restart=always
 StandardOutput=syslog
 StandardError=syslog
-SyslogIdentifier=PRESCONTROL
+SyslogIdentifier=GRAVITY
+EnvironmentFile=/home/pi/gravity.env
 User=pi
 Group=pi
 

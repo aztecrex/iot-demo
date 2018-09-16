@@ -7,9 +7,7 @@ Restart=always
 StandardOutput=syslog
 StandardError=syslog
 SyslogIdentifier=PRESCONTROL
-Environment=AWS_ACCESS_KEY_ID=
-Environment=AWS_SECRET_ACCESS_KEY=
-Environment=AWS_DEFAULT_REGION=
+EnvironmentFile=/home/pi/game-controller-scan.env
 User=pi
 Group=pi
 

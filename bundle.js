@@ -41,3 +41,16 @@ bundler({
     console.log("bundled: 'power.zip'");
 });
 
+bundler({
+    entry: 'matrix.js',
+    export: 'handle',
+    output: 'lambda-build/matrix.zip',
+    exclude: ['aws-sdk']
+}, (err, buffer, artifacts) => {
+    if (err) {
+        console.error(err);
+        return;
+    }
+    console.log("bundled: 'matrix.zip'");
+});
+

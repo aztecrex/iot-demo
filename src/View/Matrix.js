@@ -3,7 +3,7 @@ import * as R from 'ramda';
 import {connect} from 'react-redux';
 
 import {Dot} from './Dot';
-import { evtLampPressed, matrixCoord, colors } from '../Model'
+import { matrixCoord, getMatrixPosition, colors, evtLampPressed } from '../Model'
 
 const generatePoints = (dim, rows, cols, colors) => {
     const insideDim = dim * .7;
@@ -24,7 +24,8 @@ const generatePoints = (dim, rows, cols, colors) => {
 
 const Matrix = ({device, dim=300, rows=8, cols=8,
                 colors = [{row:1,col:2,color:"#aaa333"}, {row:6,col:4,color:"#FF5555"}],
-                handleDotClicked}) => {
+                handleDotClicked = () => ({})
+                }) => {
     const hclick = coord => handleDotClicked(matrixCoord(device, coord.row, coord.col));
     const points = generatePoints(dim, rows, cols, colors);
     return (
@@ -51,9 +52,16 @@ const Matrix = ({device, dim=300, rows=8, cols=8,
     </div>);
 };
 
-const ConnectedMatrix = connect(
+const GravityMatrix = connect(
+    (state,{device}) => {
+        const pos = getMatrixPosition(state);
+        return {colors: [{row: pos.y, col: pos.x, color:"#00FF00"}]};
+    }
+)(Matrix);
+
+const ColorMatrix = connect(
     (state,{device}) => ({colors: colors(state, device)}),
     dispatch => ({handleDotClicked: coord => dispatch(evtLampPressed(coord))})
 )(Matrix);
 
-export {Matrix, ConnectedMatrix};
+export {Matrix, GravityMatrix, ColorMatrix};

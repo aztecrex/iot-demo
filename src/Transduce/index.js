@@ -1,7 +1,7 @@
 import * as R from 'ramda';
 
 import {Login, currentUser, Logout, ChangePass} from '../AWS/Authenticate';
-import { isLampOn, lampColor, evtTypeLampPressed, evtLampStatus, evtLampStatusOff, coordinates, evtTypeLoginRequested, evtLoginFailed, matrixCoord, wheelCoord, evtLoginSucceeded, credentials, evtTypeLogoutRequested, evtPasswordChangeRequired, evtTypePasswordChangeRequested, getCurrentUser, evtTypeLoginSucceeded, evtPresentationChanged, index, device } from '../Model';
+import { isLampOn, lampColor, evtTypeLampPressed, evtLampStatus, evtLampStatusOff, coordinates, evtTypeLoginRequested, evtLoginFailed, matrixCoord, wheelCoord, evtLoginSucceeded, credentials, evtTypeLogoutRequested, evtPasswordChangeRequired, evtTypePasswordChangeRequested, getCurrentUser, evtTypeLoginSucceeded, evtPresentationChanged, index, device, evtMatrixPositionChanged } from '../Model';
 import { bringUp, bringDown, setLampColor } from '../AWS/IoT';
 
 
@@ -50,7 +50,7 @@ const transduce = getState => evt => {
         bringDown();
         Logout();
     } else if (evtTypeLoginSucceeded(evt)) {
-        bringUp(IoTHandler).then(console.log).catch(console.error);
+        bringUp(IoTHandler).catch(console.error);
     } else if (evtTypePasswordChangeRequested(evt)) {
         const {pass} = credentials(evt);
         const user = getCurrentUser(getState());
@@ -80,15 +80,12 @@ var IoTHandler = d => console.log(d);
 const makeIoTHandler = dispatch => {
 
     return d => {
-        console.log("GOT IOT EVENT: ", d);
         if (d.type === "STATUS" || d.type === "FOREIGN") {
             if (d.name === "Presentation") {
                 const sup = R.path(['obj','state','desired'],d) || {};
-                console.log(sup);
                 dispatch(evtPresentationChanged(sup));
             } else if (d.name === "Ring0" || d.name === "Ring1") {
                 const sup = R.path(['obj','state','reported'], d) || {};
-                console.log(JSON.stringify(sup));
                 const lampChanges = R.pickBy((_,k) => k.startsWith("lamp_"), sup);
                 R.forEachObjIndexed((v, k) => {
                     const index = parseInt(k.split("_")[1],10);
@@ -100,6 +97,9 @@ const makeIoTHandler = dispatch => {
                         dispatch(evtLampStatusOff(coord));
                     }
                 }, lampChanges);
+            } else if (d.name === "Matrix") {
+                const sup = R.path(['obj','state','reported','position'], d) || {};
+                dispatch(evtMatrixPositionChanged(sup.x, sup.y));
             }
         }
     };
@@ -124,10 +124,8 @@ const makeMiddleware = () => ({dispatch, getState}) => next => {
             .forEach(pev => {
                 pev
                     .then(dispatch)
-                    .catch(err => console.log("interop error: " + err));
+                    .catch(err => console.error("interop error: " + err));
             });
-
-        //     .then(evts => evts.forEach(dispatch)).catch(err => console.log("interop error: " + err));
         return rval;
     };
 

@@ -4,6 +4,7 @@ import * as R from 'ramda';
 const navPre = "nAV";
 const lampPre = "laMp";
 const presPre = "PresENt";
+const matPre = "mATRx"
 
 const ETP_LAMP_STATUS = lampPre + "/LAMP_STATUS";
 const ETP_LAMP_PRESSED = lampPre + "/LAMP_CHANGE";
@@ -14,9 +15,10 @@ const ETP_LOGIN_SUCCEEDED = navPre + "/LOGIN_SUCCEEDED";
 const ETP_LOGIN_FAILED = navPre + "/LOGIN_FAILED";
 const ETP_LOGIN_DESIRED = navPre + "/LOGIN_DESIRED";
 const ETP_LOGIN_CANCELED = navPre + "/LOGIN_CANCELED";
-const ETP_PASSWORD_CHANGE_REQUIRED = navPre + "/PASSWORD_CHANGE_REQUIRED"
-const ETP_PASSWORD_CHANGE_REQUESTED = navPre + "/PASSWORD_CHANGE_REQUESTED"
-const ETP_PRESENTATION_CHANGED = presPre + "/PRESENTATION_CHANGED"
+const ETP_PASSWORD_CHANGE_REQUIRED = navPre + "/PASSWORD_CHANGE_REQUIRED";
+const ETP_PASSWORD_CHANGE_REQUESTED = navPre + "/PASSWORD_CHANGE_REQUESTED";
+const ETP_PRESENTATION_CHANGED = presPre + "/PRESENTATION_CHANGED";
+const ETP_MATRIX_POSITION_CHANGED = matPre + "/POSTION_CHANGED";
 
 const DT_MATRIX = "Matrix";
 const DT_WHEEL = "Wheel";
@@ -116,7 +118,6 @@ const setLoginState = (m = {}, st) => {
 };
 
 const setLoginUser = ( m = {}, u) => {
-    console.log("here");
     return R.assoc(loginUserKey, u, m);
 };
 
@@ -205,7 +206,6 @@ const isPresenting = (m = {}) => ((m[presentationKey] || {}).presenting) || fals
 const isPowered = (m = {}) => ((m[presentationKey] || {}).powered) || false;
 const getSlideNumber = (m = {}) => {
     const v = ((m[presentationKey] || {}).slide) || 1;
-    console.log(v);
     return v;
 }
 
@@ -214,7 +214,24 @@ const evtPresentationChanged = status => {
     return {
         type: ETP_PRESENTATION_CHANGED,
         status: status
-    }
+    };
+};
+
+const matrixPositionKey = matPre + "/position";
+
+const evtMatrixPositionChanged = (x, y) => {
+    return {
+        type: ETP_MATRIX_POSITION_CHANGED,
+        x, y,
+    };
+};
+
+const updateMatrixPosition = (m = {}, x=0, y=0) => {
+    return {...m, [matrixPositionKey]:{x,y}};
+};
+
+const getMatrixPosition = m => {
+    return m[matrixPositionKey] || {x: 0,y: 0};
 };
 
 const colors = (m, device) => {
@@ -268,6 +285,8 @@ const reduce = (m = {}, evt = {}) => {
 
         case ETP_PRESENTATION_CHANGED: m = updatePresentationStatus(m, evt.status); break;
 
+        case ETP_MATRIX_POSITION_CHANGED: m = updateMatrixPosition(m, evt.x, evt.y); break;
+
         default:
             break;
     }
@@ -303,4 +322,6 @@ export {
     credentials, user,
     isPresenting, isPowered, getSlideNumber,
     evtPresentationChanged,
+    evtMatrixPositionChanged,
+    updateMatrixPosition, getMatrixPosition
 };

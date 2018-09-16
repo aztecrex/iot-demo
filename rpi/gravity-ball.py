@@ -3,6 +3,9 @@
 from sense_hat import SenseHat
 import math
 import time
+import boto3
+import json
+
 
 sense = SenseHat()
 
@@ -66,6 +69,20 @@ sense.stick.direction_left = pushed_left
 sense.stick.direction_right = pushed_right
 sense.stick.direction_middle = pushed_middle
 
+def report(x,y):
+    coord = {}
+    coord.x = x
+    coord.y = y
+    payload = {}
+    payload['position'] = coord
+    result = awsLambda.invoke(
+             FunctionName='',
+             InvocationType='Event',
+             LogType='None',
+             Payload=json.dumps(payload)
+            )
+    print(result)
+
 sense.clear()
 x = 3
 y = 3
@@ -75,8 +92,9 @@ while True:
     gx, gy = accel['x'], accel['y']
     mag = math.sqrt(gx * gx + gy * gy)
     x = clamp(next(x, gx))
-    y = clamp(next(y, gy));
+    y = clamp(next(y, gy))
     draw(x, y)
+    report(x, y)
     mag = math.sqrt(gx * gx + gy * gy)
     amount = mag / .6
     adjust = .1 * amount

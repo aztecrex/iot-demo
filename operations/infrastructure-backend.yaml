@@ -55,6 +55,23 @@ Resources:
             IOT_ENDPOINT: ad78o9k6p57sk.iot.us-east-1.amazonaws.com
             IOT_THING: iot-demo-thing-Presentation-Device-1ROQMZ1DS7LHY
 
+  MatrixPositionFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+        Code:
+            ZipFile: >
+                exports.handler = (event, context, callback) => {
+                    console.log("gen content placeholder invoked with ", event);
+                    callback(null, {});
+                };
+        Handler: index.handler
+        Role: !GetAtt ControlFunctionRole.Arn
+        Runtime: nodejs6.10
+        Environment:
+          Variables:
+            IOT_ENDPOINT: ad78o9k6p57sk.iot.us-east-1.amazonaws.com
+            IOT_THING: iot-demo-thing-Matrix0-Device-163UIKMS5LRI3
+
   PowerDispatchFunction:
     Type: AWS::Lambda::Function
     Properties:
@@ -143,12 +160,31 @@ Resources:
                 Resource:
                   - !GetAtt PresentationMasterFunction.Arn
 
-
   ControllerUserCredentials:
     Type: AWS::IAM::AccessKey
     Properties:
       Serial: 2
       UserName: !Ref ControllerUser
+
+  MatrixUser:
+    Type: AWS::IAM::User
+    Properties:
+      Policies:
+        - PolicyName: ControllerUserPolicy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - lambda:InvokeFunction
+                Resource:
+                  - !GetAtt MatrixPositionFunction.Arn
+
+  MatrixUserCredentials:
+    Type: AWS::IAM::AccessKey
+    Properties:
+      Serial: 2
+      UserName: !Ref MatrixUser
 
 
 Outputs:
@@ -158,12 +194,20 @@ Outputs:
     Value: !GetAtt SlidesButtonFunction.Arn
   PowerDispatchFunction:
     Value: !Ref PowerDispatchFunction
+  MatrixPositionFunction:
+    Value: !Ref MatrixPositionFunction
+  MatrixPositionFunctionArn:
+    Value: !GetAtt MatrixPositionFunction.Arn
   PowerDispatchFunctionArn:
     Value: !GetAtt PowerDispatchFunction.Arn
   ControllerUser:
     Value: !Ref ControllerUserCredentials
   ControllerUserSecret:
     Value: !GetAtt ControllerUserCredentials.SecretAccessKey
+  MatrixUser:
+    Value: !Ref MatrixUserCredentials
+  MatrixUserSecret:
+    Value: !GetAtt MatrixUserCredentials.SecretAccessKey
   PresentationMasterFunction:
     Value: !Ref PresentationMasterFunction
 

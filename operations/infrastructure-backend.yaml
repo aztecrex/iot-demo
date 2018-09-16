@@ -156,6 +156,10 @@ Outputs:
     Value: !Ref SlidesButtonFunction
   SlidesButtonFunctionArn:
     Value: !GetAtt SlidesButtonFunction.Arn
+  PowerDispatchFunction:
+    Value: !Ref PowerDispatchFunction
+  PowerDispatchFunctionArn:
+    Value: !GetAtt PowerDispatchFunction.Arn
   ControllerUser:
     Value: !Ref ControllerUserCredentials
   ControllerUserSecret:

@@ -55,3 +55,7 @@ update-lambda \
     'controller.handle' \
     "./lambda-build/controller.zip"
 
+update-lambda \
+    'iot-demo-backend-PowerDispatchFunction-4AGV9SKKGECG' \
+    'power.handle' \
+    "./lambda-build/power.zip"

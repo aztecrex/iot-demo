@@ -1,0 +1,15 @@
+[Unit]
+Description=Gravity Ball Servic3
+
+[Service]
+ExecStart=/home/pi/iot-demo/rpi/gravity-ball.py
+Restart=always
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=PRESCONTROL
+User=pi
+Group=pi
+
+[Install]
+WantedBy=multi-user.target
+

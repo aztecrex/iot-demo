@@ -12,6 +12,11 @@
 static uint8_t curanimation = 0;
 static bool running = false;
 static bool started = false;
+static bool powered = false;
+
+static void delay_ms(unsigned ms) {
+    vTaskDelay(ms / portTICK_PERIOD_MS);
+}
 
 void animation_select(uint8_t index) {
     curanimation = index % NUM_ANIMATIONS;
@@ -65,21 +70,64 @@ void clear() {
 
 }
 
+#define POWERSTABLE 0
+#define POWERX_UP 2
+#define POWERX_DOWN 3
+static uint8_t powermode = POWERSTABLE;
+
+void runPowerAnimation() {
+    static pixel dot_red = {31, 250, 0, 0};
+    static pixel dot_green = {31, 0, 250, 0};
+    static pixel dot_black = {0, 0, 0, 0};
+    pixel dots[6];
+    for(uint8_t i = 0; i < 6; i += 1) {
+        for(uint8_t j = 0; j < 6; j += 1) {
+            uint8_t pos = powermode == POWERX_UP ? i : (5 - i);
+            if (pos == j)
+                dots[j] = dot_red;
+            else if ((pos + 3) % 6 == j)
+                dots[j] = dot_green;
+            else
+                dots[j] = dot_black;
+        }
+        dotstar_show(dots);
+        delay_ms(80);
+    }
+}
+
+
 void animation_task(void *param) {
     unsigned frame = 0;
     while(1) {
         printf("switch to running\n");
-        while (running) {
+        while (running && powered && !powermode) {
             show_frame(frame);
             frame += 1;
         }
         clear();
         printf("switch to idle\n");
-        while (!running) {
-            vTaskDelay(1000 / portTICK_PERIOD_MS);
+        while (!(running && powered) && !powermode) {
+            delay_ms(1000);
+        }
+        if (powermode) {
+            if (running) {
+                runPowerAnimation();
+            }
+            powered = powermode == POWERX_UP;
+            powermode = POWERSTABLE;
         }
     }
 }
+
+void animation_powerup() {
+    powermode = POWERX_UP;
+}
+
+void animation_powerdown() {
+    powermode = POWERX_DOWN;
+
+}
+
 
 void animation_start() {
     if (!started)
@@ -87,104 +135,3 @@ void animation_start() {
     started = true;
 }
 
-
-
-// void rgb(int offs) {
-
-//     const int bright = 15;
-
-//     start_out();
-//     for( int i = 0; i < NUM_LAMPS; i += 1) {
-//         int idx = (i + offs) % 3;
-//         switch (idx) {
-//             case 0: frame_out(bright, 255, 0, 0); break;
-//             case 1: frame_out(bright, 0, 255, 0); break;
-//             case 2: frame_out(bright, 0, 0, 255); break;
-//         }
-//     }
-//     end_out();
-
-// }
-
-// void chase(int offs, uint8_t red, uint8_t green, uint8_t blue) {
-//     start_out();
-//     const uint8_t max_bright = 25;
-//     int head = offs % NUM_LAMPS;
-//     int trail1 = (offs + NUM_LAMPS - 1) % NUM_LAMPS;
-//     int trail2 = (offs + NUM_LAMPS - 2) % NUM_LAMPS;
-//     for (int i=0; i < NUM_LAMPS; i += 1) {
-//         if (i == head)
-//             frame_out(max_bright, red, green, blue);
-//         else if (i == trail1)
-//             frame_out(1, red, green, blue);
-//         else if (i == trail2)
-//             frame_out(1, red, green, blue);
-//         else
-//             frame_out(0, 0, 0, 0);
-//     }
-
-// }
-
-// void all(uint8_t bright, uint8_t red, uint8_t green, uint8_t blue) {
-//     start_out();
-//     for(int i=0; i < NUM_LAMPS; i += 1) {
-//         frame_out(bright, red, green, blue);
-//     }
-//     end_out();
-// }
-
-
-
-// void was_app_main()
-// {
-
-//     printf("dotstar\n");
-//     printf("portTick %d\n", portTICK_PERIOD_MS);
-
-//     /* Print chip information */
-//     esp_chip_info_t chip_info;
-//     esp_chip_info(&chip_info);
-//     printf("This is ESP32 chip with %d CPU cores, WiFi%s%s, ",
-//             chip_info.cores,
-//             (chip_info.features & CHIP_FEATURE_BT) ? "/BT" : "",
-//             (chip_info.features & CHIP_FEATURE_BLE) ? "/BLE" : "");
-
-//     printf("silicon revision %d, ", chip_info.revision);
-
-//     printf("%dMB %s flash\n", spi_flash_get_chip_size() / (1024 * 1024),
-//             (chip_info.features & CHIP_FEATURE_EMB_FLASH) ? "embedded" : "external");
-
-//     // for (int i = 10; i >= 0; i--) {
-//     //     printf("Restarting in %d seconds...\n", i);
-//     //     vTaskDelay(1000 / portTICK_PERIOD_MS);
-//     // }
-
-//     gpio_config_t io_conf;
-//     io_conf.intr_type = GPIO_PIN_INTR_DISABLE;
-//     io_conf.mode = GPIO_MODE_OUTPUT;
-//     //bit mask of the pins that you want to set,e.g.GPIO18/19
-//     io_conf.pin_bit_mask = ((1ULL<<DATA_OUT) | (1ULL<<CLOCK_OUT));
-//     io_conf.pull_down_en = 0;
-//     io_conf.pull_up_en = 0;
-//     gpio_config(&io_conf);
-
-//     // int frame = 0;
-
-//     while(1) {
-//         for (uint8_t i=0; i < 32; i += 1) {
-//             all(i,200, 90, 170);
-//             vTaskDelay (90 / portTICK_PERIOD_MS);
-//         }
-//         for (uint8_t i=31; i != 0; i -= 1) {
-//             all(i,200, 90, 170);
-//             vTaskDelay (90 / portTICK_PERIOD_MS);
-//         }
-//     }
-
-//     printf("done\n");
-//     // printf("Restarting now.\n");
-//     fflush(stdout);
-//     // esp_restart();
-
-
-// }

@@ -125,6 +125,10 @@ static esp_err_t event_handler(void *ctx, system_event_t *event)
 
 static bool shadowUpdateInProgress = false;
 static bool should_report = true;
+static bool was_powered = false;
+static bool display_powered = false;
+static bool display_visible = false;
+static uint8_t display_type = 0;
 
 void ShadowUpdateStatusCallback(const char *pThingName, ShadowActions_t action, Shadow_Ack_Status_t status,
                                 const char *pReceivedJsonDocument, void *pContextData) {
@@ -146,29 +150,54 @@ void ShadowUpdateStatusCallback(const char *pThingName, ShadowActions_t action, 
     }
 }
 
+void update_display() {
+
+    if (display_visible) {
+        animation_enable();
+    } else {
+        animation_disable();
+    }
+
+    if (display_powered != was_powered) {
+        printf("switching between power modes\n");
+        if (display_powered)
+            animation_powerup();
+        else
+            animation_powerdown();
+        was_powered = display_powered;
+    }
+}
+
+void display_powered_callback(const char *pJsonString, uint32_t JsonStringDataLen, jsonStruct_t *pContext) {
+    IOT_UNUSED(pJsonString);
+    IOT_UNUSED(JsonStringDataLen);
+    if (pContext != NULL) {
+        bool v = *(bool *)(pContext->pData);
+        ESP_LOGI(TAG, "powered: %d", v);
+        update_display();
+        should_report = true;
+    }
+}
+
 void display_visible_callback(const char *pJsonString, uint32_t JsonStringDataLen, jsonStruct_t *pContext) {
     IOT_UNUSED(pJsonString);
     IOT_UNUSED(JsonStringDataLen);
-    if(pContext != NULL) {
-        bool visible = *(bool *)(pContext->pData);
-        if (visible)
-            animation_enable();
-        else
-            animation_disable();
+    if (pContext != NULL) {
+        bool v = *(bool *)(pContext->pData);
+        ESP_LOGI(TAG, "visible: %d", v);
+        update_display();
         should_report = true;
-    } else {
-        ESP_LOGI(TAG, "cb with no data, hmm");
     }
 }
+
 void display_type_callback(const char *pJsonString, uint32_t JsonStringDataLen, jsonStruct_t *pContext) {
     IOT_UNUSED(pJsonString);
     IOT_UNUSED(JsonStringDataLen);
-    if(pContext != NULL) {
-        bool tp = *(uint8_t *)(pContext->pData);
-        animation_select(tp);
+    if (pContext != NULL) {
+        uint8_t v = *(uint8_t *)(pContext->pData);
+        ESP_LOGI(TAG, "type: %d", v);
+        update_display();
         should_report = true;
-    } else {
-        ESP_LOGI(TAG, "cb with no data, hmm");
     }
 }
 
@@ -181,12 +210,17 @@ static void initialize_display() {
 }
 
 
-static bool display_visible = false;
+static jsonStruct_t display_powered_ctl;
 static jsonStruct_t display_visible_ctl;
-static uint8_t display_type = 0;
 static jsonStruct_t display_type_ctl;
 
 static void initialize_display_control() {
+        display_powered_ctl.cb = display_powered_callback;
+        display_powered_ctl.pData = &display_powered;
+        display_powered_ctl.pKey = "powered";
+        display_powered_ctl.type = SHADOW_JSON_BOOL;
+        display_powered_ctl.dataLength = sizeof(bool);
+
         display_visible_ctl.cb = display_visible_callback;
         display_visible_ctl.pData = &display_visible;
         display_visible_ctl.pKey = "visible";
@@ -281,6 +315,7 @@ void aws_iot_task(void *param) {
     }
 
     rc = aws_iot_shadow_register_delta(&mqttClient, &display_visible_ctl);
+    rc = aws_iot_shadow_register_delta(&mqttClient, &display_powered_ctl);
     rc = aws_iot_shadow_register_delta(&mqttClient, &display_type_ctl);
 
     // for (int i=0; i< NUM_LAMPS; ++i) {
@@ -311,7 +346,8 @@ void aws_iot_task(void *param) {
                 rc = aws_iot_shadow_add_reported(
                     JsonDocumentBuffer, sizeOfJsonDocumentBuffer, 2,
                             &display_visible_ctl,
-                            &display_type_ctl);
+                            &display_type_ctl,
+                            &display_powered_ctl);
                 if (rc != SUCCESS) ESP_LOGE(TAG, "non-success result from add reported %d", rc);
                 if(SUCCESS == rc) {
                     rc = aws_iot_finalize_json_document(JsonDocumentBuffer, sizeOfJsonDocumentBuffer);

@@ -28,3 +28,16 @@ bundler({
     console.log("bundled: 'controller.zip'");
 });
 
+bundler({
+    entry: 'power.js',
+    export: 'handle',
+    output: 'lambda-build/power.zip',
+    exclude: ['aws-sdk']
+}, (err, buffer, artifacts) => {
+    if (err) {
+        console.error(err);
+        return;
+    }
+    console.log("bundled: 'power.zip'");
+});
+

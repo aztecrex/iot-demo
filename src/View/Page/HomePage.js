@@ -4,6 +4,7 @@ import { Ring0 } from '../Wheel';
 import { ColorMatrix } from '../Matrix';
 import { Blue, Green, Red } from './SlideStyle';
 import styled from 'styled-components';
+import { Dim } from '../Dim';
 
 const styles = theme => ({
     root: {
@@ -35,7 +36,6 @@ const LI = styled.li`
         content: '- ';
     }
 `
-
 const Left_ = ({classes}) => {
     return (
         <Grid item sm={6}>
@@ -84,10 +84,12 @@ const Right_ = ({classes}) => {
     return (
         <Grid item sm>
             <Paper className={classes.device + ' ' + classes.paper}>
-                <Ring0 />
+                <Dim><Ring0 /></Dim>
             </Paper>
             <Paper className={classes.device + ' ' + classes.paper}>
-                <ColorMatrix dim="250" device="Matrix" />
+                <Dim>
+                <ColorMatrix device="Matrix" />
+                </Dim>
             </Paper>
         </Grid>
     );

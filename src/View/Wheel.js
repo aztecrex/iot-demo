@@ -25,7 +25,7 @@ const generatePoints = (count, dim, colors, clockwise) => {
     }, R.range(0, count));
 };
 
-const Wheel = ( {device, dim = 300,
+const Wheel = ( {device, dim = 100,
                 count = 16, colors = [],
                 handleDotClicked},
                 clockwise=true) => {
@@ -63,8 +63,8 @@ const ConnectedWheel = connect(
 )(Wheel);
 
 
-const Ring0 = () => <ConnectedWheel device="Ring0" count={12} />;
-const Ring1 = () => <ConnectedWheel device="Ring1" count={16} clockwise={false} />;
+const Ring0 = ({dim}) => <ConnectedWheel dim={dim} device="Ring0" count={12} />;
+const Ring1 = ({dim}) => <ConnectedWheel dim={dim} device="Ring1" count={16} clockwise={false} />;
 
 export {Wheel, Ring0, Ring1};
 

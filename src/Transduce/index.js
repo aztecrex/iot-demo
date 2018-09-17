@@ -1,8 +1,8 @@
 import * as R from 'ramda';
 
 import {Login, currentUser, Logout, ChangePass} from '../AWS/Authenticate';
-import { isLampOn, lampColor, evtTypeLampPressed, evtLampStatus, evtLampStatusOff, coordinates, evtTypeLoginRequested, evtLoginFailed, wheelCoord, evtLoginSucceeded, credentials, evtTypeLogoutRequested, evtPasswordChangeRequired, evtTypePasswordChangeRequested, getCurrentUser, evtTypeLoginSucceeded, evtPresentationChanged, index, device, evtMatrixPositionChanged } from '../Model';
-import { bringUp, bringDown, setLampColor } from '../AWS/IoT';
+import { isLampOn, lampColor, evtTypeLampPressed, evtLampStatus, evtLampStatusOff, coordinates, evtTypeLoginRequested, evtLoginFailed, wheelCoord, evtLoginSucceeded, credentials, evtTypeLogoutRequested, evtPasswordChangeRequired, evtTypePasswordChangeRequested, getCurrentUser, evtTypeLoginSucceeded, evtPresentationChanged, index, device, evtMatrixPositionChanged, evtTypeLanyardPressed, evtLanyardAnimationChanged, getLanyardAnimation } from '../Model';
+import { bringUp, bringDown, setLampColor, bumpAnimation } from '../AWS/IoT';
 
 
 const transduce = getState => evt => {
@@ -32,7 +32,7 @@ const transduce = getState => evt => {
         }
         const dev = device(coords);
         const key = "lamp_" + index(coords);
-        setLampColor(dev, key, nextColorI);
+        setLampColor(dev, key, nextColorI).catch(err => console.error(err));
     } else if (evtTypeLoginRequested(evt)) {
         const {user,pass} = credentials(evt);
         emit = [
@@ -57,6 +57,12 @@ const transduce = getState => evt => {
         return ChangePass(user, pass)
             .then(u => evtLoginSucceeded(u))
             .catch(() => evtPasswordChangeRequired(user))
+    } else if (evtTypeLanyardPressed(evt)) {
+        emit = [
+            bumpAnimation(getLanyardAnimation(getState()))
+                .catch(err => {console.error("lanyard bump failed: " + err); return {}}),
+        ];
+
     } else if (evt.type === "INIT_APP") {
         emit = [
             currentUser()
@@ -101,6 +107,9 @@ const makeIoTHandler = dispatch => {
             } else if (d.name === "Matrix") {
                 const sup = R.path(['obj','state','reported','position'], d) || {};
                 dispatch(evtMatrixPositionChanged(sup.x, sup.y));
+            } else if (d.name === "Lanyard") {
+                const sup = R.path(['obj','state','reported','type'],d);
+                dispatch(evtLanyardAnimationChanged(sup));
             }
         }
     };

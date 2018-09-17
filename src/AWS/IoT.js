@@ -10,13 +10,15 @@ const clientId = () =>
 const PRES_THING = 'iot-demo-thing-Presentation-Device-1ROQMZ1DS7LHY';
 const RING_THING_0 = 'iot-demo-thing-Ring0-Device-759W16L3V7JJ';
 const RING_THING_1 = 'iot-demo-thing-Ring1-Device-GF47OOHQKUBT';
-const MATRIX_THING = 'iot-demo-thing-Matrix0-Device-163UIKMS5LRI3'
+const MATRIX_THING = 'iot-demo-thing-Matrix0-Device-163UIKMS5LRI3';
+const LANYARD_THING = 'iot-demo-thing-Lanyard-Device-YY67CDETS8PP';
 
 const RawThings = [
     PRES_THING,
     RING_THING_0,
     RING_THING_1,
     MATRIX_THING,
+    LANYARD_THING,
 ];
 
 const LogicalNames = {
@@ -24,6 +26,7 @@ const LogicalNames = {
     [RING_THING_0]: "Ring0",
     [RING_THING_1]: "Ring1",
     [MATRIX_THING]: "Matrix",
+    [LANYARD_THING]: "Lanyard",
 }
 
 const PhysicalNames = {
@@ -31,6 +34,7 @@ const PhysicalNames = {
     "Ring0": RING_THING_0,
     "Ring1": RING_THING_1,
     "Matrix": MATRIX_THING,
+    "Lanyard": LANYARD_THING,
 }
 
 
@@ -84,7 +88,24 @@ const Thing = (() => {
             .then({});
     }
 
-    return {up, down, setLampColor};
+    const setLanyardStatus = (logical, animation, visible) => {
+        if (!client) return Promise.resolve({});
+        const physical = PhysicalNames[logical];
+        const updateState = {
+            state: {
+                desired: {
+                    type: animation,
+                    visible,
+                }
+            }
+        };
+        return client
+            .then(c => c.update(physical, updateState))
+            .then({});
+
+    };
+
+    return {up, down, setLampColor, setLanyardStatus};
 
 
 })();
@@ -176,9 +197,13 @@ const bringDown = async () => {
 };
 
 const setLampColor = async (logical, key, color) => {
-    Thing.setLampColor(logical, key, color).catch(err => console.error(err));
+    return Thing.setLampColor(logical, key, color).catch(err => console.error(err));
 }
 
+const bumpAnimation = curAnimation => {
+    return Thing.setLanyardStatus("Lanyard", curAnimation + 1, true).catch(err => console.error(err));
+};
 
-export {bringUp, bringDown, setLampColor};
+
+export {bringUp, bringDown, setLampColor, bumpAnimation};
 

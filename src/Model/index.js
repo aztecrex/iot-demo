@@ -21,6 +21,7 @@ const ETP_PASSWORD_CHANGE_REQUESTED = navPre + "/PASSWORD_CHANGE_REQUESTED";
 const ETP_PRESENTATION_CHANGED = presPre + "/PRESENTATION_CHANGED";
 const ETP_MATRIX_POSITION_CHANGED = matPre + "/POSTION_CHANGED";
 const ETP_LANYARD_PRESSED = lanPre + "/PRESSED";
+const ETP_LANYARD_ANIMATION_CHANGED = lanPre + "/ANIMATION_CHANGED";
 
 const DT_MATRIX = "Matrix";
 const DT_WHEEL = "Wheel";
@@ -241,6 +242,25 @@ const evtLanyardPressed = () => {
     return { type: ETP_LANYARD_PRESSED };
 }
 
+const evtLanyardAnimationChanged = animation => {
+    return {
+            type: ETP_LANYARD_ANIMATION_CHANGED,
+            animation
+        };
+};
+
+const evtTypeLanyardPressed = (evt = {}) => evt.type === ETP_LANYARD_PRESSED;
+
+const lanyardAnimationKey = lanPre + "/animation";
+
+const getLanyardAnimation = (m = {}) => {
+    return m[lanyardAnimationKey] || 0;
+};
+
+const updateLanyardAnimation = (m = {}, evt = {}) => {
+    return {...m, [lanyardAnimationKey]: evt.animation || 0};
+};
+
 
 const colors = (m, device) => {
     const keys = R.filter(s => s.startsWith(`${lampPre}/${device}/`), R.keys(m))
@@ -295,6 +315,8 @@ const reduce = (m = {}, evt = {}) => {
 
         case ETP_MATRIX_POSITION_CHANGED: m = updateMatrixPosition(m, evt.x, evt.y); break;
 
+        case ETP_LANYARD_ANIMATION_CHANGED: m = updateLanyardAnimation(m, evt.animation); break;
+
         default:
             break;
     }
@@ -332,5 +354,7 @@ export {
     evtPresentationChanged,
     evtMatrixPositionChanged,
     updateMatrixPosition, getMatrixPosition,
-    evtLanyardPressed,
+    evtLanyardPressed, evtLanyardAnimationChanged,
+    evtTypeLanyardPressed,
+    getLanyardAnimation, updateLanyardAnimation,
 };

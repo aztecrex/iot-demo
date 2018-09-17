@@ -4,7 +4,8 @@ import { isPowered, getSlideNumber, evtLogoutRequested } from '../../Model';
 import { WhatSlide1, WhatSlide2, WhatSlide3, WhatSlide4 } from './What';
 import { WhatForSlide1, WhatForSlide2, WhatForSlide3, WhatForSlide4 } from './WhatFor';
 import styled from 'styled-components';
-import { HowSlide1, HowSlide20, HowSlide30, HowSlide40, HowSlide3, HowSlide5, HowSlide10, HowSlide7, HowSlide13, HowSlide9 } from './How';
+import { HowSlide1, HowSlide20, HowSlide3, HowSlide5, HowSlide10, HowSlide7, HowSlide13, HowSlide9 } from './How';
+import { BracketSlide10, BracketSlide20, BracketSlide30 } from './Bracket';
 
 
 const BlackBack = styled.div`
@@ -40,25 +41,27 @@ const Slides = ({ powered = true, number = 1, handleLogout = () => { } }) => {
         return <PowerOff />
     } else {
         switch (number) {
-            case 1: return <WhatSlide1 />
-            case 2: return <WhatSlide2 />
-            case 3: return <WhatSlide3 />
-            case 4: return <WhatSlide4 />
-            case 5: return <WhatForSlide1 />
-            case 6: return <WhatForSlide2 />
-            case 7: return <WhatForSlide3 />
-            case 8: return <WhatForSlide4 />
-            case 9: return <HowSlide1 />
-            case 10: return <HowSlide3 />
-            case 11: return <HowSlide5 />
-            case 12: return <HowSlide7 />
-            case 13: return <HowSlide9 />
-            case 14: return <HowSlide10 />
-            case 15: return <HowSlide13 />
-            case 16: return <HowSlide20 />
-            case 17: return <HowSlide40 />
+            case 1: return <BracketSlide10 />
+            case 2: return <WhatSlide1 />
+            case 3: return <WhatSlide2 />
+            case 4: return <WhatSlide3 />
+            case 5: return <WhatSlide4 />
+            case 6: return <WhatForSlide1 />
+            case 7: return <WhatForSlide2 />
+            case 8: return <WhatForSlide3 />
+            case 9: return <WhatForSlide4 />
+            case 10: return <HowSlide1 />
+            case 11: return <HowSlide3 />
+            case 12: return <HowSlide5 />
+            case 13: return <HowSlide7 />
+            case 14: return <HowSlide9 />
+            case 15: return <HowSlide10 />
+            case 16: return <HowSlide13 />
+            case 17: return <HowSlide20 />
+            case 18: return <BracketSlide20 />
+            case 19: return <BracketSlide30 />
             default:
-                return number < 1 ? <WhatSlide1 /> : <HowSlide40 />
+                return number < 1 ? <WhatSlide1 /> : <BracketSlide30 />
     }
     }
 };

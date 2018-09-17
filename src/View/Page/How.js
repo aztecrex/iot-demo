@@ -1,5 +1,5 @@
 import React from 'react';
-import { Ring0, Ring1 } from '../Wheel';
+import { Ring1 } from '../Wheel';
 import { Column, Outer, FixedColumn, InnerTop,
          InnerCenter, Ul, Li, Title, Section, Green, Blue, Red, P} from './SlideStyle'
 import { ConnectedLanyardButton } from '../LanyardButton';
@@ -338,34 +338,4 @@ const HowSlide20 = () => {
 };
 
 
-const HowSlide40 = () => {
-    return (
-        <Outer>
-            <FixedColumn>
-                <InnerTop>
-                    <How />
-                    <Title>Links</Title>
-                    <Ul>
-                    <   Li>This Presentation Source Code - http://bit.ly/iot-demo-source</Li>
-                        <Li>Alexa + Raspberry PI - http://bit.ly/iot-demo-alexa-pi</Li>
-                        <Li>DIY Plant Monitor using Particle and IFTTT - http://bit.ly/iot-demo-plant-monitor</Li>
-                    </Ul>
-                </InnerTop>
-            </FixedColumn>
-            <Column>
-            <InnerCenter>
-                    <Dim factor={.3}><Ring0 /></Dim>
-                </InnerCenter>
-                <InnerCenter>
-                    <Dim><Ring1/></Dim>
-                </InnerCenter>
-            </Column>
-        </Outer>
-    );
-};
-
-
-
-
-
-export { HowSlide1, HowSlide3,HowSlide5,HowSlide7, HowSlide9, HowSlide10, HowSlide13, HowSlide20, HowSlide40};
+export { HowSlide1, HowSlide3,HowSlide5,HowSlide7, HowSlide9, HowSlide10, HowSlide13, HowSlide20};

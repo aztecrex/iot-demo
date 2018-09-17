@@ -6,7 +6,7 @@ const Data = new IoTData({
     endpoint: process.env.IOT_ENDPOINT
 });
 
-const NumSlides = 13;
+const NumSlides = 25;
 
 const ThingName = process.env.IOT_THING;
 

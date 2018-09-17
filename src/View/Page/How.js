@@ -1,13 +1,13 @@
 import React from 'react';
 import { Ring0, Ring1 } from '../Wheel';
 import { Column, Outer, FixedColumn, InnerTop,
-         InnerCenter, Ul, Li, Title, Section, Green, Blue} from './SlideStyle'
+         InnerCenter, Ul, Li, Title, Section, Green, Blue, Red, P} from './SlideStyle'
 import { ConnectedLanyardButton } from '../LanyardButton';
 import { Dim } from '../Dim';
 import { GravityMatrix } from '../Matrix';
 
 
-const How = () => <Section>What IoT Is For</Section>;
+const How = () => <Section>How IoT Works</Section>;
 
 const HowSlide1 = () => {
     return (
@@ -15,40 +15,21 @@ const HowSlide1 = () => {
             <FixedColumn>
                 <InnerTop>
                     <How />
-                    <Title><Blue>Sensors</Blue>, <Blue>Actuators</Blue>, And <Blue>Computer</Blue> + <Green>Power</Green> And <Green>Network</Green></Title>
+                    <Title><Blue>Sensors</Blue> & <Blue>Actuators</Blue></Title>
                     <Ul>
                         <Li>Sensors - Monitor the environment</Li>
                         <Li>Actuators - Change the environment</Li>
-                        <Li>Computer - Microcontroller or Microprocessor</Li>
-                        <Li>Power - Battery or Commercial</Li>
-                        <Li>Network - Direct, Proxy/Mesh, or Store & Forward</Li>
                         <Li>This Presentation:
                             <Ul>
                                 <Li>Sensors - light switch, accelerometer, game pad</Li>
                                 <Li>Actuators - RGB lights</Li>
-                                <Li>Computer - ESP32 MCU, Raspberry Pi</Li>
-                                <Li>Power - Rechargable and Alkaline Batteries, USB connector</Li>
-                                <Li>Network - Direct using WiFi</Li>
                             </Ul>
-                        </Li>
-                        <Li>
-                            Raspberry Pi is easy to program and works great for IoT projects
-                        </Li>
-                        <Li>
-                            Arduino with a networking shield is also easy to use
-                        </Li>
-                        <Li>
-                            ESP32 is maybe a little harder to use but can be put into very small projects
                         </Li>
                         <Li>Most anything electrical can be used as a sensor or
                             actuator - let your imagination run free
                         </Li>
                         <Li>
-                            AWS IoT Button - Just a button that sends messages over
-                            WiFi, what could be simpler?
-                        </Li>
-                        <Li>
-                            Check out Adafruit and other electronics hobbyist stores for
+                            Check out Adafruit, SparkFun and other electronics maker stores for
                             kits and components
                         </Li>
                     </Ul>
@@ -70,29 +51,228 @@ const HowSlide1 = () => {
     );
 };
 
-const HowSlide2 = () => {
+const HowSlide3 = () => {
     return (
         <Outer>
             <FixedColumn>
                 <InnerTop>
                     <How />
-                    <Title>Communication and Orchestration</Title>
+                    <Title><Red>Computer</Red></Title>
                     <Ul>
-                        <Li>Communication - Route messages between devices and
-                        centralized coordination systems</Li>
-                        <Li>Orchestration - Coordinate related devices to produce
-                            complex behaviors
+                        <Li>Microcontroller or Microprocessor</Li>
+                        <Li>This Presentation:
+                            <Ul>
+                                <Li>ESP32 MCU</Li>
+                                <Li>Raspberry Pi</Li>
+                            </Ul>
                         </Li>
+                        <Li>
+                            Raspberry Pi is easy to program and works great for IoT projects
+                        </Li>
+                        <Li>
+                            Arduino is also easy to use
+                        </Li>
+                        <Li>
+                            ESP32 is maybe a little harder to use but can be put into very small projects
+                        </Li>
+                    </Ul>
+                </InnerTop>
+            </FixedColumn>
+            <Column>
+                <InnerCenter>
+                    <Dim>
+                        <ConnectedLanyardButton />
+                    </Dim>
+                </InnerCenter>
+                <InnerCenter>
+                    <Dim >
+                        <GravityMatrix />
+                    </Dim>
+                </InnerCenter>
+            </Column>
+        </Outer>
+    );
+};
+
+const HowSlide5 = () => {
+    return (
+        <Outer>
+            <FixedColumn>
+                <InnerTop>
+                    <How />
+                    <Title><Green>Power</Green></Title>
+                    <P>Can use battery or commercial power</P>
+                    <Ul>
+                        <Li>This Presentation:
+                            <Ul>
+                                <Li>Rechargable and Alkaline Batteries</Li>
+                                <Li>USB Connector</Li>
+                            </Ul>
+                        </Li>
+                        <Li>Don't use battery unless it has to be portable</Li>
+                    </Ul>
+                </InnerTop>
+            </FixedColumn>
+            <Column>
+                <InnerCenter>
+                    <Dim>
+                        <ConnectedLanyardButton />
+                    </Dim>
+                </InnerCenter>
+                <InnerCenter>
+                    <Dim >
+                        <GravityMatrix />
+                    </Dim>
+                </InnerCenter>
+            </Column>
+        </Outer>
+    );
+};
+
+const HowSlide7 = () => {
+    return (
+        <Outer>
+            <FixedColumn>
+                <InnerTop>
+                    <How />
+                    <Title><Green>Network</Green></Title>
+                    <Ul>
+                        <Li>Direct, Proxy/Mesh, or Store & Forward</Li>
+                        <Li>This Presentation:
+                            <Ul>
+                                <Li>Direct using WiFi built-in to
+                                    ESP32 and Raspberry Pi
+                                </Li>
+                                <Li>Game controller proxy
+                                </Li>
+                            </Ul>
+                        </Li>
+                        <Li>Computer with built-in networking is good first choice</Li>
+                        <Li>Arduino and other maker platforms have networking
+                            accessories
+                        </Li>
+                        <Li>
+                            Proxy is often easiest
+                        </Li>
+                    </Ul>
+                </InnerTop>
+            </FixedColumn>
+            <Column>
+                <InnerCenter>
+                    <Dim>
+                        <ConnectedLanyardButton />
+                    </Dim>
+                </InnerCenter>
+                <InnerCenter>
+                    <Dim >
+                        <GravityMatrix />
+                    </Dim>
+                </InnerCenter>
+            </Column>
+        </Outer>
+    );
+};
+
+const HowSlide9 = () => {
+    return (
+        <Outer>
+            <FixedColumn>
+                <InnerTop>
+                    <How />
+                    <Title>AWS IoT Button</Title>
+                    <P>
+                        Completely self-contained device with battery,
+                        button sensor, and network. Send clicks, double-clicks,
+                        and long-clicks over WiFi. What could be simpler?
+                    </P>
+                    <Ul>
+                        <Li>Just configure and go</Li>
+                        <Li>Comes with built-in behaviors or make your own</Li>
+                        <Li>LTE version available</Li>
+                    </Ul>
+                </InnerTop>
+            </FixedColumn>
+            <Column>
+                <InnerCenter>
+                    <Dim>
+                        <ConnectedLanyardButton />
+                    </Dim>
+                </InnerCenter>
+                <InnerCenter>
+                    <Dim >
+                        <GravityMatrix />
+                    </Dim>
+                </InnerCenter>
+            </Column>
+        </Outer>
+    );
+};
+
+
+const HowSlide10 = () => {
+    return (
+        <Outer>
+            <FixedColumn>
+                <InnerTop>
+                    <How />
+                    <Title>Communication</Title>
+                    <P>Route messages between devices and
+                        centralized coordination systems</P>
+                    <Ul>
                         <Li>This presentation:
                             <Ul>
-                                <Li>Communication - AWS IoT MQTT</Li>
-                                <Li>Orchestration - AWS Lambda and AWS IoT Thing Shadows</Li>
+                                <Li>MQTT & MQTT over WebSocket</Li>
+                                <Li>REST</Li>
+                            </Ul>
+                        </Li>
+                        <Li>All major cloud providers have offerings
+                            for IoT; e.g. AWS:
+                            <Ul>
+                                <Li>IoT Core - MQTT Publish/Subscribe Topics</Li>
+                                <Li>IoT Core - REST API</Li>
+                            </Ul>
+                        </Li>
+                    </Ul>
+                </InnerTop>
+            </FixedColumn>
+            <Column>
+                <InnerCenter>
+                    <Dim>
+                        <ConnectedLanyardButton />
+                    </Dim>
+                </InnerCenter>
+                <InnerCenter>
+                    <Dim >
+                        <Ring1 />
+                    </Dim>
+                </InnerCenter>
+            </Column>
+        </Outer>
+    );
+};
+
+const HowSlide13 = () => {
+    return (
+        <Outer>
+            <FixedColumn>
+                <InnerTop>
+                    <How />
+                    <Title><Red>Orchestration</Red></Title>
+                    <P>
+                    Coordinate related devices to produce complex
+                    behaviors.
+                    </P>
+                    <Ul>
+                        <Li>This presentation:
+                            <Ul>
+                                <Li>AWS Lambda - ephemeral computing</Li>
+                                <Li>AWS Thing Shadows - keep track of device status</Li>
                             </Ul>
                         </Li>
                         <Li>All major cloud providers have offerings
                             for IoT and ephemeral computing; e.g. AWS:
                             <Ul>
-                                <Li>IoT Core - Thing Shadows and Publish/Subscribe Topics</Li>
+                                <Li>IoT Core - Thing Shadows</Li>
                                 <Li>Lambda Functions - Run Javascript/Python/Java/Go in the
                                     cloud without servers
                                 </Li>
@@ -123,12 +303,12 @@ const HowSlide20 = () => {
             <FixedColumn>
                 <InnerTop>
                     <How />
-                    <Title>Monitoring, Control, and Analysis</Title>
+                    <Title>Monitoring, <Blue>Control</Blue>, and Analysis</Title>
                     <Ul>
                         <Li>Monitoring - Realtime dashboards summarizing the status of devices</Li>
                         <Li>Control - Initiate device behaviors</Li>
-                        <Li>Analysis - Process device data to provide reports and graphs over
-                            time; and to use as training data for machine learning
+                        <Li>Analysis - Reports and graphs over
+                            time; training data for machine learning
                         </Li>
                         <Li>This presentation:
                             <Ul>
@@ -158,34 +338,6 @@ const HowSlide20 = () => {
 };
 
 
-const HowSlide30 = () => {
-    return (
-        <Outer>
-            <FixedColumn>
-                <InnerTop>
-                    <How />
-                    <Title>Make Your Own</Title>
-                    <Ul>
-                        <Li>Raspberry Pi is really flexible and easy to program</Li>
-                        <Li>A Network MCU module like the ESP32 has lots of great features,
-                            WiFi built in. Developer kits easy to find.
-                        </Li>
-                        <Li>AWS IoT Button - A button with wifi, what could be simpler?</Li>
-                    </Ul>
-                </InnerTop>
-            </FixedColumn>
-            <Column>
-            <InnerCenter>
-                    <Dim><Ring0 /></Dim>
-                </InnerCenter>
-                <InnerCenter>
-                    <Dim><Ring1/></Dim>
-                </InnerCenter>
-            </Column>
-        </Outer>
-    );
-};
-
 const HowSlide40 = () => {
     return (
         <Outer>
@@ -194,9 +346,9 @@ const HowSlide40 = () => {
                     <How />
                     <Title>Links</Title>
                     <Ul>
-                        <Li>Alexa + Raspberry PI - https://www.youtube.com/watch?v=-rB4b7DbRlk</Li>
-                        <Li>This Presentation Source Code - https://github.com/aztecrex/iot-demo</Li>
-                        <Li>DIY Plant Monitor using Particle and IFTTT - https://www.youtube.com/watch?v=URv7bfEuxDg</Li>
+                    <   Li>This Presentation Source Code - http://bit.ly/iot-demo-source</Li>
+                        <Li>Alexa + Raspberry PI - http://bit.ly/iot-demo-alexa-pi</Li>
+                        <Li>DIY Plant Monitor using Particle and IFTTT - http://bit.ly/iot-demo-plant-monitor</Li>
                     </Ul>
                 </InnerTop>
             </FixedColumn>
@@ -216,4 +368,4 @@ const HowSlide40 = () => {
 
 
 
-export { HowSlide1, HowSlide2, HowSlide20, HowSlide30, HowSlide40};
+export { HowSlide1, HowSlide3,HowSlide5,HowSlide7, HowSlide9, HowSlide10, HowSlide13, HowSlide20, HowSlide40};

@@ -1,5 +1,7 @@
 import React from 'react';
+import {connect} from 'react-redux';
 import styled, { keyframes } from 'styled-components';
+import { evtLanyardPressed } from '../Model';
 
 
 const rotate360 = keyframes`
@@ -74,54 +76,13 @@ class LanyardButton extends React.Component {
 
 };
 
-// const LanyardButton = ({handlePress = () => {console.log("lanyard");}}) => {
-// };
 
-// const RotatableLanyardButton = styled(LanyardButton)`
-//     animation: ${props => props.rotating ? }
-// `
-
-
-
-// componentDidMount() {
-//     const elm = this.image;
-//     elm.addEventListener("animationend", this.rotatingDone);
-//   }
-//   componentWillUnmount() {
-//     const elm = this.image;
-//     elm.removeEventListener("animationend", this.rotatingDone);
-//   }
-
-//   rotatingDone() {
-//     this.setState(function(state) {
-//       return {
-//         toggle: !state.toggle,
-//         rotate: false
-//       };
-//     });
-//   }
-//   render() {
-//     const { rotate, toggle } = this.state;
-
-//     return (
-//       <img
-//         src={
-//           toggle
-//             ? "https://video-react.js.org/assets/logo.png"
-//             : "https://www.shareicon.net/data/128x128/2016/08/01/640324_logo_512x512.png"
-//         }
-//         ref={elm => {
-//           this.image = elm;
-//         }}
-//         onClick={() => this.setState({ rotate: true })}
-//         className={rotate ? "rotate" : ""}
-//       />
-//     );
-//   }
-// }
+const ConnectedLanyardButton = connect(
+    null,
+    dispatch => ({
+        handlePress : () => {dispatch(evtLanyardPressed());}
+    })
+    )(LanyardButton);
 
 
-
-
-
-export {LanyardButton};
+export {LanyardButton, ConnectedLanyardButton};

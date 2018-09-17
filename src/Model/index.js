@@ -4,7 +4,8 @@ import * as R from 'ramda';
 const navPre = "nAV";
 const lampPre = "laMp";
 const presPre = "PresENt";
-const matPre = "mATRx"
+const matPre = "mATRx";
+const lanPre = "lanYd";
 
 const ETP_LAMP_STATUS = lampPre + "/LAMP_STATUS";
 const ETP_LAMP_PRESSED = lampPre + "/LAMP_CHANGE";
@@ -19,6 +20,7 @@ const ETP_PASSWORD_CHANGE_REQUIRED = navPre + "/PASSWORD_CHANGE_REQUIRED";
 const ETP_PASSWORD_CHANGE_REQUESTED = navPre + "/PASSWORD_CHANGE_REQUESTED";
 const ETP_PRESENTATION_CHANGED = presPre + "/PRESENTATION_CHANGED";
 const ETP_MATRIX_POSITION_CHANGED = matPre + "/POSTION_CHANGED";
+const ETP_LANYARD_PRESSED = lanPre + "/PRESSED";
 
 const DT_MATRIX = "Matrix";
 const DT_WHEEL = "Wheel";
@@ -234,6 +236,12 @@ const getMatrixPosition = m => {
     return m[matrixPositionKey] || {x: 0,y: 0};
 };
 
+
+const evtLanyardPressed = () => {
+    return { type: ETP_LANYARD_PRESSED };
+}
+
+
 const colors = (m, device) => {
     const keys = R.filter(s => s.startsWith(`${lampPre}/${device}/`), R.keys(m))
     const kcs = R.map(key => {
@@ -323,5 +331,6 @@ export {
     isPresenting, isPowered, getSlideNumber,
     evtPresentationChanged,
     evtMatrixPositionChanged,
-    updateMatrixPosition, getMatrixPosition
+    updateMatrixPosition, getMatrixPosition,
+    evtLanyardPressed,
 };

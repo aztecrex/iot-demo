@@ -4,6 +4,7 @@ import { isPowered, getSlideNumber, evtLogoutRequested } from '../../Model';
 import { WhatSlide1, WhatSlide2, WhatSlide3, WhatSlide4 } from './What';
 import { WhatForSlide1, WhatForSlide2, WhatForSlide3, WhatForSlide4 } from './WhatFor';
 import styled from 'styled-components';
+import { HowSlide1, HowSlide2, HowSlide20, HowSlide30, HowSlide40 } from './How';
 
 
 const BlackBack = styled.div`
@@ -47,8 +48,13 @@ const Slides = ({ powered = true, number = 1, handleLogout = () => { } }) => {
             case 6: return <WhatForSlide2 />
             case 7: return <WhatForSlide3 />
             case 8: return <WhatForSlide4 />
+            case 9: return <HowSlide1 />
+            case 10: return <HowSlide2 />
+            case 11: return <HowSlide20 />
+            case 12: return <HowSlide30 />
+            case 13: return <HowSlide40 />
             default:
-                return number < 1 ? <WhatSlide1 /> : <WhatForSlide4 />
+                return number < 1 ? <WhatSlide1 /> : <HowSlide40 />
     }
     }
 };

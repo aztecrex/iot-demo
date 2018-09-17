@@ -1,8 +1,8 @@
 import * as R from 'ramda';
 
 import {Login, currentUser, Logout, ChangePass} from '../AWS/Authenticate';
-import { isLampOn, lampColor, evtTypeLampPressed, evtLampStatus, evtLampStatusOff, coordinates, evtTypeLoginRequested, evtLoginFailed, matrixCoord, wheelCoord, evtLoginSucceeded, credentials, evtTypeLogoutRequested, evtPasswordChangeRequired, evtTypePasswordChangeRequested, getCurrentUser, evtTypeLoginSucceeded, evtPresentationChanged, index, device, evtMatrixPositionChanged } from '../Model';
-import { bringUp, bringDown, setLampColor } from '../AWS/IoT';
+import { isLampOn, lampColor, evtTypeLampPressed, evtLampStatus, evtLampStatusOff, coordinates, evtTypeLoginRequested, evtLoginFailed, wheelCoord, evtLoginSucceeded, credentials, evtTypeLogoutRequested, evtPasswordChangeRequired, evtTypePasswordChangeRequested, getCurrentUser, evtTypeLoginSucceeded, evtPresentationChanged, index, device, evtMatrixPositionChanged, evtTypeLanyardPressed, evtLanyardAnimationChanged, getLanyardAnimation } from '../Model';
+import { bringUp, bringDown, setLampColor, bumpAnimation } from '../AWS/IoT';
 
 
 const transduce = getState => evt => {
@@ -32,7 +32,7 @@ const transduce = getState => evt => {
         }
         const dev = device(coords);
         const key = "lamp_" + index(coords);
-        setLampColor(dev, key, nextColorI);
+        setLampColor(dev, key, nextColorI).catch(err => console.error(err));
     } else if (evtTypeLoginRequested(evt)) {
         const {user,pass} = credentials(evt);
         emit = [
@@ -57,19 +57,25 @@ const transduce = getState => evt => {
         return ChangePass(user, pass)
             .then(u => evtLoginSucceeded(u))
             .catch(() => evtPasswordChangeRequired(user))
+    } else if (evtTypeLanyardPressed(evt)) {
+        emit = [
+            bumpAnimation(getLanyardAnimation(getState()))
+                .catch(err => {console.error("lanyard bump failed: " + err); return {}}),
+        ];
+
     } else if (evt.type === "INIT_APP") {
         emit = [
             currentUser()
                 .then(user => evtLoginSucceeded(user))
                 .catch(() => evtLoginFailed()),
-        Promise.resolve(evtLampStatus(matrixCoord("matrix_0",1,7),"#ff0000")),
-            Promise.resolve(evtLampStatus(matrixCoord("matrix_0",3,2),"#00ff00")),
-            Promise.resolve(evtLampStatus(matrixCoord("matrix_0",1,4),"#0000ff")),
-            Promise.resolve(evtLampStatus(matrixCoord("matrix_0",4,1),"#00ff00")),
-            Promise.resolve(evtLampStatus(wheelCoord("Ring0",3),"#00ff00")),
-            Promise.resolve(evtLampStatus(wheelCoord("Ring0",7),"#ff0000")),
-            Promise.resolve(evtLampStatus(wheelCoord("Ring0",11),"#0000ff")),
-            Promise.resolve(evtPresentationChanged({presenting: false,powered: false, slide: 1})),
+            // Promise.resolve(evtLampStatus(matrixCoord("matrix_0",1,7),"#ff0000")),
+            // Promise.resolve(evtLampStatus(matrixCoord("matrix_0",3,2),"#00ff00")),
+            // Promise.resolve(evtLampStatus(matrixCoord("matrix_0",1,4),"#0000ff")),
+            // Promise.resolve(evtLampStatus(matrixCoord("matrix_0",4,1),"#00ff00")),
+            // Promise.resolve(evtLampStatus(wheelCoord("Ring0",3),"#00ff00")),
+            // Promise.resolve(evtLampStatus(wheelCoord("Ring0",7),"#ff0000")),
+            // Promise.resolve(evtLampStatus(wheelCoord("Ring0",11),"#0000ff")),
+            // Promise.resolve(evtPresentationChanged({presenting: false,powered: false, slide: 1})),
         ];
     }
     return emit;
@@ -101,6 +107,9 @@ const makeIoTHandler = dispatch => {
             } else if (d.name === "Matrix") {
                 const sup = R.path(['obj','state','reported','position'], d) || {};
                 dispatch(evtMatrixPositionChanged(sup.x, sup.y));
+            } else if (d.name === "Lanyard") {
+                const sup = R.path(['obj','state','reported','type'],d);
+                dispatch(evtLanyardAnimationChanged(sup));
             }
         }
     };

@@ -65,7 +65,7 @@ const Blue = styled.span`
 `
 
 const P = styled.p`
-    font-size: 3.4vmin
+    font-size: 4vmin
 `
 
 

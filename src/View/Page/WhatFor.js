@@ -1,7 +1,7 @@
 import React from 'react';
 import { Ring0, Ring1 } from '../Wheel';
 import { Column, Outer, FixedColumn, InnerTop,
-         InnerCenter, Ul, Li, Title, P} from './SlideStyle'
+         InnerCenter, Ul, Li, Title, P, Section} from './SlideStyle'
 import CokeMachineImg from '../../images/internet-coke-machine.png'
 import CokeTerminalImg from '../../images/coke-terminal.png';
 import PDP10Img from '../../images/dec-pdp-10.jpg';
@@ -28,11 +28,14 @@ const PDP10 = () => {
 };
 
 
+const WhatFor = () => <Section>What IoT Is For</Section>;
+
 const WhatForSlide1 = () => {
     return (
         <Outer>
             <FixedColumn>
                 <InnerTop>
+                    <WhatFor />
                     <Title>1982 - Internet Coke Machine</Title>
                     <P>
                         Remotely determine if Coke in the machine is cold and what
@@ -64,6 +67,7 @@ const WhatForSlide2 = () => {
         <Outer>
             <FixedColumn>
                 <InnerTop>
+                    <WhatFor />
                     <Title>Devices That Sense and Communicate</Title>
                     <Ul>
                         <Li>Health Care - Telehealth</Li>
@@ -98,6 +102,7 @@ const WhatForSlide3 = () => {
         <Outer>
             <FixedColumn>
                 <InnerTop>
+                    <WhatFor />
                     <Title>Devices That Take Action</Title>
                     <Ul>
                         <Li>Security - Perimiter Access Control</Li>
@@ -123,6 +128,7 @@ const WhatForSlide4 = () => {
         <Outer>
             <FixedColumn>
                 <InnerTop>
+                    <WhatFor />
                     <Title>Future</Title>
                     <Ul>
                         <Li>Health - Ingestibles</Li>

@@ -1,7 +1,7 @@
 import * as R from 'ramda';
 
 import {Login, currentUser, Logout, ChangePass} from '../AWS/Authenticate';
-import { isLampOn, lampColor, evtTypeLampPressed, evtLampStatus, evtLampStatusOff, coordinates, evtTypeLoginRequested, evtLoginFailed, matrixCoord, wheelCoord, evtLoginSucceeded, credentials, evtTypeLogoutRequested, evtPasswordChangeRequired, evtTypePasswordChangeRequested, getCurrentUser, evtTypeLoginSucceeded, evtPresentationChanged, index, device, evtMatrixPositionChanged } from '../Model';
+import { isLampOn, lampColor, evtTypeLampPressed, evtLampStatus, evtLampStatusOff, coordinates, evtTypeLoginRequested, evtLoginFailed, wheelCoord, evtLoginSucceeded, credentials, evtTypeLogoutRequested, evtPasswordChangeRequired, evtTypePasswordChangeRequested, getCurrentUser, evtTypeLoginSucceeded, evtPresentationChanged, index, device, evtMatrixPositionChanged } from '../Model';
 import { bringUp, bringDown, setLampColor } from '../AWS/IoT';
 
 
@@ -62,14 +62,14 @@ const transduce = getState => evt => {
             currentUser()
                 .then(user => evtLoginSucceeded(user))
                 .catch(() => evtLoginFailed()),
-        Promise.resolve(evtLampStatus(matrixCoord("matrix_0",1,7),"#ff0000")),
-            Promise.resolve(evtLampStatus(matrixCoord("matrix_0",3,2),"#00ff00")),
-            Promise.resolve(evtLampStatus(matrixCoord("matrix_0",1,4),"#0000ff")),
-            Promise.resolve(evtLampStatus(matrixCoord("matrix_0",4,1),"#00ff00")),
-            Promise.resolve(evtLampStatus(wheelCoord("Ring0",3),"#00ff00")),
-            Promise.resolve(evtLampStatus(wheelCoord("Ring0",7),"#ff0000")),
-            Promise.resolve(evtLampStatus(wheelCoord("Ring0",11),"#0000ff")),
-            Promise.resolve(evtPresentationChanged({presenting: false,powered: false, slide: 1})),
+            // Promise.resolve(evtLampStatus(matrixCoord("matrix_0",1,7),"#ff0000")),
+            // Promise.resolve(evtLampStatus(matrixCoord("matrix_0",3,2),"#00ff00")),
+            // Promise.resolve(evtLampStatus(matrixCoord("matrix_0",1,4),"#0000ff")),
+            // Promise.resolve(evtLampStatus(matrixCoord("matrix_0",4,1),"#00ff00")),
+            // Promise.resolve(evtLampStatus(wheelCoord("Ring0",3),"#00ff00")),
+            // Promise.resolve(evtLampStatus(wheelCoord("Ring0",7),"#ff0000")),
+            // Promise.resolve(evtLampStatus(wheelCoord("Ring0",11),"#0000ff")),
+            // Promise.resolve(evtPresentationChanged({presenting: false,powered: false, slide: 1})),
         ];
     }
     return emit;

@@ -121,7 +121,7 @@ const createClient = async (callback) => {
         host: 'ad78o9k6p57sk.iot.us-east-1.amazonaws.com',
         clientId: cid + "-" + (new Date().getTime()),
         maximumReconnectTimeMs: 8000,
-        debug: true,
+        debug: false,
         accessKeyId: cred.accessKeyId,
         secretKey: cred.secretAccessKey,
         sessionToken: cred.sessionToken
@@ -146,7 +146,6 @@ const createClient = async (callback) => {
         }
     });
     client.on('foreignStateChange', (name, foreignOp, obj) => {
-        // console.log(name, op, obj, "foreign state change");
         if (callback)
             callback({
                 type: 'FOREIGN',
@@ -160,9 +159,7 @@ const createClient = async (callback) => {
     });
 
     const setRefresh = millis => {
-        console.log("next credential refresh minutes: " + millis / 60000)
         setTimeout(async () => {
-            console.log("refresh credentials");
             const newCreds = await awsCredentials().catch(() => {
                 return Promise.resolve({});
             });
@@ -176,7 +173,6 @@ const createClient = async (callback) => {
                 const nextExp = newCreds.expireTime.getTime() - new Date().getTime();
                 setRefresh (nextExp);
             } else {
-                console.log("error getting credentials, retry 8s");
                 setRefresh(8000);
             }
         }, millis);

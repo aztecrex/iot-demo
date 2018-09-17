@@ -44,12 +44,11 @@ class LanyardButton extends React.Component {
     }
 
     doneRotating() {
-        console.log("done rotating");
         this.setState({rotating: false});
     }
 
     render() {
-        const {handlePress = () => {console.log("lanyard");}} = this.props;
+        const {handlePress = () => {}} = this.props;
         const clicker = () => {
             this.setState({rotating: true});
             handlePress();

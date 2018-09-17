@@ -59,7 +59,6 @@ const transduce = getState => evt => {
             .catch(() => evtPasswordChangeRequired(user))];
     } else if (evtTypeLanyardPressed(evt)) {
         const cur = getLanyardAnimation(getState());
-        console.log("current animation ", cur);
         bumpAnimation(cur).catch(err => {console.error("lanyard bump failed: " + err); return {}});
         // nothing to emit
     } else if (evt.type === "INIT_APP") {
@@ -80,12 +79,11 @@ const transduce = getState => evt => {
     return emit;
 };
 
-var IoTHandler = d => console.log(d);
+var IoTHandler = d => {};
 
 const makeIoTHandler = dispatch => {
 
     return d => {
-        console.log("IOT UPDATE: ", d);
         if (d.type === "STATUS" || d.type === "FOREIGN") {
             if (d.name === "Presentation") {
                 const sup = R.path(['obj','state','desired'],d) || {};

@@ -57,7 +57,6 @@ const Wheel = ( {device, dim = 300,
 const ConnectedWheel = connect(
     (state,{device}) => {
         const props = {colors: colors(state, device)};
-        if (device === "Ring1") console.log(props);
         return props;
     },
     dispatch => ({handleDotClicked: coord => dispatch(evtLampPressed(coord))})

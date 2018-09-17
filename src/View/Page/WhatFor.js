@@ -107,11 +107,11 @@ const WhatForSlide3 = () => {
                 </InnerTop>
             </FixedColumn>
             <Column>
-                <InnerCenter>
-                    <Ring0 />
+            <InnerCenter>
+                    <Dim><Ring0 /></Dim>
                 </InnerCenter>
                 <InnerCenter>
-                    <Ring1 />
+                    <Dim><Ring1/></Dim>
                 </InnerCenter>
             </Column>
         </Outer>
@@ -131,11 +131,11 @@ const WhatForSlide4 = () => {
                 </InnerTop>
             </FixedColumn>
             <Column>
-                <InnerCenter>
-                    <Ring0 />
+            <InnerCenter>
+                    <Dim><Ring0 /></Dim>
                 </InnerCenter>
                 <InnerCenter>
-                    <Ring1 />
+                    <Dim><Ring1/></Dim>
                 </InnerCenter>
             </Column>
         </Outer>

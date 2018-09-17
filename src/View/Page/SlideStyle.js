@@ -58,18 +58,24 @@ const Red = styled.span`
 
 const Green = styled.span`
     color: green;
-`
+`;
 
 const Blue = styled.span`
     color: blue;
-`
+`;
 
 const P = styled.p`
     font-size: 4vmin
-`
+`;
 
+const SpaceAge = styled.span`
+    font-family: Orbitron;
+    font-weight: bold;
+    font-size: 1.3em;
+    color: #bc4606;
+`;
 
 export {
     Outer, Column, FixedColumn, InnerCenter, InnerTop, Title, Ul, Li,
-    Red, Green, Blue, Section, P
+    Red, Green, Blue, Section, P, SpaceAge
 }

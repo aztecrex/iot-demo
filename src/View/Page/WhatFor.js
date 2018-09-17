@@ -1,7 +1,7 @@
 import React from 'react';
 import { Ring0, Ring1 } from '../Wheel';
 import { Column, Outer, FixedColumn, InnerTop,
-         InnerCenter, Ul, Li, Title, P, Section} from './SlideStyle'
+         InnerCenter, Ul, Li, Title, P, Section, Green, SpaceAge} from './SlideStyle'
 import CokeMachineImg from '../../images/internet-coke-machine.png'
 import CokeTerminalImg from '../../images/coke-terminal.png';
 import PDP10Img from '../../images/dec-pdp-10.jpg';
@@ -68,7 +68,7 @@ const WhatForSlide2 = () => {
             <FixedColumn>
                 <InnerTop>
                     <WhatFor />
-                    <Title>Devices That Sense and Communicate</Title>
+                    <Title>Devices That <Green>Sense and Communicate</Green></Title>
                     <Ul>
                         <Li>Health Care - Telehealth</Li>
                         <Li>Health Care - Hospital Bed Monitoring</Li>
@@ -103,11 +103,16 @@ const WhatForSlide3 = () => {
             <FixedColumn>
                 <InnerTop>
                     <WhatFor />
-                    <Title>Devices That Take Action</Title>
+                    <Title>Devices That <Green>Take Action</Green></Title>
                     <Ul>
-                        <Li>Security - Perimiter Access Control</Li>
                         <Li>Energy - Smart Environment</Li>
                         <Li>Home - Remote Appliance Control</Li>
+                        <Li>Security - Perimiter Access Control</Li>
+                        <Li>Security - Remote Disable</Li>
+                        <Li>Safety - Emergency Shutoff</Li>
+                        <Li>Health Care - Medicine Dosage</Li>
+                        <Li>Agriculture - Irrigation</Li>
+                        <Li>Entertainment - Aerial Displays</Li>
                     </Ul>
                 </InnerTop>
             </FixedColumn>
@@ -129,16 +134,21 @@ const WhatForSlide4 = () => {
             <FixedColumn>
                 <InnerTop>
                     <WhatFor />
-                    <Title>Future</Title>
+                    <Title>IoT In <SpaceAge>The Future</SpaceAge></Title>
                     <Ul>
+                        <Li>Agriculture - Smart Farms/Greenhouses/Hydroponics</Li>
                         <Li>Health - Ingestibles</Li>
-                        <Li>What Would You Build?</Li>
+                        <Li>Logistics - Smart Trash Cans</Li>
+                        <Li>Safety - Structural Health</Li>
+                        <Li>Energy - Smart Street Lamps</Li>
+                        <Li>Convenience - Parking Lot Occupancy</Li>
+                        <Li><Green>What Would You Build?</Green></Li>
                     </Ul>
                 </InnerTop>
             </FixedColumn>
             <Column>
             <InnerCenter>
-                    <Dim><Ring0 /></Dim>
+                    <Dim factor={.3}><Ring0 /></Dim>
                 </InnerCenter>
                 <InnerCenter>
                     <Dim><Ring1/></Dim>

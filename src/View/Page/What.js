@@ -1,7 +1,7 @@
 import React from 'react';
 import { Ring0, Ring1 } from '../Wheel';
 import { Column, Outer, FixedColumn, InnerTop,
-         InnerCenter, Ul, Li, Title, Red, Section, Blue, Green} from './SlideStyle'
+         InnerCenter, Ul, Li, Title, Red, Section} from './SlideStyle'
 import { Dim } from '../Dim';
 
 const What = () => <Section>What IoT Is</Section>

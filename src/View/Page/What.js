@@ -1,16 +1,17 @@
 import React from 'react';
 import { Ring0, Ring1 } from '../Wheel';
 import { Column, Outer, FixedColumn, InnerTop,
-         InnerCenter, Ul, Li, Title, Red, Section} from './SlideStyle'
+         InnerCenter, Ul, Li, Title, Red, Section, Blue, Green} from './SlideStyle'
 import { Dim } from '../Dim';
 
+const What = () => <Section>What IoT Is</Section>
 
 const WhatSlide1 = () => {
     return (
         <Outer>
             <FixedColumn>
                 <InnerTop>
-                    <Section>What</Section>
+                    <What />
                     <Title>Independent Inter-related <Red>Computing</Red> Machines</Title>
                     <Ul>
                         <Li>Network Connected</Li>
@@ -20,7 +21,7 @@ const WhatSlide1 = () => {
             </FixedColumn>
             <Column>
             <InnerCenter>
-                    <Dim><Ring0 /></Dim>
+                    <Dim factor={.3}><Ring0 /></Dim>
                 </InnerCenter>
                 <InnerCenter>
                     <Dim><Ring1/></Dim>
@@ -35,16 +36,17 @@ const WhatSlide2 = () => {
         <Outer>
             <FixedColumn>
                 <InnerTop>
+                    <What />
                     <Title>Specialized</Title>
                     <Ul>
-                        <Li>Simple User Interface or No User Interface At All</Li>
-                        <Li>Just Enough Computing Power</Li>
+                        <Li>Simple User Interface or <Red>No User Interface At All</Red></Li>
+                        <Li><Red>Just Enough</Red> Computing Power</Li>
                     </Ul>
                 </InnerTop>
             </FixedColumn>
             <Column>
                 <InnerCenter>
-                    <Dim><Ring0 /></Dim>
+                    <Dim factor={.3}><Ring0 /></Dim>
                 </InnerCenter>
                 <InnerCenter>
                     <Dim><Ring1/></Dim>
@@ -59,10 +61,12 @@ const WhatSlide3 = () => {
         <Outer>
             <FixedColumn>
                 <InnerTop>
+                    <What />
                     <Title>Infrastructure</Title>
                     <Ul>
                         <Li>Communication</Li>
                         <Li>Storage</Li>
+                        <Li><Red>Security</Red></Li>
                         <Li>Management</Li>
                         <Li>Insights</Li>
                     </Ul>
@@ -70,7 +74,7 @@ const WhatSlide3 = () => {
             </FixedColumn>
             <Column>
                 <InnerCenter>
-                    <Dim><Ring0 /></Dim>
+                    <Dim factor={.3}><Ring0 /></Dim>
                 </InnerCenter>
                 <InnerCenter>
                     <Dim><Ring1/></Dim>
@@ -85,16 +89,17 @@ const WhatSlide4 = () => {
         <Outer>
             <FixedColumn>
                 <InnerTop>
+                    <What />
                     <Title>Concerns</Title>
                     <Ul>
-                        <Li>Privacy</Li>
+                        <Li><Red>Privacy</Red></Li>
                         <Li>Security</Li>
                     </Ul>
                 </InnerTop>
             </FixedColumn>
             <Column>
             <InnerCenter>
-                    <Dim><Ring0 /></Dim>
+                    <Dim factor={.3}><Ring0 /></Dim>
                 </InnerCenter>
                 <InnerCenter>
                     <Dim><Ring1/></Dim>

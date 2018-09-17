@@ -257,8 +257,9 @@ const getLanyardAnimation = (m = {}) => {
     return m[lanyardAnimationKey] || 0;
 };
 
-const updateLanyardAnimation = (m = {}, evt = {}) => {
-    return {...m, [lanyardAnimationKey]: evt.animation || 0};
+const updateLanyardAnimation = (m = {}, value) => {
+    console.log("update lanyard anmation: ",value);
+    return {...m, [lanyardAnimationKey]: value || 0};
 };
 
 

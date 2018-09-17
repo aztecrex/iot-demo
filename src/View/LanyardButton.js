@@ -51,7 +51,6 @@ class LanyardButton extends React.Component {
     render() {
         const {handlePress = () => {console.log("lanyard");}} = this.props;
         const clicker = () => {
-            console.log("rotating");
             this.setState({rotating: true});
             handlePress();
         };
@@ -65,7 +64,7 @@ class LanyardButton extends React.Component {
                         points=" 87,0  174,50 174,150 87,200 0,150  0,50  87,0"
                         onClick={clicker}/>
                     <ClickablePolyline
-                    fill="brown"
+                    fill="#0000C0"
                     points="87,20 157,60 157,140 87,180 17,140 17,60 87,20"
                     onClick={clicker}
                     />
@@ -80,7 +79,7 @@ class LanyardButton extends React.Component {
 const ConnectedLanyardButton = connect(
     null,
     dispatch => ({
-        handlePress : () => {dispatch(evtLanyardPressed());}
+        handlePress: () => {dispatch(evtLanyardPressed());}
     })
     )(LanyardButton);
 

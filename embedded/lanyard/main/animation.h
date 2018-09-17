@@ -2,7 +2,11 @@
 #define ___ANIMATION
 
 #define FADE 0
-#define RGB 1
+#define GOOGLEY 1
+#define GOOGLEY_REV 2
+#define SPARKLE 3
+
+#define NUM_ANIMATIONS 4
 
 uint8_t animation_select(uint8_t index);
 void animation_start();

@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <time.h>
+#include <stdlib.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
@@ -7,7 +9,7 @@
 #include "dotstar.h"
 
 
-#define NUM_ANIMATIONS 1
+#define NUM_LAMPS 6
 
 static uint8_t curanimation = 0;
 static bool running = false;
@@ -18,8 +20,9 @@ static void delay_ms(unsigned ms) {
     vTaskDelay(ms / portTICK_PERIOD_MS);
 }
 
-void animation_select(uint8_t index) {
+uint8_t animation_select(uint8_t index) {
     curanimation = index % NUM_ANIMATIONS;
+    return curanimation;
 }
 
 void animation_disable() {
@@ -45,13 +48,99 @@ void fade(unsigned frame) {
         {bright, 255, 255, 255}
     };
     dotstar_show(dots);
-    vTaskDelay(80 / portTICK_PERIOD_MS);
+    delay_ms(80);
 }
+
+
+pixel* init_black() {
+    static pixel dot_black = {31,0,0,0};
+    pixel* rval = malloc(sizeof(pixel) * NUM_LAMPS);
+    for(unsigned i=0; i< NUM_LAMPS; i += 1) {
+        *(rval + i) = dot_black;
+    }
+    return rval;
+}
+
+pixel randpix() {
+    uint8_t red = rand() % 256;
+    uint8_t green = rand() % 256;
+    uint8_t blue = rand() % 256;
+    pixel rval = {31, red, green, blue};
+    return rval;
+}
+
+pixel* init_random() {
+    pixel* rval = malloc(sizeof(pixel) * NUM_LAMPS);
+    for(unsigned i=0; i< NUM_LAMPS; i += 1) {
+        (*(rval + i)) = randpix();
+    }
+    return rval;
+}
+
+void sparkle(unsigned frame) {
+    static pixel *dots = 0;
+    static pixel *targs = 0;
+    if (!dots) dots = init_black();
+    if (!targs) targs = init_random();
+    if (frame % 7 == 0) {
+        unsigned pix1 = frame % NUM_LAMPS;
+        *(targs + pix1) = randpix();
+        unsigned pix2 = (frame + NUM_LAMPS / 3) % NUM_LAMPS;
+        *(targs + pix2) = randpix();
+        unsigned pix3 = (frame + (NUM_LAMPS * 2) / 3) % NUM_LAMPS;
+        *(targs + pix3) = randpix();
+    }
+    for (unsigned i=0; i< NUM_LAMPS; i += 1) {
+        (*(dots + i)).red = (*(dots + i)).red / 2 + (*(targs + i)).red / 2;
+        (*(dots + i)).green = (*(dots + i)).green / 2 + (*(targs + i)).green / 2;
+        (*(dots + i)).blue = (*(dots + i)).blue / 2 + (*(targs + i)).blue / 2;
+    }
+    dotstar_show(dots);
+    delay_ms(20);
+}
+
+unsigned normal (unsigned pos, bool direction) {
+    unsigned offs = pos % NUM_LAMPS;
+    return direction ? offs : (NUM_LAMPS - offs);
+}
+
+unsigned adjacent(unsigned pos, bool direction) {
+    return (pos + NUM_LAMPS + (direction ? 1 : -1)) % NUM_LAMPS;
+}
+
+void googley(unsigned frame, bool direction) {
+    static pixel dot_full = {31, 0, 255, 0};
+    static pixel dot_t1 = {8, 0, 64, 0};
+    static pixel dot_t2 = {4, 0, 20, 0};
+    static pixel dot_black = {0, 0, 0, 0};
+    uint8_t lead = normal(frame, direction);
+    uint8_t tail1 = adjacent(lead, direction);
+    uint8_t tail2 = adjacent(tail1, direction);
+    pixel dots[NUM_LAMPS];
+    for (uint8_t i = 0; i < NUM_LAMPS; ++i) {
+        if (i == lead) {
+            dots[i] = dot_full;
+        } else if (i == tail1) {
+            dots[i] = dot_t1;
+        } else if (i == tail2) {
+            dots[i] = dot_t2;
+        } else {
+            dots[i] = dot_black;
+        }
+    }
+    dotstar_show(dots);
+    delay_ms(40);
+
+}
+
 
 void show_frame(unsigned frame) {
     if (!running) return;
     switch (curanimation) {
         case FADE: fade(frame); break;
+        case GOOGLEY: googley(frame, true); break;
+        case GOOGLEY_REV: googley(frame, false); break;
+        case SPARKLE: sparkle(frame); break;
         default: fade(frame); break;
     }
 }
@@ -97,6 +186,8 @@ void runPowerAnimation() {
 
 
 void animation_task(void *param) {
+    time_t t;
+    srand((unsigned) time(&t));
     unsigned frame = 0;
     while(1) {
         printf("switch to running\n");

@@ -152,6 +152,8 @@ void ShadowUpdateStatusCallback(const char *pThingName, ShadowActions_t action, 
 
 void update_display() {
 
+    animation_select(display_type);
+
     if (display_visible) {
         animation_enable();
     } else {
@@ -344,7 +346,7 @@ void aws_iot_task(void *param) {
             if (rc != SUCCESS) ESP_LOGE(TAG, "non-success result from init json document %d", rc);
             if(SUCCESS == rc) {
                 rc = aws_iot_shadow_add_reported(
-                    JsonDocumentBuffer, sizeOfJsonDocumentBuffer, 2,
+                    JsonDocumentBuffer, sizeOfJsonDocumentBuffer, 3,
                             &display_visible_ctl,
                             &display_type_ctl,
                             &display_powered_ctl);

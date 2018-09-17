@@ -54,15 +54,13 @@ const transduce = getState => evt => {
     } else if (evtTypePasswordChangeRequested(evt)) {
         const {pass} = credentials(evt);
         const user = getCurrentUser(getState());
-        return ChangePass(user, pass)
+        emit = [ChangePass(user, pass)
             .then(u => evtLoginSucceeded(u))
-            .catch(() => evtPasswordChangeRequired(user))
+            .catch(() => evtPasswordChangeRequired(user))];
     } else if (evtTypeLanyardPressed(evt)) {
-        emit = [
-            bumpAnimation(getLanyardAnimation(getState()))
-                .catch(err => {console.error("lanyard bump failed: " + err); return {}}),
-        ];
-
+        const cur = getLanyardAnimation(getState());
+        bumpAnimation(cur).catch(err => {console.error("lanyard bump failed: " + err); return {}});
+        // nothing to emit
     } else if (evt.type === "INIT_APP") {
         emit = [
             currentUser()
@@ -81,12 +79,11 @@ const transduce = getState => evt => {
     return emit;
 };
 
-var IoTHandler = d => console.log(d);
+var IoTHandler = d => {};
 
 const makeIoTHandler = dispatch => {
 
     return d => {
-        console.log("IOT UPDATE: ", d);
         if (d.type === "STATUS" || d.type === "FOREIGN") {
             if (d.name === "Presentation") {
                 const sup = R.path(['obj','state','desired'],d) || {};
@@ -109,7 +106,8 @@ const makeIoTHandler = dispatch => {
                 dispatch(evtMatrixPositionChanged(sup.x, sup.y));
             } else if (d.name === "Lanyard") {
                 const sup = R.path(['obj','state','reported','type'],d);
-                dispatch(evtLanyardAnimationChanged(sup));
+                if (typeof sup === "number")
+                    dispatch(evtLanyardAnimationChanged(sup));
             }
         }
     };

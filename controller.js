@@ -38,7 +38,7 @@ const updateDesired = v => {
 
 const advance = async () => {
     const curDesired = await fetchDesired()
-        .catch(err => {console.log(err); return {}});
+        .catch(err => {console.error(err); return {}});
     const current = curDesired.slide || 1;
     console.log(current);
     return await updateDesired({slide: Math.min(NumSlides, current + 1)});
@@ -46,7 +46,7 @@ const advance = async () => {
 
 const retreat = async () => {
     const curDesired = await fetchDesired()
-        .catch(err => {console.log(err); return {}});
+        .catch(err => {console.error(err); return {}});
     const current = curDesired.slide || 1;
     console.log(current);
     return await updateDesired({slide: Math.max(1, current - 1)});
@@ -82,7 +82,7 @@ const powerOff = () => {
 
 const toggleDetails = async () => {
     const curDesired = await fetchDesired()
-        .catch(err => {console.log(err); return {}});
+        .catch(err => {console.error(err); return {}});
     const current = !!(curDesired.details || false);
     console.log("current details", current);
     return await updateDesired({details: !current});

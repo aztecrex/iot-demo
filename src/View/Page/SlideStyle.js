@@ -12,8 +12,6 @@ const Column = styled.div`
     flex-direction: column;
     flex-grow: 1;
 `
-
-
 const FixedColumn = styled(Column)`
     height: 90vh;
     width: ${props => props.percent ? props.percent + "vw" : "64vw"};
@@ -28,7 +26,7 @@ const InnerTop = styled.div`
 `
 
 const Title = styled.h1`
-    font-size: 4.5vmin;
+    font-size: 5.4vmin;
 `
 
 const Section = styled.h1`
@@ -43,9 +41,7 @@ const Section = styled.h1`
 
 
 const Ul = styled.ul`
-    font-size 3vmin;
-    // margin-left: 3vmin;
-    // padding-left: 3vmin;
+    font-size 4vmin;
     list-style: none;
 `
 
@@ -73,5 +69,7 @@ const P = styled.p`
 `
 
 
-export {Outer, Column, FixedColumn, InnerCenter, InnerTop, Title, Ul, Li,
-        Red, Green, Blue, Section, P}
+export {
+    Outer, Column, FixedColumn, InnerCenter, InnerTop, Title, Ul, Li,
+    Red, Green, Blue, Section, P
+}

@@ -1,5 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import * as R from 'ramda';
 import styled, { keyframes } from 'styled-components';
 import { evtLanyardPressed } from '../Model';
 
@@ -28,6 +29,22 @@ const ClickablePolyline = styled.polyline`
     cursor: pointer;
 `;
 
+const pt = (start, theta, radius, cx, cy) => {
+    return i => {
+        const alpha = start + (i*theta);
+        const x = Math.cos(alpha) * radius + cx;
+        const y = Math.sin(alpha) * radius + cy;
+        return {x, y};
+    };
+};
+
+const pline = points => {
+    const pstrs = R.map(
+            ({x,y}) => (`${x},${y}`),points);
+    return pstrs.join(' ');
+
+};
+
 class LanyardButton extends React.Component {
     constructor(props) {
         super(props);
@@ -47,24 +64,38 @@ class LanyardButton extends React.Component {
         this.setState({rotating: false});
     }
 
+
+
     render() {
-        const {handlePress = () => {}} = this.props;
+        const {dim = 24, handlePress = () => {}} = this.props;
         const clicker = () => {
             this.setState({rotating: true});
             handlePress();
         };
+        const theta = Math.PI/3;
+        const start = Math.PI/2;
+        const ro = dim / 2;
+        const ri = (dim / 2) * .8;
+        const cx = dim / 2;
+        const cy = dim / 2;
+        const pto = pt(start, theta, ro, cx, cy);
+        const pti = pt(start, theta, ri, cx, cy);
+        const outer = R.map(pto, R.range(0,6));
+        const inner = R.map(pti, R.range(0,6));
+        console.log(pline(outer));
+        console.log(pline(inner));
         return (
             <SvgRot
                 rotating = {this.state.rotating}
                 innerRef={ elem => {this.pic = elem;} }
-                version="1.1" width="100%" height="100%" viewBox="0 0 174 200" >
+                version="1.1" width={dim} height={dim} viewBox={`0 0 ${dim} ${dim}`} >
                     <ClickablePolyline
                         fill="gold"
-                        points=" 87,0  174,50 174,150 87,200 0,150  0,50  87,0"
+                        points={pline(outer)}
                         onClick={clicker}/>
                     <ClickablePolyline
                     fill="#0000C0"
-                    points="87,20 157,60 157,140 87,180 17,140 17,60 87,20"
+                    points={pline(inner)}
                     onClick={clicker}
                     />
             </SvgRot>

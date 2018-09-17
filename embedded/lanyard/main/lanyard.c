@@ -152,6 +152,8 @@ void ShadowUpdateStatusCallback(const char *pThingName, ShadowActions_t action, 
 
 void update_display() {
 
+    display_type = animation_select(display_type);
+
     if (display_visible) {
         animation_enable();
     } else {

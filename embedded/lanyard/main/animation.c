@@ -18,8 +18,9 @@ static void delay_ms(unsigned ms) {
     vTaskDelay(ms / portTICK_PERIOD_MS);
 }
 
-void animation_select(uint8_t index) {
+uint8_t animation_select(uint8_t index) {
     curanimation = index % NUM_ANIMATIONS;
+    return curanimation;
 }
 
 void animation_disable() {

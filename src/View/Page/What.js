@@ -2,6 +2,7 @@ import React from 'react';
 import { Ring0, Ring1 } from '../Wheel';
 import { Column, Outer, FixedColumn, InnerTop,
          InnerCenter, Ul, Li, Title, Red, Section} from './SlideStyle'
+import { Dim } from '../Dim';
 
 
 const WhatSlide1 = () => {
@@ -19,10 +20,10 @@ const WhatSlide1 = () => {
             </FixedColumn>
             <Column>
             <InnerCenter>
-                    <Ring0 />
+                    <Dim><Ring0 /></Dim>
                 </InnerCenter>
                 <InnerCenter>
-                    <Ring1 />
+                    <Dim><Ring1/></Dim>
                 </InnerCenter>
             </Column>
         </Outer>
@@ -43,10 +44,10 @@ const WhatSlide2 = () => {
             </FixedColumn>
             <Column>
                 <InnerCenter>
-                    <Ring0 />
+                    <Dim><Ring0 /></Dim>
                 </InnerCenter>
                 <InnerCenter>
-                    <Ring1 />
+                    <Dim><Ring1/></Dim>
                 </InnerCenter>
             </Column>
         </Outer>
@@ -69,10 +70,10 @@ const WhatSlide3 = () => {
             </FixedColumn>
             <Column>
                 <InnerCenter>
-                    <Ring0 />
+                    <Dim><Ring0 /></Dim>
                 </InnerCenter>
                 <InnerCenter>
-                    <Ring1 />
+                    <Dim><Ring1/></Dim>
                 </InnerCenter>
             </Column>
         </Outer>
@@ -92,11 +93,11 @@ const WhatSlide4 = () => {
                 </InnerTop>
             </FixedColumn>
             <Column>
-                <InnerCenter>
-                    <Ring0 />
+            <InnerCenter>
+                    <Dim><Ring0 /></Dim>
                 </InnerCenter>
                 <InnerCenter>
-                    <Ring1 />
+                    <Dim><Ring1/></Dim>
                 </InnerCenter>
             </Column>
         </Outer>

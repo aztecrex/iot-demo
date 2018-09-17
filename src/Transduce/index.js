@@ -80,6 +80,7 @@ var IoTHandler = d => console.log(d);
 const makeIoTHandler = dispatch => {
 
     return d => {
+        console.log("IOT UPDATE: ", d);
         if (d.type === "STATUS" || d.type === "FOREIGN") {
             if (d.name === "Presentation") {
                 const sup = R.path(['obj','state','desired'],d) || {};

@@ -27,13 +27,8 @@ const BracketSlide10 = () => {
             </FixedColumn>
             <Column>
                 <InnerCenter>
-                    <Dim>
-                        <ConnectedLanyardButton />
-                    </Dim>
-                </InnerCenter>
-                <InnerCenter>
                     <Dim >
-                        <GravityMatrix />
+                        <Ring1 />
                     </Dim>
                 </InnerCenter>
             </Column>
@@ -83,14 +78,14 @@ const BracketSlide30 = () => {
                 </InnerTop>
             </FixedColumn>
             <Column>
-                <InnerCenter>
-                    <Dim>
-                        <ConnectedLanyardButton />
+            <InnerCenter>
+                    <Dim >
+                        <Ring1 />
                     </Dim>
                 </InnerCenter>
                 <InnerCenter>
-                    <Dim >
-                        <GravityMatrix />
+                    <Dim>
+                        <ConnectedLanyardButton />
                     </Dim>
                 </InnerCenter>
             </Column>

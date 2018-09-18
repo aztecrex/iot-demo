@@ -5,7 +5,7 @@ import { Column, Outer, FixedColumn, InnerTop,
 import CokeMachineImg from '../../images/internet-coke-machine.png'
 import CokeTerminalImg from '../../images/coke-terminal.png';
 import PDP10Img from '../../images/dec-pdp-10.jpg';
-import { ConnectedLanyardButton } from '../LanyardButton';
+import { ConnectedLanyardButton, LanyardButton } from '../LanyardButton';
 import { Dim } from '../Dim';
 
 const Image = ({src, alt, hp}) => {
@@ -83,13 +83,8 @@ const WhatForSlide2 = () => {
             </FixedColumn>
             <Column>
                 <InnerCenter>
-                    <Dim>
-                        <ConnectedLanyardButton />
-                    </Dim>
-                </InnerCenter>
-                <InnerCenter>
-                    <Dim >
-                        <Ring1 />
+                    <Dim factor={.3}>
+                        <Ring0 />
                     </Dim>
                 </InnerCenter>
             </Column>
@@ -117,11 +112,8 @@ const WhatForSlide3 = () => {
                 </InnerTop>
             </FixedColumn>
             <Column>
-            <InnerCenter>
-                    <Dim><Ring0 /></Dim>
-                </InnerCenter>
                 <InnerCenter>
-                    <Dim><Ring1/></Dim>
+                    <Dim><LanyardButton /></Dim>
                 </InnerCenter>
             </Column>
         </Outer>

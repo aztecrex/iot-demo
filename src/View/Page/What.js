@@ -38,6 +38,7 @@ const WhatSlide2 = () => {
                     <Ul>
                         <Li>Simple User Interface or <Red>No User Interface At All</Red></Li>
                         <Li><Red>Just Enough</Red> Computing Power</Li>
+                        <Li>Special-purpose <Red>Sensors</Red> and <Red>Actuators</Red></Li>
                     </Ul>
                 </InnerTop>
             </FixedColumn>

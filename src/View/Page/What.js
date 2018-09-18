@@ -20,11 +20,8 @@ const WhatSlide1 = () => {
                 </InnerTop>
             </FixedColumn>
             <Column>
-            <InnerCenter>
+                 <InnerCenter>
                     <Dim factor={.3}><Ring0 /></Dim>
-                </InnerCenter>
-                <InnerCenter>
-                    <Dim><Ring1/></Dim>
                 </InnerCenter>
             </Column>
         </Outer>
@@ -46,9 +43,6 @@ const WhatSlide2 = () => {
             </FixedColumn>
             <Column>
                 <InnerCenter>
-                    <Dim factor={.3}><Ring0 /></Dim>
-                </InnerCenter>
-                <InnerCenter>
                     <Dim><Ring1/></Dim>
                 </InnerCenter>
             </Column>
@@ -68,7 +62,7 @@ const WhatSlide3 = () => {
                         <Li>Storage</Li>
                         <Li><Red>Security</Red></Li>
                         <Li>Management</Li>
-                        <Li>Insights</Li>
+                        <Li>Coordination</Li>
                     </Ul>
                 </InnerTop>
             </FixedColumn>
@@ -98,11 +92,11 @@ const WhatSlide4 = () => {
                 </InnerTop>
             </FixedColumn>
             <Column>
-            <InnerCenter>
-                    <Dim factor={.3}><Ring0 /></Dim>
-                </InnerCenter>
                 <InnerCenter>
                     <Dim><Ring1/></Dim>
+                </InnerCenter>
+                <InnerCenter>
+                    <Dim factor={.3}><Ring0 /></Dim>
                 </InnerCenter>
             </Column>
         </Outer>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Ring1 } from '../Wheel';
+import { Ring1, Ring0 } from '../Wheel';
 import { Column, Outer, FixedColumn, InnerTop,
          InnerCenter, Ul, Li, Title, Section, Green, Blue, Red, P} from './SlideStyle'
 import { ConnectedLanyardButton } from '../LanyardButton';
@@ -37,13 +37,13 @@ const HowSlide1 = () => {
             </FixedColumn>
             <Column>
                 <InnerCenter>
-                    <Dim>
-                        <ConnectedLanyardButton />
+                    <Dim >
+                        <GravityMatrix />
                     </Dim>
                 </InnerCenter>
                 <InnerCenter>
-                    <Dim >
-                        <GravityMatrix />
+                    <Dim>
+                        <ConnectedLanyardButton />
                     </Dim>
                 </InnerCenter>
             </Column>
@@ -80,11 +80,6 @@ const HowSlide3 = () => {
             </FixedColumn>
             <Column>
                 <InnerCenter>
-                    <Dim>
-                        <ConnectedLanyardButton />
-                    </Dim>
-                </InnerCenter>
-                <InnerCenter>
                     <Dim >
                         <GravityMatrix />
                     </Dim>
@@ -119,11 +114,6 @@ const HowSlide5 = () => {
                         <ConnectedLanyardButton />
                     </Dim>
                 </InnerCenter>
-                <InnerCenter>
-                    <Dim >
-                        <GravityMatrix />
-                    </Dim>
-                </InnerCenter>
             </Column>
         </Outer>
     );
@@ -151,21 +141,13 @@ const HowSlide7 = () => {
                         <Li>Arduino and other maker platforms have networking
                             accessories
                         </Li>
-                        <Li>
-                            Proxy is often easiest
-                        </Li>
                     </Ul>
                 </InnerTop>
             </FixedColumn>
             <Column>
                 <InnerCenter>
                     <Dim>
-                        <ConnectedLanyardButton />
-                    </Dim>
-                </InnerCenter>
-                <InnerCenter>
-                    <Dim >
-                        <GravityMatrix />
+                        <Ring1 />
                     </Dim>
                 </InnerCenter>
             </Column>
@@ -194,8 +176,8 @@ const HowSlide9 = () => {
             </FixedColumn>
             <Column>
                 <InnerCenter>
-                    <Dim>
-                        <ConnectedLanyardButton />
+                    <Dim factor={.3}>
+                        <Ring0 />
                     </Dim>
                 </InnerCenter>
                 <InnerCenter>
@@ -237,13 +219,13 @@ const HowSlide10 = () => {
             </FixedColumn>
             <Column>
                 <InnerCenter>
-                    <Dim>
-                        <ConnectedLanyardButton />
+                    <Dim >
+                        <Ring1 />
                     </Dim>
                 </InnerCenter>
                 <InnerCenter>
-                    <Dim >
-                        <Ring1 />
+                    <Dim>
+                        <ConnectedLanyardButton />
                     </Dim>
                 </InnerCenter>
             </Column>
@@ -284,12 +266,7 @@ const HowSlide13 = () => {
             <Column>
                 <InnerCenter>
                     <Dim>
-                        <ConnectedLanyardButton />
-                    </Dim>
-                </InnerCenter>
-                <InnerCenter>
-                    <Dim >
-                        <Ring1 />
+                        <GravityMatrix />
                     </Dim>
                 </InnerCenter>
             </Column>
@@ -323,13 +300,8 @@ const HowSlide20 = () => {
             </FixedColumn>
             <Column>
                 <InnerCenter>
-                    <Dim>
-                        <ConnectedLanyardButton />
-                    </Dim>
-                </InnerCenter>
-                <InnerCenter>
                     <Dim >
-                        <Ring1 />
+                        <Ring0 />
                     </Dim>
                 </InnerCenter>
             </Column>

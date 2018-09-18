@@ -114,4 +114,4 @@ const ConnectedLanyardButton = connect(
     )(LanyardButton);
 
 
-export {LanyardButton, ConnectedLanyardButton};
+export {ConnectedLanyardButton};

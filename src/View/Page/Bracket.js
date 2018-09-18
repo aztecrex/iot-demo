@@ -4,7 +4,6 @@ import { Column, Outer, FixedColumn, InnerTop,
          InnerCenter, Ul, Li, Title, Section, Green} from './SlideStyle'
 import { ConnectedLanyardButton } from '../LanyardButton';
 import { Dim } from '../Dim';
-import { GravityMatrix } from '../Matrix';
 
 
 const General = () => <Section>IoT</Section>;
